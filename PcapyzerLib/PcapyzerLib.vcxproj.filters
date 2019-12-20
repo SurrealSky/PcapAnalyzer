@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Export">
+      <UniqueIdentifier>{6fb4f6cb-01f5-4de6-a046-af79ef8b6292}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommonLib">
+      <UniqueIdentifier>{ff0db18f-eee2-44d2-a995-42f0247835d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommonLib\xml">
+      <UniqueIdentifier>{523559b4-b182-44d2-9b3f-e43a99afa410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filter">
+      <UniqueIdentifier>{9ba03f52-fb92-493c-95d2-4b73d1d12879}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="PcapAnalyzer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalysisCap.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\xml\Markup.cpp">
+      <Filter>CommonLib\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="XmlFilter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EthernetFilter.cpp">
+      <Filter>Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="IPv4Filter.cpp">
+      <Filter>Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="LayerFilter.cpp">
+      <Filter>Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="TCPFilter.cpp">
+      <Filter>Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="UDPFilter.cpp">
+      <Filter>Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="DataFilter.cpp">
+      <Filter>Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="PrivateFilter.cpp">
+      <Filter>Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="RegexFilter.cpp">
+      <Filter>Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketCapture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PcapAnalyzer.h">
+      <Filter>Export</Filter>
+    </ClInclude>
+    <ClInclude Include="AnalysisCap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\Hex.h">
+      <Filter>CommonLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\typedef.h">
+      <Filter>CommonLib</Filter>
+    </ClInclude>
+    <ClInclude Include="packet.h">
+      <Filter>Export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\xml\Markup.h">
+      <Filter>CommonLib\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="XmlFilter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EthernetFilter.h">
+      <Filter>Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="IPv4Filter.h">
+      <Filter>Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="LayerFilter.h">
+      <Filter>Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPFilter.h">
+      <Filter>Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="UDPFilter.h">
+      <Filter>Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="DataFilter.h">
+      <Filter>Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="Sessions.h">
+      <Filter>Export</Filter>
+    </ClInclude>
+    <ClInclude Include="NetInfo.h">
+      <Filter>Export</Filter>
+    </ClInclude>
+    <ClInclude Include="SyncStream.h">
+      <Filter>Export</Filter>
+    </ClInclude>
+    <ClInclude Include="SyncPacket.h">
+      <Filter>Export</Filter>
+    </ClInclude>
+    <ClInclude Include="PrivateFilter.h">
+      <Filter>Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="RegexFilter.h">
+      <Filter>Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketCapture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
