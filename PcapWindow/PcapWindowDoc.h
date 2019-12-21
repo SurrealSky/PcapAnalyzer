@@ -50,3 +50,7 @@ protected:
 public:
 	static void _stream_call_handler(void* uParam, void* stream, unsigned int code);
 };
+
+
+#define WM_STREAMVIEW_ADDSTREAM		WM_USER+100
+#define WM_STREAMVIEW_ADDPACKET		WM_USER+100

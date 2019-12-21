@@ -6,6 +6,8 @@
 #include "PcapWindow.h"
 #include "ChildFrm.h"
 #include"StreamsView.h"
+#include"PcapWindowView.h"
+#include"PacketsView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -62,12 +64,12 @@ BOOL CChildFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	//将主窗口分割为1行2列，
 	m_wndSplitter.CreateStatic(this, 1, 2);
 	//然后在主窗口的第1行第1列中绑定CMyListView
-	m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CStreamsView), CSize(100, 200), pContext);
+	m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CStreamsView), CSize(380, -1), pContext);
 	//m_wndSplitter.CreateView(0, 1, RUNTIME_CLASS(CMyListView), CSize(100, 200), pContext);
 	//将分割类对象m_wndSplitter的第1行，2列再次进行分割，分割为2行1列
 	m_wndSplitter2.CreateStatic(&m_wndSplitter, 2, 1, WS_CHILD | WS_VISIBLE, m_wndSplitter.IdFromRowCol(0, 1));
-	m_wndSplitter2.CreateView(0, 0, RUNTIME_CLASS(CStreamsView), CSize(100, 200), pContext);
-	m_wndSplitter2.CreateView(1, 0, RUNTIME_CLASS(CStreamsView), CSize(100, 200), pContext);
+	m_wndSplitter2.CreateView(0, 0, RUNTIME_CLASS(CPacketsView), CSize(100, 200), pContext);
+	m_wndSplitter2.CreateView(1, 0, RUNTIME_CLASS(CPacketsView), CSize(100, 200), pContext);
 	return TRUE;
 	//return CMDIChildWndEx::OnCreateClient(lpcs, pContext);
 }

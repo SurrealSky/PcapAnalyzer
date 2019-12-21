@@ -57,10 +57,13 @@
     <ClInclude Include="PropertiesWnd.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="StreamsView.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="include.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StreamsView.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketsView.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -99,6 +102,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="StreamsView.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketsView.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

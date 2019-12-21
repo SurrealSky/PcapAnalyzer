@@ -132,7 +132,7 @@ int CPcapWindowView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	CCreateContext *pContext = (CCreateContext*)lpCreateStruct->lpCreateParams;
+	//CCreateContext *pContext = (CCreateContext*)lpCreateStruct->lpCreateParams;
 
 	return 0;
 }

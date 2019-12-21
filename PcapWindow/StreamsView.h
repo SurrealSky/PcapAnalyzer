@@ -24,6 +24,10 @@ protected:
 public:
 	virtual void OnInitialUpdate();
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
+protected:
+	afx_msg LRESULT OnStreamviewAddstream(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnStreamviewAddpacket(WPARAM wParam, LPARAM lParam);
 };
 
 

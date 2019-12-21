@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include"PcapWindowDoc.h"
 
 
 class CPcapWindowView : public CView

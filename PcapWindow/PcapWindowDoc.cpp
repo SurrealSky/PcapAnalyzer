@@ -10,6 +10,8 @@
 #endif
 
 #include "PcapWindowDoc.h"
+#include"StreamsView.h"
+#include"PacketsView.h"
 
 #include <propkey.h>
 
@@ -57,16 +59,14 @@ void CPcapWindowDoc::Serialize(CArchive& ar)
 {
 	if (ar.IsStoring())
 	{
-		// TODO: 在此添加存储代码
 	}
 	else
 	{
-		// TODO: 在此添加加载代码
-		//if (!CACap.OpenPcapFileByPacket(ar.m_strFileName.GetBuffer(0)))
-		//{
-		//	AfxMessageBox("PCAP文件错误!");
-		//	return;
-		//}
+		if (!CACap.OpenPcapFileByPacket(ar.m_strFileName.GetBuffer(0)))
+		{
+			AfxMessageBox("PCAP文件错误!");
+			return;
+		}
 	}
 }
 
@@ -143,69 +143,33 @@ void CPcapWindowDoc::Dump(CDumpContext& dc) const
 void CPcapWindowDoc::_stream_call_handler(void* uParam1, void* uParam2, unsigned int code)
 {
 	CPcapWindowDoc *p = static_cast<CPcapWindowDoc*>(uParam1);
-	p->UpdateAllViews(0, 0, p);
-	//if (p->m_viewList.GetCount()>0)
-	//{
-	//	CView *cView = static_cast<CView *>(p->m_viewList.GetHead());
-	//	p->UpdateAllViews(0, 0, p);
-	//}
-
-	CSyncStream *stream = static_cast<CSyncStream*>(uParam2);
-	if (code == 0)
+	POSITION pos = p->m_viewList.GetHeadPosition();
+	while (pos != NULL)
 	{
-		////添加流
-		//CString item = "";
-		//item.Format("%d", count + 1);
-		//p->mConnections.InsertItem(count, item);
-
-		////取第一个包的时间戳
-		//p->mConnections.SetItemText(count, 1, p->CACap.FormatTime(stream->GetTime()).c_str());
-
-		//CNetInfo net = stream->GetNetInfo();
-		//char ip[0x30] = { 0 };
-		//inet_ntop(AF_INET, (void*)&(net.srcip), ip, 16);
-		//item.Format("%s", ip);
-		//p->mConnections.SetItemText(count, 2, item);
-
-		//inet_ntop(AF_INET, (void*)&(net.dstip), ip, 16);
-		//item.Format("%s", ip);
-		//p->mConnections.SetItemText(count, 3, item);
-
-		//p->mConnections.SetItemText(count, 4, p->CACap.Protocol2String(net.proto).c_str());
-
-		//item.Format("%d", stream->GetCount());
-		//p->mConnections.SetItemText(count, 5, item);
-
-		//p->mConnections.SetItemData(count, (DWORD_PTR)(stream));
-	}
-	else if (code == 1)
-	{
-		//添加数据包
-		//for (int i = 0; i < count; i++)
-		//{
-		//	if (((CSyncStream*)(p->mConnections.GetItemData(i)))->guid == stream->guid)
-		//	{
-		//		CString item = "";
-		//		item.Format("%d", stream->GetCount());
-		//		p->mConnections.SetItemText(i, 5, item);
-		//		//判断当前项是否为选中项
-		//		POSITION Position = p->mConnections.GetFirstSelectedItemPosition();
-		//		int Item = p->mConnections.GetNextSelectedItem(Position);
-		//		if (Item != -1)
-		//		{
-		//			if (((CSyncStream*)(p->mConnections.GetItemData(Item)))->guid == stream->guid)
-		//			{
-		//				if (p->mPackets.GetItemCount() > 0)
-		//				{
-		//					//增加
-		//					CString strExp;
-		//					p->dfilterEdt.GetWindowTextA(strExp);
-		//					p->AddPacket2UI(stream->GetBack(), strExp.GetBuffer(0));
-		//				}
-		//			}
-		//		}
-		//		break;
-		//	}
-		//}
+		CView * cView = (CView *)p->m_viewList.GetNext(pos);
+		if (cView != NULL)
+		{
+			if (cView->IsKindOf(RUNTIME_CLASS(CStreamsView)))
+			{
+				switch (code)
+				{
+					case 0:
+					{
+						SendMessage(cView->m_hWnd, WM_STREAMVIEW_ADDSTREAM, (WPARAM)uParam2, (LPARAM)0);
+					}break;
+					case 1:
+					{
+						SendMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)uParam2, (LPARAM)0);
+					}break;
+				}
+			}
+			if (cView->IsKindOf(RUNTIME_CLASS(CPacketsView)))
+			{
+				if (code == 1)
+				{
+					SendMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)uParam2, (LPARAM)0);
+				}
+			}
+		}
 	}
 }

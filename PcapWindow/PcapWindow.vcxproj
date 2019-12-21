@@ -193,6 +193,7 @@
     <ClInclude Include="include.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
+    <ClInclude Include="PacketsView.h" />
     <ClInclude Include="PcapWindow.h" />
     <ClInclude Include="PcapWindowDoc.h" />
     <ClInclude Include="PcapWindowView.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
+    <ClCompile Include="PacketsView.cpp" />
     <ClCompile Include="PcapWindow.cpp" />
     <ClCompile Include="PcapWindowDoc.cpp" />
     <ClCompile Include="PcapWindowView.cpp" />
