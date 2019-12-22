@@ -5,6 +5,7 @@
 #include "PcapWindow.h"
 #include "StreamsView.h"
 #include"PcapWindowDoc.h"
+#include <WS2tcpip.h>
 
 
 // CStreamsView
@@ -104,20 +105,20 @@ afx_msg LRESULT CStreamsView::OnStreamviewAddstream(WPARAM wParam, LPARAM lParam
 		item.Format("%d", count + 1);
 		p.InsertItem(count, item);
 
-		////取第一个包的时间戳
-		//p.SetItemText(count, 1, p->CACap.FormatTime(stream->GetTime()).c_str());
+		//取第一个包的时间戳
+		p.SetItemText(count, 1, pDoc->CACap.FormatTime(stream->GetTime()).c_str());
 
-		//CNetInfo net = stream->GetNetInfo();
-		//char ip[0x30] = { 0 };
-		//inet_ntop(AF_INET, (void*)&(net.srcip), ip, 16);
-		//item.Format("%s", ip);
-		//p.SetItemText(count, 2, item);
+		CNetInfo net = stream->GetNetInfo();
+		char ip[0x30] = { 0 };
+		inet_ntop(AF_INET, (void*)&(net.srcip), ip, 16);
+		item.Format("%s", ip);
+		p.SetItemText(count, 2, item);
 
-		//inet_ntop(AF_INET, (void*)&(net.dstip), ip, 16);
-		//item.Format("%s", ip);
-		//p.SetItemText(count, 3, item);
+		inet_ntop(AF_INET, (void*)&(net.dstip), ip, 16);
+		item.Format("%s", ip);
+		p.SetItemText(count, 3, item);
 
-		//p.SetItemText(count, 4, p->CACap.Protocol2String(net.proto).c_str());
+		p.SetItemText(count, 4, pDoc->CACap.Protocol2String(net.proto).c_str());
 
 		item.Format("%d", stream->GetCount());
 		p.SetItemText(count, 5, item);

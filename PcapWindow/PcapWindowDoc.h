@@ -16,6 +16,7 @@ protected: // 仅从序列化创建
 // 特性
 public:
 	PcapAnalyzer CACap;
+	CSessions	mSessions;
 
 // 操作
 public:
@@ -53,4 +54,4 @@ public:
 
 
 #define WM_STREAMVIEW_ADDSTREAM		WM_USER+100
-#define WM_STREAMVIEW_ADDPACKET		WM_USER+100
+#define WM_STREAMVIEW_ADDPACKET		WM_USER+101

@@ -25,30 +25,20 @@ PcapAnalyzer::~PcapAnalyzer()
 	}
 }
 
-void PcapAnalyzer::InitSession(void *main,message_call_handler stream_func)
-{
-	mSessions.initcallhander(main,stream_func);
-}
-
-void PcapAnalyzer::ReleaseSession()
-{
-	mSessions.ClearStream();
-}
-
 std::vector<std::string> PcapAnalyzer::GetAllPlugins()
 {
 	return pImplAnalysis->GetAllPlugins();
 }
 
-STbool PcapAnalyzer::OpenPcapFileByPacket(std::string file, std::string plugin)
+STbool PcapAnalyzer::OpenPcapFileByPacket(CSessions &mSessions,std::string file, std::string plugin)
 {
-	ReleaseSession();
+	mSessions.ClearStream();
 	return pImplAnalysis->pcapOpen(file.c_str(),mSessions,plugin);
 }
 
-STbool PcapAnalyzer::OpenPcapFileByStream(std::string file, std::string plugin)
+STbool PcapAnalyzer::OpenPcapFileByStream(CSessions &mSessions, std::string file, std::string plugin)
 {
-	ReleaseSession();
+	mSessions.ClearStream();
 	return pImplAnalysis->capOpen(file.c_str(), mSessions, plugin);
 }
 
@@ -155,7 +145,7 @@ void PcapAnalyzer::LoadNetDevs(std::vector<NetCardInfo> &devs)
 	devs = pImplAnalysis->mSniffer.devs;
 }
 
-bool PcapAnalyzer::StartOpenSniffer(const char * name, std::string _plugin)
+bool PcapAnalyzer::StartOpenSniffer(CSessions &mSessions,const char * name, std::string _plugin)
 {
 	return pImplAnalysis->StartOpenSniffer(name,mSessions, _plugin);
 }

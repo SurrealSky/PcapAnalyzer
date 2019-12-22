@@ -32,11 +32,13 @@ END_MESSAGE_MAP()
 CPcapWindowDoc::CPcapWindowDoc()
 {
 	// TODO: 在此添加一次性构造代码
-	CACap.InitSession(this, _stream_call_handler);
+	//CACap.InitSession(this, _stream_call_handler);
+	mSessions.initcallhander(this, _stream_call_handler);
 }
 
 CPcapWindowDoc::~CPcapWindowDoc()
 {
+	mSessions.ClearStream();
 }
 
 BOOL CPcapWindowDoc::OnNewDocument()
@@ -62,7 +64,7 @@ void CPcapWindowDoc::Serialize(CArchive& ar)
 	}
 	else
 	{
-		if (!CACap.OpenPcapFileByPacket(ar.m_strFileName.GetBuffer(0)))
+		if (!CACap.OpenPcapFileByPacket(mSessions,ar.m_strFileName.GetBuffer(0)))
 		{
 			AfxMessageBox("PCAP文件错误!");
 			return;
@@ -142,6 +144,8 @@ void CPcapWindowDoc::Dump(CDumpContext& dc) const
 // CPcapWindowDoc 命令
 void CPcapWindowDoc::_stream_call_handler(void* uParam1, void* uParam2, unsigned int code)
 {
+	Sleep(1000);
+	return;
 	CPcapWindowDoc *p = static_cast<CPcapWindowDoc*>(uParam1);
 	POSITION pos = p->m_viewList.GetHeadPosition();
 	while (pos != NULL)
@@ -155,11 +159,11 @@ void CPcapWindowDoc::_stream_call_handler(void* uParam1, void* uParam2, unsigned
 				{
 					case 0:
 					{
-						SendMessage(cView->m_hWnd, WM_STREAMVIEW_ADDSTREAM, (WPARAM)uParam2, (LPARAM)0);
+						PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDSTREAM, (WPARAM)uParam2, (LPARAM)0);
 					}break;
 					case 1:
 					{
-						SendMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)uParam2, (LPARAM)0);
+						PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)uParam2, (LPARAM)0);
 					}break;
 				}
 			}
@@ -167,7 +171,7 @@ void CPcapWindowDoc::_stream_call_handler(void* uParam1, void* uParam2, unsigned
 			{
 				if (code == 1)
 				{
-					SendMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)uParam2, (LPARAM)0);
+					PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)uParam2, (LPARAM)0);
 				}
 			}
 		}

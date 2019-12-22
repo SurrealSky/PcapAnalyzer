@@ -28,23 +28,20 @@ public:
 	explicit PcapAnalyzer();
 	~PcapAnalyzer();
 private:
-	CSessions	mSessions;
+	//CSessions	mSessions;
 	CAnalysisCap * pImplAnalysis;
 	XmlFilter * pImplFilter;
-public:
-	void InitSession(void *main,message_call_handler);
-	void ReleaseSession();
 public:
 	std::vector<std::string> GetAllPlugins();
 public:
 	/*
 	*作用：调用pcap原始库进行组流，并处理业务数据包
 	*/
-	STbool OpenPcapFileByPacket(std::string,std::string plugin="");
+	STbool OpenPcapFileByPacket(CSessions&,std::string,std::string plugin="");
 	/*
 	*作用：调用第三方库进行组流,未处理业务数据包
 	*/
-	STbool OpenPcapFileByStream(std::string,std::string plugin="");
+	STbool OpenPcapFileByStream(CSessions&,std::string,std::string plugin="");
 	STbool isFileLoaded();
 private:
 	//xml操作
@@ -61,7 +58,7 @@ public:
 public:
 	//sniffer
 	void LoadNetDevs(std::vector<NetCardInfo>&);
-	bool StartOpenSniffer(const char * dev, std::string plugin = "");
+	bool StartOpenSniffer(CSessions &mSessions, const char * dev, std::string plugin = "");
 	void StopOpenSniffer();
 public:
 	//分析
