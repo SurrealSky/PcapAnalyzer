@@ -28,6 +28,9 @@ public:
 protected:
 	afx_msg LRESULT OnStreamviewAddstream(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnStreamviewAddpacket(WPARAM wParam, LPARAM lParam);
+public:
+	afx_msg void OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMClick(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
 

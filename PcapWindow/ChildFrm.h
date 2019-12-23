@@ -34,4 +34,5 @@ protected:
 public:
 	CSplitterWndEx  m_wndSplitter;
 	CSplitterWndEx  m_wndSplitter2;
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

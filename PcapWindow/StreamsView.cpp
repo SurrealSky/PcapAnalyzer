@@ -24,6 +24,8 @@ CStreamsView::~CStreamsView()
 BEGIN_MESSAGE_MAP(CStreamsView, CListView)
 	ON_MESSAGE(WM_STREAMVIEW_ADDSTREAM, &CStreamsView::OnStreamviewAddstream)
 	ON_MESSAGE(WM_STREAMVIEW_ADDPACKET, &CStreamsView::OnStreamviewAddpacket)
+	ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, &CStreamsView::OnNMCustomdraw)
+	ON_NOTIFY_REFLECT(NM_CLICK, &CStreamsView::OnNMClick)
 END_MESSAGE_MAP()
 
 
@@ -68,7 +70,7 @@ void CStreamsView::OnInitialUpdate()
 
 	listctrl.SetExtendedStyle(dwStyle);//列表风格
 
-	int width[6] = { 40,40,80, 80, 80, 40 };
+	int width[6] = { 30,105,100, 100, 40, 40 };
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -105,10 +107,9 @@ afx_msg LRESULT CStreamsView::OnStreamviewAddstream(WPARAM wParam, LPARAM lParam
 		item.Format("%d", count + 1);
 		p.InsertItem(count, item);
 
-		//取第一个包的时间戳
-		p.SetItemText(count, 1, pDoc->CACap.FormatTime(stream->GetTime()).c_str());
+		p.SetItemText(count, 1, pDoc->CACap.FormatTime(stream->time).c_str());
 
-		CNetInfo net = stream->GetNetInfo();
+		CNetInfo net = stream->net;
 		char ip[0x30] = { 0 };
 		inet_ntop(AF_INET, (void*)&(net.srcip), ip, 16);
 		item.Format("%s", ip);
@@ -145,26 +146,62 @@ afx_msg LRESULT CStreamsView::OnStreamviewAddpacket(WPARAM wParam, LPARAM lParam
 				CString item = "";
 				item.Format("%d", stream->GetCount());
 				p.SetItemText(i, 5, item);
-				//判断当前项是否为选中项
-				POSITION Position = p.GetFirstSelectedItemPosition();
-				int Item = p.GetNextSelectedItem(Position);
-				if (Item != -1)
-				{
-					if (((CSyncStream*)(p.GetItemData(Item)))->guid == stream->guid)
-					{
-						//if (p->mPackets.GetItemCount() > 0)
-						//{
-						//	//增加
-						//	CString strExp;
-						//	p->dfilterEdt.GetWindowTextA(strExp);
-						//	p->AddPacket2UI(stream->GetBack(), strExp.GetBuffer(0));
-						//}
-					}
-				}
 				break;
 			}
 		}
 	}
 	
 	return 0;
+}
+
+
+void CStreamsView::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	NMLVCUSTOMDRAW* pLVCD = reinterpret_cast<NMLVCUSTOMDRAW*>(pNMHDR);
+	*pResult = CDRF_DODEFAULT;
+	if (CDDS_PREPAINT == pLVCD->nmcd.dwDrawStage)
+	{
+		*pResult = CDRF_NOTIFYITEMDRAW;
+	}
+	else if (CDDS_ITEMPREPAINT == pLVCD->nmcd.dwDrawStage)
+	{
+		*pResult = CDRF_NOTIFYSUBITEMDRAW;
+	}
+	else if ((CDDS_ITEMPREPAINT | CDDS_SUBITEM) == pLVCD->nmcd.dwDrawStage)
+	{
+		COLORREF m_clrText2, m_clrBKcolor;
+		int nItem = static_cast<int>(pLVCD->nmcd.dwItemSpec);
+
+		POSITION pos = this->GetListCtrl().GetFirstSelectedItemPosition();
+		int index = this->GetListCtrl().GetNextSelectedItem(pos); //获取鼠标点击的哪一项索引
+
+		if (nItem == index)    //某一项被选中则显示
+		{
+			m_clrText2 = RGB(255, 255, 255);
+			m_clrBKcolor = RGB(49, 106, 197);
+		}
+		else    //其余的默认如下
+		{
+			m_clrText2 = RGB(0, 0, 0);
+			m_clrBKcolor = RGB(255, 255, 255);
+		}
+		pLVCD->clrText = m_clrText2;
+		pLVCD->clrTextBk = m_clrBKcolor;
+	}
+}
+
+
+void CStreamsView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	CPcapWindowDoc *pDoc = static_cast<CPcapWindowDoc*>(this->GetDocument());
+	if (pNMItemActivate->iItem == -1)
+	{
+		pDoc->curStream = 0;
+		return;
+	}
+	int dwIndex = pNMItemActivate->iItem;
+	pDoc->curStream = (void*)this->GetListCtrl().GetItemData(dwIndex);
+	pDoc->AddPacket2PacketView((CSyncStream*)(pDoc->curStream));
+	*pResult = 0;
 }

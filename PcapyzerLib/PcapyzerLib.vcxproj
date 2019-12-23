@@ -137,7 +137,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\CommonLib\include\enkiTS\LockLessMultiReadPipe.h" />
+    <ClInclude Include="..\CommonLib\include\enkiTS\TaskScheduler.h" />
     <ClInclude Include="..\CommonLib\include\Hex.h" />
+    <ClInclude Include="..\CommonLib\include\LogLib\DebugLog.h" />
+    <ClInclude Include="..\CommonLib\include\LogLib\log4z.h" />
     <ClInclude Include="..\CommonLib\include\typedef.h" />
     <ClInclude Include="..\CommonLib\include\xml\Markup.h" />
     <ClInclude Include="AnalysisCap.h" />
@@ -160,6 +164,9 @@
     <ClInclude Include="PcapAnalyzer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\CommonLib\include\enkiTS\TaskScheduler.cpp" />
+    <ClCompile Include="..\CommonLib\include\LogLib\DebugLog.cpp" />
+    <ClCompile Include="..\CommonLib\include\LogLib\log4z.cpp" />
     <ClCompile Include="..\CommonLib\include\xml\Markup.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>

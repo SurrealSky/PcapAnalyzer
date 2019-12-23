@@ -18,3 +18,6 @@
 //#include<Hex.h>
 //
 #pragma comment(lib,"..\\Debug\\CorePlugin.lib")
+
+
+#include<LogLib\DebugLog.h>

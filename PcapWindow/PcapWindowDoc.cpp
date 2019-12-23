@@ -31,8 +31,8 @@ END_MESSAGE_MAP()
 
 CPcapWindowDoc::CPcapWindowDoc()
 {
-	// TODO: 在此添加一次性构造代码
-	//CACap.InitSession(this, _stream_call_handler);
+	curStream = 0;
+	curPacket = 0;
 	mSessions.initcallhander(this, _stream_call_handler);
 }
 
@@ -64,11 +64,6 @@ void CPcapWindowDoc::Serialize(CArchive& ar)
 	}
 	else
 	{
-		if (!CACap.OpenPcapFileByPacket(mSessions,ar.m_strFileName.GetBuffer(0)))
-		{
-			AfxMessageBox("PCAP文件错误!");
-			return;
-		}
 	}
 }
 
@@ -144,36 +139,81 @@ void CPcapWindowDoc::Dump(CDumpContext& dc) const
 // CPcapWindowDoc 命令
 void CPcapWindowDoc::_stream_call_handler(void* uParam1, void* uParam2, unsigned int code)
 {
-	Sleep(1000);
-	return;
 	CPcapWindowDoc *p = static_cast<CPcapWindowDoc*>(uParam1);
-	POSITION pos = p->m_viewList.GetHeadPosition();
+	switch (code)
+	{
+		case 0:
+		{
+			p->AddStream2StreamView((CSyncStream*)uParam2);
+		}break;
+		case 1:
+		{
+			p->AddPacket2StreamView((CSyncStream*)uParam2);
+			//p->AddPacket2PacketView((CSyncStream*)uParam2);
+		}break;
+	}
+}
+
+void CPcapWindowDoc::AddStream2StreamView(CSyncStream *stream)
+{
+	POSITION pos = m_viewList.GetHeadPosition();
 	while (pos != NULL)
 	{
-		CView * cView = (CView *)p->m_viewList.GetNext(pos);
+		CView * cView = (CView *)m_viewList.GetNext(pos);
 		if (cView != NULL)
 		{
 			if (cView->IsKindOf(RUNTIME_CLASS(CStreamsView)))
 			{
-				switch (code)
-				{
-					case 0:
-					{
-						PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDSTREAM, (WPARAM)uParam2, (LPARAM)0);
-					}break;
-					case 1:
-					{
-						PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)uParam2, (LPARAM)0);
-					}break;
-				}
-			}
-			if (cView->IsKindOf(RUNTIME_CLASS(CPacketsView)))
-			{
-				if (code == 1)
-				{
-					PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)uParam2, (LPARAM)0);
-				}
+				PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDSTREAM, (WPARAM)stream, (LPARAM)0);
 			}
 		}
 	}
+}
+
+void CPcapWindowDoc::AddPacket2StreamView(CSyncStream *stream)
+{
+	POSITION pos = m_viewList.GetHeadPosition();
+	while (pos != NULL)
+	{
+		CView * cView = (CView *)m_viewList.GetNext(pos);
+		if (cView != NULL)
+		{
+			if (cView->IsKindOf(RUNTIME_CLASS(CStreamsView)))
+			{
+				PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)stream, (LPARAM)0);
+			}
+		}
+	}
+}
+
+void CPcapWindowDoc::AddPacket2PacketView(CSyncStream *stream)
+{
+	POSITION pos = m_viewList.GetHeadPosition();
+	while (pos != NULL)
+	{
+		CView * cView = (CView *)m_viewList.GetNext(pos);
+		if (cView != NULL)
+		{
+			if (cView->IsKindOf(RUNTIME_CLASS(CPacketsView)))
+			{
+				PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)stream, (LPARAM)0);
+			}
+		}
+	}
+}
+
+
+BOOL CPcapWindowDoc::OnOpenDocument(LPCTSTR lpszPathName)
+{
+	/*if (!CDocument::OnOpenDocument(lpszPathName))
+		return FALSE;*/
+
+	// TODO:  在此添加您专用的创建代码
+	SetPathName(lpszPathName, TRUE);
+	if (!CACap.OpenPcapFileByPacket(mSessions, GetPathName().GetString()))
+	{
+		AfxMessageBox("PCAP文件错误!");
+		return FALSE;
+	}
+	return TRUE;
 }

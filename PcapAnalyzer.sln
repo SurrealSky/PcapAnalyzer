@@ -10,6 +10,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MobileQQPlugin", "MobileQQPlugin\MobileQQPlugin.vcxproj", "{342553C4-65B6-4A07-A884-DD8ABFC8F7B8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PcapWindow", "PcapWindow\PcapWindow.vcxproj", "{ACDB5997-44BC-4F9A-B962-CA1F4576A4A7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{019BDDD5-15CE-431D-90AF-74B84F3595F0} = {019BDDD5-15CE-431D-90AF-74B84F3595F0}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

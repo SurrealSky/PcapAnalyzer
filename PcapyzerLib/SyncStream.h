@@ -31,11 +31,9 @@ private:
 	std::list<CSyncPacket> mPackets;
 public:
 	std::string		guid;
+	STu64			time;
+	CNetInfo		net;
 public:
-	STu64 GetTime()
-	{
-		return mPackets.begin()->time;
-	}
 	STu32 GetCount()
 	{
 		return mPackets.size();
@@ -51,10 +49,6 @@ public:
 	std::list<CSyncPacket>::iterator GetEnd()
 	{
 		return mPackets.end();
-	}
-	CNetInfo GetNetInfo()
-	{
-		return mPackets.begin()->mNetInfo;
 	}
 public:
 	void AddPacket(CSyncPacket packet)

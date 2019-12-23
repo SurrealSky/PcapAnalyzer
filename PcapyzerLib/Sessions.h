@@ -3,15 +3,11 @@
 #include<algorithm>
 #include"SyncStream.h"
 #include<process.h>
+#include<LogLib\DebugLog.h>
+#include<enkiTS\TaskScheduler.h>
+using namespace enki;
 
 typedef void(*message_call_handler)(void* _this, void *uParam,unsigned int code);
-
-struct argulst
-{
-	void *param1;
-	void *param2;
-	unsigned int code;
-};
 
 class CSessions
 {
@@ -21,40 +17,57 @@ public:
 	{
 		_message_func = 0;
 		_this = 0;
-		hmu= CreateMutex(NULL, FALSE, NULL);
+		g_TS.Initialize();
 	}
 	virtual ~CSessions()
 	{
-		CloseHandle(hmu);
+		g_TS.WaitforAllAndShutdown();
 	}
 private:
 	std::list<CSyncStream> mCacheStreams;
 	message_call_handler _message_func;
 	void *_this;
-	HANDLE hmu;
+	TaskScheduler g_TS;
 private:
-	static unsigned int __stdcall ThreadFunc(void* pParam)
-	{
-		argulst *p = static_cast<argulst*>(pParam);
-		CSessions *s = static_cast<CSessions*>(p->param1);
-		WaitForSingleObject(s->hmu, INFINITE);//µÈ´ý»¥³âÁ¿
-		s->_message_func(s->_this, (void*)(p->param2), p->code);
-		delete p;
-		p = 0;
-		ReleaseMutex(s->hmu);
-		return 0;
-	}
+	struct ParallelTaskSet : enki::ITaskSet {
+		//ParallelTaskSet() { m_SetSize = 1000; }
+		void *param1;
+		void *param2;
+		unsigned int code;
+		virtual void    ExecuteRange(enki::TaskSetPartition range, uint32_t threadnum) {
+			// do something here, can issue tasks with g_TS
+			CSessions *argu1 = static_cast<CSessions*>(param1);
+			CSyncStream *argu2 = static_cast<CSyncStream*>(param2);
+			argu1->_message_func(argu1->_this, param2, code);
+		}
+	};
+	struct PinnedTask : enki::IPinnedTask {
+		void *param1;
+		void *param2;
+		unsigned int code;
+		virtual void    Execute() {
+			// do something here, can issue tasks with g_TS
+			CSessions *argu1 = static_cast<CSessions*>(param1);
+			CSyncStream *argu2 = static_cast<CSyncStream*>(param2);
+			argu1->_message_func(argu1->_this, param2, code);
+		}
+	};
 private:
 	void AddStream(CSyncStream stream)
 	{
 		mCacheStreams.push_back(stream);
 		if (_message_func)
 		{
-			argulst *argus=new argulst();
-			argus->param1 = this;
-			argus->param2 = FindStreamByGuid(stream.guid);
-			argus->code = 0;
-			_beginthreadex(NULL, 0, ThreadFunc, argus, 0, 0);
+			PinnedTask task;
+			//ParallelTaskSet task; // default constructor has a set size of 1
+			task.param1 = this;
+			task.param2 = FindStreamByGuid(stream.guid);
+			task.code = 0;
+			//g_TS.AddTaskSetToPipe(&task);
+			g_TS.AddPinnedTask(&task);
+			g_TS.RunPinnedTasks();
+
+			g_TS.WaitforTask(&task);
 		}	
 	}
 public:
@@ -83,16 +96,23 @@ public:
 		stream->AddPacket(packet);
 		if (_message_func)
 		{
-			argulst *argus=new argulst();
-			argus->param1 = this;
-			argus->param2 = stream;
-			argus->code = 1;
-			_beginthreadex(NULL, 0, ThreadFunc, argus, 0, 0);
+			PinnedTask task;
+			//ParallelTaskSet task; // default constructor has a set size of 1
+			task.param1 = this;
+			task.param2 = stream;
+			task.code = 1;
+			//g_TS.AddTaskSetToPipe(&task);
+			g_TS.AddPinnedTask(&task);
+			g_TS.RunPinnedTasks();
+
+			g_TS.WaitforTask(&task);
 		}
 	}
 	void AddNewPacket(CSyncPacket packet)
 	{
 		CSyncStream m;
+		m.net = packet.mNetInfo;
+		m.time = packet.time;
 		AddStream(m);
 		AddPacket(m.guid, packet);
 	}

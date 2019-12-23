@@ -25,6 +25,12 @@
     <Filter Include="Filter">
       <UniqueIdentifier>{9ba03f52-fb92-493c-95d2-4b73d1d12879}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CommonLib\LogLib">
+      <UniqueIdentifier>{01cb1b38-07bb-405a-aa9b-8b6ae2893d67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommonLib\enkiTS">
+      <UniqueIdentifier>{79243bac-7844-416a-9c13-52b5d8db52e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -68,6 +74,15 @@
     </ClCompile>
     <ClCompile Include="PacketCapture.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\LogLib\DebugLog.cpp">
+      <Filter>CommonLib\LogLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\LogLib\log4z.cpp">
+      <Filter>CommonLib\LogLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\enkiTS\TaskScheduler.cpp">
+      <Filter>CommonLib\enkiTS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +148,18 @@
     </ClInclude>
     <ClInclude Include="include.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\LogLib\DebugLog.h">
+      <Filter>CommonLib\LogLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\LogLib\log4z.h">
+      <Filter>CommonLib\LogLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\enkiTS\LockLessMultiReadPipe.h">
+      <Filter>CommonLib\enkiTS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\enkiTS\TaskScheduler.h">
+      <Filter>CommonLib\enkiTS</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

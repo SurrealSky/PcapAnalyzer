@@ -17,7 +17,8 @@ protected: // 仅从序列化创建
 public:
 	PcapAnalyzer CACap;
 	CSessions	mSessions;
-
+	void *curStream;
+	void *curPacket;
 // 操作
 public:
 
@@ -50,6 +51,11 @@ protected:
 #endif // SHARED_HANDLERS
 public:
 	static void _stream_call_handler(void* uParam, void* stream, unsigned int code);
+	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
+public:
+	void AddStream2StreamView(CSyncStream*);
+	void AddPacket2StreamView(CSyncStream*);
+	void AddPacket2PacketView(CSyncStream*);
 };
 
 
