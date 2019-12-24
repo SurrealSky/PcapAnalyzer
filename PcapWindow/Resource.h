@@ -85,14 +85,16 @@
 #define IDS_EDIT_MENU                   306
 #define IDD_PACKETSVIEW                 310
 #define IDD_AUTO_CTRL                   311
+#define IDD_DIALOG1                     311
+#define IDC_COMBO1                      1000
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        310
+#define _APS_NEXT_RESOURCE_VALUE        313
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

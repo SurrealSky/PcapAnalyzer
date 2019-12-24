@@ -190,6 +190,7 @@
     <ClInclude Include="AutoComplete.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ClassView.h" />
+    <ClInclude Include="DlgPlugins.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="MainFrm.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="AutoComplete.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ClassView.cpp" />
+    <ClCompile Include="DlgPlugins.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />

@@ -225,32 +225,32 @@ void CFileView::OnSetFocus(CWnd* pOldWnd)
 
 void CFileView::OnChangeVisualStyle()
 {
-	m_wndToolBar.CleanUpLockedImages();
-	m_wndToolBar.LoadBitmap(theApp.m_bHiColorIcons ? IDB_EXPLORER_24 : IDR_EXPLORER, 0, 0, TRUE /* 锁定*/);
+	//m_wndToolBar.CleanUpLockedImages();
+	//m_wndToolBar.LoadBitmap(theApp.m_bHiColorIcons ? IDB_EXPLORER_24 : IDR_EXPLORER, 0, 0, TRUE /* 锁定*/);
 
-	m_FileViewImages.DeleteImageList();
+	//m_FileViewImages.DeleteImageList();
 
-	UINT uiBmpId = theApp.m_bHiColorIcons ? IDB_FILE_VIEW_24 : IDB_FILE_VIEW;
+	//UINT uiBmpId = theApp.m_bHiColorIcons ? IDB_FILE_VIEW_24 : IDB_FILE_VIEW;
 
-	CBitmap bmp;
-	if (!bmp.LoadBitmap(uiBmpId))
-	{
-		TRACE(_T("无法加载位图: %x\n"), uiBmpId);
-		ASSERT(FALSE);
-		return;
-	}
+	//CBitmap bmp;
+	//if (!bmp.LoadBitmap(uiBmpId))
+	//{
+	//	TRACE(_T("无法加载位图: %x\n"), uiBmpId);
+	//	ASSERT(FALSE);
+	//	return;
+	//}
 
-	BITMAP bmpObj;
-	bmp.GetBitmap(&bmpObj);
+	//BITMAP bmpObj;
+	//bmp.GetBitmap(&bmpObj);
 
-	UINT nFlags = ILC_MASK;
+	//UINT nFlags = ILC_MASK;
 
-	nFlags |= (theApp.m_bHiColorIcons) ? ILC_COLOR24 : ILC_COLOR4;
+	//nFlags |= (theApp.m_bHiColorIcons) ? ILC_COLOR24 : ILC_COLOR4;
 
-	m_FileViewImages.Create(16, bmpObj.bmHeight, nFlags, 0, 0);
-	m_FileViewImages.Add(&bmp, RGB(255, 0, 255));
+	//m_FileViewImages.Create(16, bmpObj.bmHeight, nFlags, 0, 0);
+	//m_FileViewImages.Add(&bmp, RGB(255, 0, 255));
 
-	m_wndFileView.SetImageList(&m_FileViewImages, TVSIL_NORMAL);
+	//m_wndFileView.SetImageList(&m_FileViewImages, TVSIL_NORMAL);
 }
 
 

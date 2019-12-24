@@ -12,6 +12,7 @@
 #include "PcapWindowDoc.h"
 #include"StreamsView.h"
 #include"PacketsView.h"
+#include"DlgPlugins.h"
 
 #include <propkey.h>
 
@@ -209,11 +210,21 @@ BOOL CPcapWindowDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		return FALSE;*/
 
 	// TODO:  在此添加您专用的创建代码
-	SetPathName(lpszPathName, TRUE);
-	if (!CACap.OpenPcapFileByPacket(mSessions, GetPathName().GetString()))
+	std::string plugin = "";
+	CDlgPlugins mdlg;
+	INT_PTR RESULT=mdlg.DoModal();
+	if (RESULT == IDOK)
 	{
-		AfxMessageBox("PCAP文件错误!");
-		return FALSE;
+		SetPathName(lpszPathName, TRUE);
+		if (!CACap.OpenPcapFileByPacket(mSessions, GetPathName().GetString(), mdlg.plugin))
+		{
+			AfxMessageBox("PCAP文件错误!");
+			return FALSE;
+		}
+	}
+	else
+	{
+
 	}
 	return TRUE;
 }

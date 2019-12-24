@@ -27,7 +27,7 @@ PcapAnalyzer::~PcapAnalyzer()
 
 std::vector<std::string> PcapAnalyzer::GetAllPlugins()
 {
-	return pImplAnalysis->GetAllPlugins();
+	return CAnalysisCap::GetAllPlugins();
 }
 
 STbool PcapAnalyzer::OpenPcapFileByPacket(CSessions &mSessions,std::string file, std::string plugin)

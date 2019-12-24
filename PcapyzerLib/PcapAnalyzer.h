@@ -32,7 +32,7 @@ private:
 	CAnalysisCap * pImplAnalysis;
 	XmlFilter * pImplFilter;
 public:
-	std::vector<std::string> GetAllPlugins();
+	static std::vector<std::string> GetAllPlugins();
 public:
 	/*
 	*作用：调用pcap原始库进行组流，并处理业务数据包

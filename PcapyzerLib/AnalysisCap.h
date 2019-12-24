@@ -13,7 +13,7 @@ public:
 private:
 	std::string plugin;
 public:
-	std::vector<std::string> GetAllPlugins();
+	static std::vector<std::string> GetAllPlugins();
 public:
 	//使用Packetyzer::Analyzers::cPcapFile自动组流再分析
 	bool capOpen(const char *, CSessions &,std::string plugin);

@@ -26,8 +26,8 @@ public:
 protected:
 
 	CViewTree m_wndFileView;
-	CImageList m_FileViewImages;
-	CFileViewToolBar m_wndToolBar;
+	//CImageList m_FileViewImages;
+	//CFileViewToolBar m_wndToolBar;
 
 protected:
 	void FillFileView();
