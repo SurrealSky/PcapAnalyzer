@@ -14,10 +14,21 @@
 #pragma comment(lib, "..\\Release\\PcapyzerLib.lib")
 #endif
 
-//#include<CodedConvert.h>
-//#include<Hex.h>
-//
+#include<CodedConvert.h>
+#include<Hex.h>
+
 #pragma comment(lib,"..\\Debug\\CorePlugin.lib")
 
 
 #include<LogLib\DebugLog.h>
+
+
+//message
+//CAutoComplete
+#define WM_SHOWDROP		WM_USER + 201
+#define WM_UPDATEUI		WM_USER + 202
+
+#define WM_STREAMVIEW_ADDSTREAM		WM_USER+100
+#define WM_STREAMVIEW_ADDPACKET		WM_USER+101
+#define WM_HEXVIEW_PACKET			WM_USER+102
+#define WM_ANALYSISVIEW_MAP			WM_USER+103

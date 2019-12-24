@@ -13,6 +13,7 @@
 #include"StreamsView.h"
 #include"PacketsView.h"
 #include"DlgPlugins.h"
+#include"AnalysisView.h"
 
 #include <propkey.h>
 
@@ -203,6 +204,28 @@ void CPcapWindowDoc::AddPacket2PacketView(CSyncStream *stream)
 	}
 }
 
+void CPcapWindowDoc::Packet2HexView(CSyncPacket* packet)
+{
+	CWinAppEx *pApp = (CWinAppEx *)AfxGetApp();
+	pApp->GetMainWnd()->SendMessage(WM_HEXVIEW_PACKET, (WPARAM)packet, (LPARAM)0);
+}
+
+void CPcapWindowDoc::Result2AnalysisView(std::map<std::string, std::string> result)
+{
+	curResult = result;
+	POSITION pos = m_viewList.GetHeadPosition();
+	while (pos != NULL)
+	{
+		CView * cView = (CView *)m_viewList.GetNext(pos);
+		if (cView != NULL)
+		{
+			if (cView->IsKindOf(RUNTIME_CLASS(CAnalysisView)))
+			{
+				PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)0, (LPARAM)0);
+			}
+		}
+	}
+}
 
 BOOL CPcapWindowDoc::OnOpenDocument(LPCTSTR lpszPathName)
 {
@@ -224,7 +247,7 @@ BOOL CPcapWindowDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	}
 	else
 	{
-
+		return FALSE;
 	}
 	return TRUE;
 }

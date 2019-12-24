@@ -8,6 +8,7 @@
 #include"StreamsView.h"
 #include"PcapWindowView.h"
 #include"PacketsView.h"
+#include"AnalysisView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -73,7 +74,7 @@ BOOL CChildFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	//将分割类对象m_wndSplitter的第1行，2列再次进行分割，分割为2行1列
 	m_wndSplitter2.CreateStatic(&m_wndSplitter, 2, 1, WS_CHILD | WS_VISIBLE, m_wndSplitter.IdFromRowCol(0, 1));
 	m_wndSplitter2.CreateView(0, 0, RUNTIME_CLASS(CPacketsView), CSize(width/2, height/2), pContext);
-	m_wndSplitter2.CreateView(1, 0, RUNTIME_CLASS(CPacketsView), CSize(width/2, height/2), pContext);
+	m_wndSplitter2.CreateView(1, 0, RUNTIME_CLASS(CAnalysisView), CSize(width/2, height/2), pContext);
 	return TRUE;
 	//return CMDIChildWndEx::OnCreateClient(lpcs, pContext);
 }

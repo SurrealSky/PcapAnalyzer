@@ -46,11 +46,15 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	const DWORD dwStyle = LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL;
 
 	if (!m_wndOutputText.Create(dwStyle, rectDummy, &m_wndTabs, 2) ||
-		!m_wndOutputHex.Create(dwStyle, rectDummy, &m_wndTabs, 3))
+		!m_wndOutputHex.Create("SoftCircuitsHexEdit","SoftCircuitsHexEdit", WS_CHILD, rectDummy,&m_wndTabs,3))
 	{
 		TRACE0("未能创建输出窗口\n");
 		return -1;      // 未能创建
 	}
+	m_wndOutputHex.SetWideView(TRUE);
+	//m_wndOutputHex.SetReadOnly(TRUE);
+	//BYTE buffer[0x100] = { 0xff };
+	//m_wndOutputHex.SetData(sizeof(buffer), buffer);
 
 	UpdateFonts();
 
@@ -108,15 +112,21 @@ void COutputWnd::FillBuildWindow()
 
 void COutputWnd::FillDebugWindow()
 {
-	m_wndOutputHex.AddString(_T("调试输出正显示在此处。"));
-	m_wndOutputHex.AddString(_T("输出正显示在列表视图的行中"));
-	m_wndOutputHex.AddString(_T("但您可以根据需要更改其显示方式..."));
+	//m_wndOutputHex.AddString(_T("调试输出正显示在此处。"));
+	//m_wndOutputHex.AddString(_T("输出正显示在列表视图的行中"));
+	//m_wndOutputHex.AddString(_T("但您可以根据需要更改其显示方式..."));
 }
 
 void COutputWnd::UpdateFonts()
 {
 	m_wndOutputText.SetFont(&afxGlobalData.fontRegular);
-	m_wndOutputHex.SetFont(&afxGlobalData.fontRegular);
+	//m_wndOutputHex.SetFont(&afxGlobalData.fontRegular);
+}
+
+void COutputWnd::Data2HexView(STu64 length, STu8 *data)
+{
+	m_wndTabs.SetActiveTab(1);
+	m_wndOutputHex.SetData(length, data);
 }
 
 /////////////////////////////////////////////////////////////////////////////

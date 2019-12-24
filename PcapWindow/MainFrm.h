@@ -56,6 +56,7 @@ protected:
 
 	BOOL CreateDockingWindows();
 	void SetDockingWindowIcons(BOOL bHiColorIcons);
+	afx_msg LRESULT OnHexviewPacket(WPARAM wParam, LPARAM lParam);
 };
 
 

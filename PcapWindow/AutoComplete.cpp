@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "AutoComplete.h"
 #include<list>
+#include"include.h"
 
 
 // CAutoComplete

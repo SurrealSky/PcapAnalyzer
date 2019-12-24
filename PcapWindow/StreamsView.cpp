@@ -201,7 +201,7 @@ void CStreamsView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 		return;
 	}
 	int dwIndex = pNMItemActivate->iItem;
-	pDoc->curStream = (void*)this->GetListCtrl().GetItemData(dwIndex);
+	pDoc->curStream = (CSyncStream*)this->GetListCtrl().GetItemData(dwIndex);
 	pDoc->AddPacket2PacketView((CSyncStream*)(pDoc->curStream));
 	*pResult = 0;
 }

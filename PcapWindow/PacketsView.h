@@ -37,10 +37,14 @@ public:
 	afx_msg void OnCbnEditchangeCombo();
 protected:
 	afx_msg LRESULT OnStreamviewAddpacket(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnUpdateui(WPARAM wParam, LPARAM lParam);
 public:
 	virtual void OnInitialUpdate();
+	afx_msg void OnPacketsNMClick(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult);
 public:
-	void AddPacket2UI(CSyncPacket*, std::string strExp);
+	void AddPacket2UI(CSyncPacket*, std::string strExp);	
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 

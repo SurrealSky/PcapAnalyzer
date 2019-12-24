@@ -2,9 +2,6 @@
 
 
 // CAutoComplete
-#define WM_SHOWDROP WM_USER + 101
-
-#define WM_UPDATEUI		(WM_USER + 0x001)
 
 class CAutoComplete : public CComboBox
 {

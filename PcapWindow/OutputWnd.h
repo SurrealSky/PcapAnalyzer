@@ -1,5 +1,7 @@
 
 #pragma once
+#include"HexEdit.h"
+#include"include.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // COutputList ´°¿Ú
@@ -36,7 +38,9 @@ protected:
 	CMFCTabCtrl	m_wndTabs;
 
 	COutputList m_wndOutputText;
-	COutputList m_wndOutputHex;
+	//COutputList m_wndOutputHex;
+	//CDlgHexView m_wndOutputHex;
+	CHexEdit	m_wndOutputHex;
 
 protected:
 	void FillBuildWindow();
@@ -53,5 +57,7 @@ protected:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 
 	DECLARE_MESSAGE_MAP()
+public:
+	void Data2HexView(STu64 length,STu8 *data);
 };
 

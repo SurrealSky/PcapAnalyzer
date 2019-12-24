@@ -2,6 +2,7 @@
 // Microsoft Visual C++ 生成的包含文件。
 // 供 PcapWindow.rc 使用
 //
+#define IDR_HEXCTRLMENU                 4
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
 #define IDR_POPUP_EDIT                  119
@@ -84,15 +85,25 @@
 #define IDS_EXPLORER                    305
 #define IDS_EDIT_MENU                   306
 #define IDD_PACKETSVIEW                 310
-#define IDD_AUTO_CTRL                   311
 #define IDD_DIALOG1                     311
+#define IDD_AUTO_CTRL                   312
+#define IDD_PACKETS_LIST				313
 #define IDC_COMBO1                      1000
+#define ID_EDIT_DELETE                  32777
+#define ID_EDIT_SELECTALL               32778
+#define ID_COPY_BINARY                  32779
+#define ID_COPY_STRING                  32780
+#define ID_PASTE_BINARY                 32781
+#define ID_PASTE_STRING                 32782
+#define ID_COPY_HEXSTRING               32791
+#define ID_PASTE_HEXSTRING              32792
+#define ID_COPY_VIEW                    32793
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        313
+#define _APS_NEXT_RESOURCE_VALUE        315
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           311

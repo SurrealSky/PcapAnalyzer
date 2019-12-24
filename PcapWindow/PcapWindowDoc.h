@@ -17,8 +17,9 @@ protected: // 仅从序列化创建
 public:
 	PcapAnalyzer CACap;
 	CSessions	mSessions;
-	void *curStream;
+	CSyncStream *curStream;
 	void *curPacket;
+	std::map<std::string, std::string> curResult;
 // 操作
 public:
 
@@ -56,8 +57,6 @@ public:
 	void AddStream2StreamView(CSyncStream*);
 	void AddPacket2StreamView(CSyncStream*);
 	void AddPacket2PacketView(CSyncStream*);
+	void Packet2HexView(CSyncPacket*);
+	void Result2AnalysisView(std::map<std::string, std::string>);
 };
-
-
-#define WM_STREAMVIEW_ADDSTREAM		WM_USER+100
-#define WM_STREAMVIEW_ADDPACKET		WM_USER+101

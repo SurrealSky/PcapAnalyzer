@@ -31,7 +31,10 @@ BEGIN_MESSAGE_MAP(CPacketsView, CFormView)
 	ON_WM_SIZE()
 	ON_MESSAGE(WM_STREAMVIEW_ADDPACKET, &CPacketsView::OnStreamviewAddpacket)
 	ON_CBN_SELCHANGE(IDD_AUTO_CTRL, &CPacketsView::OnCbnSelchangeCombo)
+	ON_NOTIFY(NM_CLICK,IDD_PACKETS_LIST, &CPacketsView::OnPacketsNMClick)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDD_PACKETS_LIST, &CPacketsView::OnNMCustomdraw)
 	ON_CBN_EDITCHANGE(IDD_AUTO_CTRL, &CPacketsView::OnCbnEditchangeCombo)
+	ON_MESSAGE(WM_UPDATEUI, &CPacketsView::OnUpdateui)
 END_MESSAGE_MAP()
 
 
@@ -64,7 +67,7 @@ int CPacketsView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CRect rect;
 	GetClientRect(&rect);
 	//rect.bottom -= 250;
-	packets.Create(WS_BORDER | WS_VISIBLE | LVS_REPORT, rect, this, -1);
+	packets.Create(WS_BORDER | WS_VISIBLE | LVS_REPORT, rect, this, IDD_PACKETS_LIST);
 	DWORD dwStyle = 0;
 	dwStyle |= LVS_EX_FULLROWSELECT;
 	dwStyle |= LVS_EX_GRIDLINES;
@@ -130,6 +133,25 @@ afx_msg LRESULT CPacketsView::OnStreamviewAddpacket(WPARAM wParam, LPARAM lParam
 		}
 	}
 	return 0;
+}
+
+void CPacketsView::OnPacketsNMClick(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+
+	if (pNMLV->iItem == -1) return;
+	int dwIndex = pNMLV->iItem;
+	//第几项
+	CPcapWindowDoc *pDoc = static_cast<CPcapWindowDoc*>(this->GetDocument());
+	CSyncPacket *packet= static_cast<CSyncPacket*>((void*)packets.GetItemData(dwIndex));
+	if (packet->_payload.size() > 0)
+	{
+		std::map<std::string, std::string> result;
+		result = pDoc->CACap.PacketAnalysis(packet->_payload, packet->mNetInfo.srcport, packet->mNetInfo.dstport);
+		pDoc->Result2AnalysisView(result);
+		pDoc->Packet2HexView((CSyncPacket*)(packets.GetItemData(dwIndex)));
+	}
+	*pResult = 0;
 }
 
 void CPacketsView::OnInitialUpdate()
@@ -217,4 +239,79 @@ void CPacketsView::AddPacket2UI(CSyncPacket *pack, std::string strExp)
 
 	packets.SetItemData(count, (DWORD_PTR)(pack));
 	packets.EnsureVisible(count, FALSE);
+}
+
+void CPacketsView::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	NMLVCUSTOMDRAW* pLVCD = reinterpret_cast<NMLVCUSTOMDRAW*>(pNMHDR);
+	*pResult = CDRF_DODEFAULT;
+	if (CDDS_PREPAINT == pLVCD->nmcd.dwDrawStage)
+	{
+		*pResult = CDRF_NOTIFYITEMDRAW;
+	}
+	else if (CDDS_ITEMPREPAINT == pLVCD->nmcd.dwDrawStage)
+	{
+		*pResult = CDRF_NOTIFYSUBITEMDRAW;
+	}
+	else if ((CDDS_ITEMPREPAINT | CDDS_SUBITEM) == pLVCD->nmcd.dwDrawStage)
+	{
+		COLORREF m_clrText2, m_clrBKcolor;
+		int nItem = static_cast<int>(pLVCD->nmcd.dwItemSpec);
+
+		POSITION pos = packets.GetFirstSelectedItemPosition();
+		int index = packets.GetNextSelectedItem(pos); //获取鼠标点击的哪一项索引
+
+		if (nItem == index)    //某一项被选中则显示
+		{
+			m_clrText2 = RGB(255, 255, 255);
+			m_clrBKcolor = RGB(49, 106, 197);
+		}
+		else    //其余的默认如下
+		{
+			m_clrText2 = RGB(0, 0, 0);
+			m_clrBKcolor = RGB(255, 255, 255);
+		}
+		pLVCD->clrText = m_clrText2;
+		pLVCD->clrTextBk = m_clrBKcolor;
+	}
+}
+
+
+afx_msg LRESULT CPacketsView::OnUpdateui(WPARAM wParam, LPARAM lParam)
+{
+	CPcapWindowDoc *pDoc = static_cast<CPcapWindowDoc*>(this->GetDocument());
+	switch (wParam)
+	{
+		case 0x0004:
+		{
+			CString exp = "";
+			dfilterEdt.GetWindowTextA(exp);
+			std::string strExp;
+			strExp = exp;
+			if (pDoc->curStream != 0&& pDoc->curStream->GetCount()>0)
+			{
+				packets.DeleteAllItems();
+				//mAnalysisResult.DeleteAllItems();
+				//mHexView.SetData(0, 0);
+				std::list<CSyncPacket>::iterator iter;
+				for (iter = pDoc->curStream->GetBegin(); iter != pDoc->curStream->GetEnd(); iter++)
+				{
+					AddPacket2UI(&(*iter), strExp);
+				}
+			}
+		}break;
+	}
+	return 0;
+}
+
+
+BOOL CPacketsView::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_RETURN)
+	{
+		dfilterEdt.PostMessage(WM_CHAR, (WPARAM)VK_RETURN, 0);
+		return TRUE;
+	}
+	return CFormView::PreTranslateMessage(pMsg);
 }

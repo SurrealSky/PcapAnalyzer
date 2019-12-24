@@ -72,6 +72,12 @@
     <ClInclude Include="DlgPlugins.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="HexEdit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AnalysisView.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PcapWindow.cpp">
@@ -117,6 +123,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="DlgPlugins.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HexEdit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalysisView.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
