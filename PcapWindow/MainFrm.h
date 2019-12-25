@@ -7,8 +7,7 @@
 #include "ClassView.h"
 #include "OutputWnd.h"
 #include "PropertiesWnd.h"
-#include<SkinUI\SkinComboBox.h>
-#include<SkinUI\SkinButton.h>
+#include"include.h"
 
 class CMainFrame : public CMDIFrameWndEx
 {
@@ -44,7 +43,8 @@ protected:  // 控件条嵌入成员
 	CClassView        m_wndClassView;
 	COutputWnd        m_wndOutput;
 	CPropertiesWnd    m_wndProperties;
-	//CSkinComboBox		m_wndZoom;
+	//CSkinComboBox	m_wndDevs;
+	//CSkinButton			m_StartCapture;
 	CComboBox		m_wndDevs;
 	CComboBox		m_wndDisplayFilter;
 

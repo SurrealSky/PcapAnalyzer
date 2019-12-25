@@ -203,22 +203,41 @@ void CMainFrame::LoadUI()
 {
 	int index = 0;
 	RECT rect;
-	while (m_wndToolBar.GetItemID(index) != ID_APP_ABOUT)
-		index++;
-	//设置指定工具项的宽度并获取新的区域  80是宽度
-	m_wndToolBar.SetButtonInfo(index, ID_APP_ABOUT, TBBS_SEPARATOR, 80);
-	m_wndToolBar.GetItemRect(index, &rect);
-	//设置位置
-	rect.top += 2;
-	rect.bottom += 200;
-	// 创建并显示控件
-	if (!m_wndDevs.Create(WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_DROPDOWNLIST | CBS_HASSTRINGS, rect,
-		&m_wndToolBar, ID_APP_ABOUT))
-	{
-		TRACE0("Failed to create combo-box\n");
-		return;
-	}
-	m_wndDevs.ShowWindow(SW_SHOW);
+	
+
+	//while (m_wndToolBar.GetItemID(index) != ID_APP_ABOUT)
+	//	index++;
+	////设置指定工具项的宽度并获取新的区域  80是宽度
+	//m_wndToolBar.SetButtonInfo(index, ID_APP_ABOUT, TBBS_SEPARATOR|TBBS_BUTTON, 80);
+	//m_wndToolBar.GetItemRect(index, &rect);
+	////设置位置
+	//rect.top += 2;
+	//rect.bottom += 200;
+	//// 创建并显示控件
+	//if (!m_StartCapture.Create("",WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_DROPDOWNLIST | CBS_HASSTRINGS, rect,
+	//	&m_wndToolBar, ID_APP_ABOUT))
+	//{
+	//	TRACE0("Failed to create combo-box\n");
+	//	return;
+	//}
+	//m_StartCapture.SetBackImage("explorer_hc.bmp", "explorer_hc.bmp", "explorer_hc.bmp", "explorer_hc.bmp");
+	//m_StartCapture.ShowWindow(SW_SHOW);
+
+	//while (m_wndToolBar.GetItemID(index) != ID_APP_ABOUT)
+	//	index++;
+	////设置指定工具项的宽度并获取新的区域  80是宽度
+	//m_wndToolBar.SetButtonInfo(index, ID_APP_ABOUT, TBBS_SEPARATOR, 80);
+	//m_wndToolBar.GetItemRect(index, &rect);
+	////设置位置
+	//rect.top += 2;
+	//rect.bottom += 200;
+	//// 创建并显示控件
+	//if (!m_wndDevs.Create(WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_DROPDOWNLIST | CBS_HASSTRINGS, rect,
+	//	&m_wndToolBar, ID_APP_ABOUT))
+	//{
+	//	TRACE0("Failed to create combo-box\n");
+	//	return;
+	//}
 
 	//while (m_wndToolBar.GetItemID(index) != ID_APP_ABOUT)
 	//	index++;

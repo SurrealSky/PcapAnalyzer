@@ -19,6 +19,9 @@
     <Filter Include="CommonLib\SkinUI">
       <UniqueIdentifier>{7e94c780-6937-4dda-aaac-b820caa94d09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CommonLib\LibUIDK">
+      <UniqueIdentifier>{86273fbb-08d4-4a3c-ac5b-b95eeaa2b38d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -155,6 +158,9 @@
     </ClInclude>
     <ClInclude Include="..\CommonLib\include\SkinUI\SkinUI_ScrollBar.h">
       <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\LibUIDK\LibUIDK.h">
+      <Filter>CommonLib\LibUIDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -358,6 +364,15 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\toolbar1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\x-capture-restart.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\x-capture-start.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\x-capture-stop.png">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

@@ -22,6 +22,18 @@
 
 #include<LogLib\DebugLog.h>
 
+//#include<LibUIDK\LibUIDK.h>
+//using namespace LibUIDK;
+//using namespace Render;
+//using namespace ImageManager;
+//using namespace FontManager;
+//using namespace ControlResMgr;
+//
+//#ifdef _DEBUG
+//#pragma comment(lib, "Debug\\LibUIDK100d.lib")
+//#else
+//#pragma comment(lib, "Release\\LibUIDK100.lib")
+//#endif
 
 //message
 //CAutoComplete
