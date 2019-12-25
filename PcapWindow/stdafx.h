@@ -9,6 +9,24 @@
 #define VC_EXTRALEAN            // 从 Windows 头中排除极少使用的资料
 #endif
 
+
+//#ifndef WINVER
+//#define WINVER 0x0602
+//#endif
+//
+//#ifndef _WIN32_WINNT
+//#define _WIN32_WINNT 0x0500
+//#endif
+//
+//#ifndef _WIN32_WINDOWS
+//#define _WIN32_WINDOWS 0x0602
+//#endif
+//
+//#ifndef _WIN32_IE
+//#define _WIN32_IE 0x0602
+//#endif
+
+
 #include "targetver.h"
 
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // 某些 CString 构造函数将是显式的
@@ -33,11 +51,6 @@
 
 #include <afxcontrolbars.h>     // 功能区和控件条的 MFC 支持
 #include <afxcview.h>
-
-
-
-
-
 
 
 

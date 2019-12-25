@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="CommonLib">
+      <UniqueIdentifier>{c99d086e-e9d2-4fe3-9007-06df49a9b4bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommonLib\SkinUI">
+      <UniqueIdentifier>{7e94c780-6937-4dda-aaac-b820caa94d09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -78,6 +84,78 @@
     <ClInclude Include="AnalysisView.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinToolBar.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinUI.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\Function.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\Macro.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\MemoryDC.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\ImageEx.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\RenderManager.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\ISkinControl.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\GifImage.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinButton.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinComboBox.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinDialog.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinEdit.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinListBox.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinListCtrl.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinMenu.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinProgressCtrl.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinRichEdit.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinSliderCtrl.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinTabCtrl.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinTreeCtrl.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\FlashControl.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\internal.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinUI_ScrollBar.h">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PcapWindow.cpp">
@@ -130,6 +208,66 @@
     </ClCompile>
     <ClCompile Include="AnalysisView.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinToolBar.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\MemoryDC.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\ImageEx.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\RenderManager.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\ISkinControl.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\GifImage.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinButton.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinComboBox.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinDialog.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinEdit.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinListBox.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinListCtrl.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinMenu.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinProgressCtrl.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinRichEdit.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinSliderCtrl.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinTabCtrl.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinTreeCtrl.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\FlashControl.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinUI_ScrollBar.cpp">
+      <Filter>CommonLib\SkinUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +355,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\Toolbar256.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\toolbar1.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

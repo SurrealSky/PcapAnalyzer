@@ -87,7 +87,7 @@
 #define IDD_PACKETSVIEW                 310
 #define IDD_DIALOG1                     311
 #define IDD_AUTO_CTRL                   312
-#define IDD_PACKETS_LIST				313
+#define IDD_PACKETS_LIST                313
 #define IDC_COMBO1                      1000
 #define ID_EDIT_DELETE                  32777
 #define ID_EDIT_SELECTALL               32778
@@ -103,7 +103,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        315
+#define _APS_NEXT_RESOURCE_VALUE        317
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           311

@@ -7,6 +7,8 @@
 #include "ClassView.h"
 #include "OutputWnd.h"
 #include "PropertiesWnd.h"
+#include<SkinUI\SkinComboBox.h>
+#include<SkinUI\SkinButton.h>
 
 class CMainFrame : public CMDIFrameWndEx
 {
@@ -42,6 +44,9 @@ protected:  // 控件条嵌入成员
 	CClassView        m_wndClassView;
 	COutputWnd        m_wndOutput;
 	CPropertiesWnd    m_wndProperties;
+	//CSkinComboBox		m_wndZoom;
+	CComboBox		m_wndDevs;
+	CComboBox		m_wndDisplayFilter;
 
 // 生成的消息映射函数
 protected:
@@ -57,6 +62,8 @@ protected:
 	BOOL CreateDockingWindows();
 	void SetDockingWindowIcons(BOOL bHiColorIcons);
 	afx_msg LRESULT OnHexviewPacket(WPARAM wParam, LPARAM lParam);
+private:
+	void LoadUI();
 };
 
 

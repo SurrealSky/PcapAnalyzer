@@ -187,6 +187,30 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\CommonLib\include\SkinUI\FlashControl.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\Function.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\GifImage.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\ImageEx.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\internal.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\ISkinControl.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\Macro.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\MemoryDC.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\RenderManager.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinButton.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinComboBox.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinDialog.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinEdit.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinListBox.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinListCtrl.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinMenu.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinProgressCtrl.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinRichEdit.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinSliderCtrl.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinTabCtrl.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinToolBar.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinTreeCtrl.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinUI.h" />
+    <ClInclude Include="..\CommonLib\include\SkinUI\SkinUI_ScrollBar.h" />
     <ClInclude Include="AnalysisView.h" />
     <ClInclude Include="AutoComplete.h" />
     <ClInclude Include="ChildFrm.h" />
@@ -209,6 +233,66 @@
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\CommonLib\include\SkinUI\FlashControl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\GifImage.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\ImageEx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\ISkinControl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\MemoryDC.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\RenderManager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinButton.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinComboBox.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinDialog.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinEdit.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinListBox.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinListCtrl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinMenu.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinProgressCtrl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinRichEdit.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinSliderCtrl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinTabCtrl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinToolBar.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinTreeCtrl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\SkinUI\SkinUI_ScrollBar.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="AnalysisView.cpp" />
     <ClCompile Include="AutoComplete.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
@@ -265,6 +349,7 @@
     <Image Include="res\sort.bmp" />
     <Image Include="res\sort_hc.bmp" />
     <Image Include="res\Toolbar.bmp" />
+    <Image Include="res\toolbar1.bmp" />
     <Image Include="res\Toolbar256.bmp" />
     <Image Include="UserImages.bmp" />
   </ItemGroup>

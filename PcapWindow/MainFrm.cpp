@@ -77,12 +77,15 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// 防止菜单栏在激活时获得焦点
 	CMFCPopupMenu::SetForceMenuFocus(FALSE);
 
+	//系统默认工具栏
 	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
 		!m_wndToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME))
 	{
 		TRACE0("未能创建工具栏\n");
 		return -1;      // 未能创建
 	}
+
+	LoadUI();
 
 	CString strToolBarName;
 	bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
@@ -92,7 +95,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CString strCustomize;
 	bNameValid = strCustomize.LoadString(IDS_TOOLBAR_CUSTOMIZE);
 	ASSERT(bNameValid);
-	m_wndToolBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
+	//m_wndToolBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
+	// 去掉工具栏最右侧的自定义按钮
+	m_wndToolBar.EnableCustomizeButton(FALSE, ID_VIEW_CUSTOMIZE, strCustomize);
 
 	// 允许用户定义的工具栏操作: 
 	InitUserToolbars(NULL, uiFirstUserToolBarId, uiLastUserToolBarId);
@@ -105,8 +110,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
 
 	// TODO: 如果您不希望工具栏和菜单栏可停靠，请删除这五行
-	m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
-	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+	//m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);	//禁止菜单栏浮动
+	//m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);	//禁止工具栏浮动
 	EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndMenuBar);
 	DockPane(&m_wndToolBar);
@@ -143,8 +148,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// 启用增强的窗口管理对话框
 	EnableWindowsDialog(ID_WINDOW_MANAGER, ID_WINDOW_MANAGER, TRUE);
 
-	// 启用工具栏和停靠窗口菜单替换
-	EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
+	// 启用工具栏和停靠窗口菜单替换(屏蔽菜单 自定义 项)
+	EnablePaneMenu(TRUE, /*ID_VIEW_CUSTOMIZE*/0, strCustomize, ID_VIEW_TOOLBAR);
 
 	// 启用快速(按住 Alt 拖动)工具栏自定义
 	CMFCToolBar::EnableQuickCustomization();
@@ -192,6 +197,45 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	ModifyStyle(0, FWS_PREFIXTITLE);
 
 	return 0;
+}
+
+void CMainFrame::LoadUI()
+{
+	int index = 0;
+	RECT rect;
+	while (m_wndToolBar.GetItemID(index) != ID_APP_ABOUT)
+		index++;
+	//设置指定工具项的宽度并获取新的区域  80是宽度
+	m_wndToolBar.SetButtonInfo(index, ID_APP_ABOUT, TBBS_SEPARATOR, 80);
+	m_wndToolBar.GetItemRect(index, &rect);
+	//设置位置
+	rect.top += 2;
+	rect.bottom += 200;
+	// 创建并显示控件
+	if (!m_wndDevs.Create(WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_DROPDOWNLIST | CBS_HASSTRINGS, rect,
+		&m_wndToolBar, ID_APP_ABOUT))
+	{
+		TRACE0("Failed to create combo-box\n");
+		return;
+	}
+	m_wndDevs.ShowWindow(SW_SHOW);
+
+	//while (m_wndToolBar.GetItemID(index) != ID_APP_ABOUT)
+	//	index++;
+	////设置指定工具项的宽度并获取新的区域  80是宽度
+	//m_wndToolBar.SetButtonInfo(index, ID_APP_ABOUT, TBBS_SEPARATOR, 80);
+	//m_wndToolBar.GetItemRect(index, &rect);
+	////设置位置
+	//rect.top += 2;
+	//rect.bottom += 200;
+	//// 创建并显示控件
+	//if (!m_wndDisplayFilter.Create(WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_DROPDOWNLIST | CBS_HASSTRINGS, rect,
+	//	&m_wndToolBar, ID_APP_ABOUT))
+	//{
+	//	TRACE0("Failed to create combo-box\n");
+	//	return;
+	//}
+	//m_wndDisplayFilter.ShowWindow(SW_SHOW);
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
