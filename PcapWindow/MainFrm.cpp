@@ -7,6 +7,7 @@
 
 #include "MainFrm.h"
 #include"include.h"
+#include"resource.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -79,28 +80,28 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//系统默认工具栏
 	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
-		!m_wndToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME))
+		!m_wndToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME_256))
 	{
 		TRACE0("未能创建工具栏\n");
 		return -1;      // 未能创建
 	}
 
-	LoadUI();
+	//LoadUI();
 
-	CString strToolBarName;
-	bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
-	ASSERT(bNameValid);
-	m_wndToolBar.SetWindowText(strToolBarName);
+	//CString strToolBarName;
+	//bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
+	//ASSERT(bNameValid);
+	//m_wndToolBar.SetWindowText(strToolBarName);
 
 	CString strCustomize;
 	bNameValid = strCustomize.LoadString(IDS_TOOLBAR_CUSTOMIZE);
 	ASSERT(bNameValid);
 	//m_wndToolBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
 	// 去掉工具栏最右侧的自定义按钮
-	m_wndToolBar.EnableCustomizeButton(FALSE, ID_VIEW_CUSTOMIZE, strCustomize);
+	//m_wndToolBar.EnableCustomizeButton(FALSE, ID_VIEW_CUSTOMIZE, strCustomize);
 
 	// 允许用户定义的工具栏操作: 
-	InitUserToolbars(NULL, uiFirstUserToolBarId, uiLastUserToolBarId);
+	//InitUserToolbars(NULL, uiFirstUserToolBarId, uiLastUserToolBarId);
 
 	if (!m_wndStatusBar.Create(this))
 	{
@@ -152,16 +153,16 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	EnablePaneMenu(TRUE, /*ID_VIEW_CUSTOMIZE*/0, strCustomize, ID_VIEW_TOOLBAR);
 
 	// 启用快速(按住 Alt 拖动)工具栏自定义
-	CMFCToolBar::EnableQuickCustomization();
+	//CMFCToolBar::EnableQuickCustomization();
 
-	if (CMFCToolBar::GetUserImages() == NULL)
-	{
-		// 加载用户定义的工具栏图像
-		if (m_UserImages.Load(_T(".\\UserImages.bmp")))
-		{
-			CMFCToolBar::SetUserImages(&m_UserImages);
-		}
-	}
+	//if (CMFCToolBar::GetUserImages() == NULL)
+	//{
+	//	// 加载用户定义的工具栏图像
+	//	if (m_UserImages.Load(_T(".\\UserImages.bmp")))
+	//	{
+	//		CMFCToolBar::SetUserImages(&m_UserImages);
+	//	}
+	//}
 
 	// 启用菜单个性化(最近使用的命令)
 	// TODO: 定义您自己的基本命令，确保每个下拉菜单至少有一个基本命令。
@@ -203,58 +204,84 @@ void CMainFrame::LoadUI()
 {
 	int index = 0;
 	RECT rect;
-	
+	int width = 20;
+	int num = 0;
+	m_wndToolBar.GetItemRect(0, &rect);
+	m_wndToolBar.GetItemRect(1, &rect);
+	m_wndToolBar.GetItemRect(2, &rect);
+	m_wndToolBar.GetItemRect(3, &rect);
+	m_wndToolBar.GetItemRect(4, &rect);
+	m_wndToolBar.GetItemRect(5, &rect);
 
-	//while (m_wndToolBar.GetItemID(index) != ID_APP_ABOUT)
-	//	index++;
-	////设置指定工具项的宽度并获取新的区域  80是宽度
-	//m_wndToolBar.SetButtonInfo(index, ID_APP_ABOUT, TBBS_SEPARATOR|TBBS_BUTTON, 80);
-	//m_wndToolBar.GetItemRect(index, &rect);
-	////设置位置
-	//rect.top += 2;
-	//rect.bottom += 200;
-	//// 创建并显示控件
-	//if (!m_StartCapture.Create("",WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_DROPDOWNLIST | CBS_HASSTRINGS, rect,
-	//	&m_wndToolBar, ID_APP_ABOUT))
-	//{
-	//	TRACE0("Failed to create combo-box\n");
-	//	return;
-	//}
-	//m_StartCapture.SetBackImage("explorer_hc.bmp", "explorer_hc.bmp", "explorer_hc.bmp", "explorer_hc.bmp");
-	//m_StartCapture.ShowWindow(SW_SHOW);
+	//设置指定工具项的宽度并获取新的区域  20是宽度
+	index = m_wndToolBar.CommandToIndex(ID_CAPTURE_START);
+	m_wndToolBar.SetButtonInfo(index, ID_CAPTURE_START, TBBS_SEPARATOR, 0);
+	m_wndToolBar.GetItemRect(index, &rect);
+	rect.left += width*(num++) + 2;
+	rect.top += 2;
+	// 创建并显示控件
+	if (!m_StartCapture.Create("",WS_CHILD | WS_VISIBLE, rect,
+		&m_wndToolBar, ID_CAPTURE_START))
+	{
+		TRACE0("Failed to create combo-box\n");
+		return;
+	}
+	// 设置按钮1图片
+	m_StartCapture.SetImagePng(IDB_PNG4);
+	m_StartCapture.SetTransparentColor(RGB(74, 144, 226), 100, 155);//設置按鈕顯示半透明貼膜
+	m_StartCapture.ShowWindow(SW_HIDE);
 
-	//while (m_wndToolBar.GetItemID(index) != ID_APP_ABOUT)
-	//	index++;
-	////设置指定工具项的宽度并获取新的区域  80是宽度
-	//m_wndToolBar.SetButtonInfo(index, ID_APP_ABOUT, TBBS_SEPARATOR, 80);
-	//m_wndToolBar.GetItemRect(index, &rect);
-	////设置位置
-	//rect.top += 2;
-	//rect.bottom += 200;
-	//// 创建并显示控件
-	//if (!m_wndDevs.Create(WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_DROPDOWNLIST | CBS_HASSTRINGS, rect,
-	//	&m_wndToolBar, ID_APP_ABOUT))
-	//{
-	//	TRACE0("Failed to create combo-box\n");
-	//	return;
-	//}
+	//设置指定工具项的宽度并获取新的区域  80是宽度
+	index = m_wndToolBar.CommandToIndex(ID_CAPTURE_STOP);
+	m_wndToolBar.SetButtonInfo(index, ID_CAPTURE_STOP, TBBS_SEPARATOR, 0);
+	m_wndToolBar.GetItemRect(index, &rect);
+	rect.left += width*(num++) + 2;
+	rect.top += 2;
+	// 创建并显示控件
+	if (!m_StopCapture.Create("", WS_CHILD | WS_VISIBLE, rect,
+		&m_wndToolBar, ID_CAPTURE_STOP))
+	{
+		TRACE0("Failed to create combo-box\n");
+		return;
+	}
+	// 设置按钮1图片
+	m_StopCapture.SetImagePng(IDB_PNG5);
+	m_StopCapture.SetTransparentColor(RGB(74, 144, 226), 100, 155);//設置按鈕顯示半透明貼膜
+	m_StopCapture.ShowWindow(SW_HIDE);
 
-	//while (m_wndToolBar.GetItemID(index) != ID_APP_ABOUT)
-	//	index++;
-	////设置指定工具项的宽度并获取新的区域  80是宽度
-	//m_wndToolBar.SetButtonInfo(index, ID_APP_ABOUT, TBBS_SEPARATOR, 80);
-	//m_wndToolBar.GetItemRect(index, &rect);
-	////设置位置
-	//rect.top += 2;
-	//rect.bottom += 200;
-	//// 创建并显示控件
-	//if (!m_wndDisplayFilter.Create(WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_DROPDOWNLIST | CBS_HASSTRINGS, rect,
-	//	&m_wndToolBar, ID_APP_ABOUT))
-	//{
-	//	TRACE0("Failed to create combo-box\n");
-	//	return;
-	//}
-	//m_wndDisplayFilter.ShowWindow(SW_SHOW);
+	//设置指定工具项的宽度并获取新的区域  80是宽度
+	index = m_wndToolBar.CommandToIndex(ID_CAPTURE_RESTART);
+	m_wndToolBar.SetButtonInfo(index, ID_CAPTURE_RESTART, TBBS_SEPARATOR,0);
+	m_wndToolBar.GetItemRect(index, &rect);
+	rect.left += width*(num++) + 2;
+	rect.top += 2;
+	// 创建并显示控件
+	if (!m_RestartCapture.Create("", WS_CHILD | WS_VISIBLE, rect,
+		&m_wndToolBar, ID_CAPTURE_RESTART))
+	{
+		TRACE0("Failed to create combo-box\n");
+		return;
+	}
+	// 设置按钮1图片
+	m_RestartCapture.SetImagePng(IDB_PNG6);
+	m_RestartCapture.SetTransparentColor(RGB(74, 144, 226), 100, 155);//設置按鈕顯示半透明貼膜
+	m_RestartCapture.ShowWindow(SW_HIDE);
+
+	//设置指定工具项的宽度并获取新的区域  20是宽度
+	index = m_wndToolBar.CommandToIndex(ID_NET_DEVS);
+	m_wndToolBar.SetButtonInfo(index, ID_NET_DEVS, TBBS_SEPARATOR, 0);
+	m_wndToolBar.GetItemRect(index, &rect);
+	rect.left += width*(num++) + 2;
+	rect.top += 2;
+	// 创建并显示控件
+	if (!m_wndDevs.Create(WS_CHILD | WS_VISIBLE, rect,
+		&m_wndToolBar, ID_NET_DEVS))
+	{
+		TRACE0("Failed to create combo-box\n");
+		return;
+	}
+	// 设置按钮1图片
+	m_wndDevs.ShowWindow(SW_HIDE);
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
@@ -372,7 +399,7 @@ LRESULT CMainFrame::OnToolbarCreateNew(WPARAM wp,LPARAM lp)
 		return 0;
 	}
 
-	CMFCToolBar* pUserToolbar = (CMFCToolBar*)lres;
+	/*CMFCToolBar* pUserToolbar = (CMFCToolBar*)lres;
 	ASSERT_VALID(pUserToolbar);
 
 	BOOL bNameValid;
@@ -380,7 +407,7 @@ LRESULT CMainFrame::OnToolbarCreateNew(WPARAM wp,LPARAM lp)
 	bNameValid = strCustomize.LoadString(IDS_TOOLBAR_CUSTOMIZE);
 	ASSERT(bNameValid);
 
-	pUserToolbar->EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
+	pUserToolbar->EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);*/
 	return lres;
 }
 
@@ -470,22 +497,30 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 		return FALSE;
 	}
 
-
 	// 为所有用户工具栏启用自定义按钮
-	BOOL bNameValid;
-	CString strCustomize;
-	bNameValid = strCustomize.LoadString(IDS_TOOLBAR_CUSTOMIZE);
-	ASSERT(bNameValid);
+	//BOOL bNameValid;
+	//CString strCustomize;
+	//bNameValid = strCustomize.LoadString(IDS_TOOLBAR_CUSTOMIZE);
+	//ASSERT(bNameValid);
 
-	for (int i = 0; i < iMaxUserToolbars; i ++)
-	{
-		CMFCToolBar* pUserToolbar = GetUserToolBarByIndex(i);
-		if (pUserToolbar != NULL)
-		{
-			pUserToolbar->EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
-		}
-	}
-
+	//for (int i = 0; i < iMaxUserToolbars; i ++)
+	//{
+	//	CMFCToolBar* pUserToolbar = GetUserToolBarByIndex(i);
+	//	if (pUserToolbar != NULL)
+	//	{
+	//		pUserToolbar->EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
+	//	}
+	//}
+	//必须在主界面ui绘制结束才能进行其它UI绘制
+	LoadUI();
+	m_StartCapture.ShowWindow(SW_SHOW);
+	m_StartCapture.Invalidate(TRUE);
+	m_StopCapture.ShowWindow(SW_SHOW);
+	m_StopCapture.Invalidate(TRUE);
+	m_RestartCapture.ShowWindow(SW_SHOW);
+	m_RestartCapture.Invalidate(TRUE);
+	m_wndDevs.ShowWindow(SW_HIDE);
+	m_wndDevs.Invalidate(TRUE);
 	return TRUE;
 }
 

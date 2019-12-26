@@ -21,6 +21,10 @@
 
 BEGIN_MESSAGE_MAP(CPcapWindowApp, CWinAppEx)
 	ON_COMMAND(ID_APP_ABOUT, &CPcapWindowApp::OnAppAbout)
+	ON_COMMAND(ID_CAPTURE_START, &CWinAppEx::OnFileNew)
+	ON_COMMAND(ID_CAPTURE_STOP, &CWinAppEx::OnFileNew)
+	ON_COMMAND(ID_CAPTURE_RESTART, &CWinAppEx::OnFileNew)
+	ON_COMMAND(ID_NET_DEVS, &CWinAppEx::OnFileNew)
 	// 基于文件的标准文档命令
 	ON_COMMAND(ID_FILE_NEW, &CWinAppEx::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)

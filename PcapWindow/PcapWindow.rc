@@ -98,9 +98,7 @@ IDI_PROPERTIES_WND_HC   ICON                    "res\\properties_wnd_hc.ico"
 // Bitmap
 //
 
-IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
-
-IDR_MAINFRAME_256       BITMAP                  "res\\Toolbar256.bmp"
+IDR_MAINFRAME_256       BITMAP                  "res\\Toolbar.bmp"
 
 IDR_SORT                BITMAP                  "res\\sort.bmp"
 
@@ -132,32 +130,16 @@ IDB_PROPERTIES_HC       BITMAP                  "res\\properties_hc.bmp"
 // Toolbar
 //
 
-IDR_MAINFRAME TOOLBAR 16, 15
-BEGIN
-    BUTTON      ID_FILE_NEW
-    BUTTON      ID_FILE_OPEN
-    BUTTON      ID_FILE_SAVE
-    SEPARATOR
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    SEPARATOR
-    BUTTON      ID_FILE_PRINT
-    BUTTON      ID_APP_ABOUT
-END
-
 IDR_MAINFRAME_256 TOOLBAR 16, 15
 BEGIN
     BUTTON      ID_FILE_NEW
     BUTTON      ID_FILE_OPEN
     BUTTON      ID_FILE_SAVE
     SEPARATOR
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    SEPARATOR
-    BUTTON      ID_FILE_PRINT
-    BUTTON      ID_APP_ABOUT
+    BUTTON      ID_CAPTURE_START
+    BUTTON      ID_CAPTURE_STOP
+    BUTTON      ID_CAPTURE_RESTART
+    BUTTON      ID_NET_DEVS
 END
 
 IDR_SORT TOOLBAR 16, 15
@@ -532,6 +514,24 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// PNG
+//
+
+IDB_PNG1                PNG                     "res\\x-capture-restart.png"
+
+IDB_PNG2                PNG                     "res\\x-capture-start.png"
+
+IDB_PNG3                PNG                     "res\\x-capture-stop.png"
+
+IDB_PNG4                PNG                     "res\\1.png"
+
+IDB_PNG5                PNG                     "res\\2.png"
+
+IDB_PNG6                PNG                     "res\\3.png"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
@@ -688,6 +688,14 @@ STRINGTABLE
 BEGIN
     IDS_TEXT_TAB            "文本"
     IDS_HEX_TAB             "HexView"
+END
+
+STRINGTABLE
+BEGIN
+    ID_CAPTURE_START        "捕获\n捕获"
+    ID_CAPTURE_STOP         "停止捕获\n停止"
+    ID_CAPTURE_RESTART      "重新捕获\n重新"
+    ID_NET_DEVS             "网卡列表\n网卡"
 END
 
 #endif    // 中文(简体，中国) resources

@@ -8,6 +8,8 @@
 #include "OutputWnd.h"
 #include "PropertiesWnd.h"
 #include"include.h"
+#include"PngButton.h"
+
 
 class CMainFrame : public CMDIFrameWndEx
 {
@@ -43,10 +45,11 @@ protected:  // 控件条嵌入成员
 	CClassView        m_wndClassView;
 	COutputWnd        m_wndOutput;
 	CPropertiesWnd    m_wndProperties;
-	//CSkinComboBox	m_wndDevs;
-	//CSkinButton			m_StartCapture;
+	CPngButton		m_StartCapture;
+	CPngButton		m_StopCapture;
+	CPngButton		m_RestartCapture;
 	CComboBox		m_wndDevs;
-	CComboBox		m_wndDisplayFilter;
+	CComboBox		m_wndPlugins;
 
 // 生成的消息映射函数
 protected:

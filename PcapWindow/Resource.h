@@ -88,7 +88,17 @@
 #define IDD_DIALOG1                     311
 #define IDD_AUTO_CTRL                   312
 #define IDD_PACKETS_LIST                313
+#define IDB_PNG1                        317
+#define IDB_PNG2                        318
+#define IDB_PNG3                        319
+#define IDB_PNG4                        321
+#define IDB_PNG5                        322
+#define IDB_PNG6                        323
 #define IDC_COMBO1                      1000
+#define ID_CAPTURE_START                32771
+#define ID_CAPTURE_STOP                 32772
+#define ID_CAPTURE_RESTART              32773
+#define ID_NET_DEVS                     32774
 #define ID_EDIT_DELETE                  32777
 #define ID_EDIT_SELECTALL               32778
 #define ID_COPY_BINARY                  32779
@@ -103,8 +113,8 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        317
-#define _APS_NEXT_COMMAND_VALUE         32771
+#define _APS_NEXT_RESOURCE_VALUE        324
+#define _APS_NEXT_COMMAND_VALUE         32775
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           311
 #endif
