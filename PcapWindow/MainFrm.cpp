@@ -268,9 +268,14 @@ void CMainFrame::LoadUI()
 		return;
 	}
 	// 设置按钮1图片
-	m_StartCapture.SetImagePng(IDB_PNG4);
-	m_StartCapture.SetTransparentColor(RGB(74, 144, 226), 100, 155);//設置按鈕顯示半透明貼膜
-	m_StartCapture.ShowWindow(SW_HIDE);
+	m_StartCapture.SetBackImage(NULL, TEXT("Res\\Button\\allbtn_highlight.png"), TEXT("Res\\Button\\allbtn_down.png"), NULL);
+	m_StartCapture.SetIconImage(TEXT("Res\\Button\\message.png"));
+	m_StartCapture.SetButtonType(en_IconButton);
+	//m_StartCapture.SetParentBack(hParentDC);
+	m_StartCapture.SetSize(22, 22);
+	//m_StartCapture.SetImagePng(IDB_PNG4);
+	//m_StartCapture.SetTransparentColor(RGB(74, 144, 226), 100, 155);//設置按鈕顯示半透明貼膜
+	//m_StartCapture.ShowWindow(SW_HIDE);
 
 	//设置指定工具项的宽度并获取新的区域  80是宽度
 	//index = m_wndToolBar.CommandToIndex(ID_CAPTURE_STOP);

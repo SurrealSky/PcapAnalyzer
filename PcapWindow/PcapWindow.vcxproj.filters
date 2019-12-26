@@ -19,6 +19,9 @@
     <Filter Include="pngbutton">
       <UniqueIdentifier>{c8711309-7039-45ba-8f04-04ea20bc5c5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SkinCommbox">
+      <UniqueIdentifier>{1f4db71c-bb41-4c69-9d2d-23f9ae4ed9b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -87,6 +90,27 @@
     <ClInclude Include="PngButton.h">
       <Filter>pngbutton</Filter>
     </ClInclude>
+    <ClInclude Include="SkinComboBox.h">
+      <Filter>SkinCommbox</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageEx.h">
+      <Filter>SkinCommbox</Filter>
+    </ClInclude>
+    <ClInclude Include="ISkinControl.h">
+      <Filter>SkinCommbox</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderManager.h">
+      <Filter>SkinCommbox</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryDC.h">
+      <Filter>SkinCommbox</Filter>
+    </ClInclude>
+    <ClInclude Include="Macro.h">
+      <Filter>SkinCommbox</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinButton.h">
+      <Filter>SkinCommbox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PcapWindow.cpp">
@@ -142,6 +166,24 @@
     </ClCompile>
     <ClCompile Include="PngButton.cpp">
       <Filter>pngbutton</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinComboBox.cpp">
+      <Filter>SkinCommbox</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageEx.cpp">
+      <Filter>SkinCommbox</Filter>
+    </ClCompile>
+    <ClCompile Include="ISkinControl.cpp">
+      <Filter>SkinCommbox</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderManager.cpp">
+      <Filter>SkinCommbox</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryDC.cpp">
+      <Filter>SkinCommbox</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinButton.cpp">
+      <Filter>SkinCommbox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

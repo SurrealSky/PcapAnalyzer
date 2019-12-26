@@ -194,8 +194,12 @@
     <ClInclude Include="DlgPlugins.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="HexEdit.h" />
+    <ClInclude Include="ImageEx.h" />
     <ClInclude Include="include.h" />
+    <ClInclude Include="ISkinControl.h" />
+    <ClInclude Include="Macro.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="MemoryDC.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="PacketsView.h" />
     <ClInclude Include="PcapWindow.h" />
@@ -203,7 +207,10 @@
     <ClInclude Include="PcapWindowView.h" />
     <ClInclude Include="PngButton.h" />
     <ClInclude Include="PropertiesWnd.h" />
+    <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SkinButton.h" />
+    <ClInclude Include="SkinComboBox.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StreamsView.h" />
     <ClInclude Include="targetver.h" />
@@ -219,7 +226,10 @@
     <ClCompile Include="HexEdit.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ImageEx.cpp" />
+    <ClCompile Include="ISkinControl.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="MemoryDC.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PacketsView.cpp" />
     <ClCompile Include="PcapWindow.cpp" />
@@ -227,6 +237,9 @@
     <ClCompile Include="PcapWindowView.cpp" />
     <ClCompile Include="PngButton.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
+    <ClCompile Include="RenderManager.cpp" />
+    <ClCompile Include="SkinButton.cpp" />
+    <ClCompile Include="SkinComboBox.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
