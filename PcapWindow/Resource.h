@@ -99,6 +99,7 @@
 #define ID_CAPTURE_STOP                 32772
 #define ID_CAPTURE_RESTART              32773
 #define ID_NET_DEVS                     32774
+#define ID_PLUGINS						32775
 #define ID_EDIT_DELETE                  32777
 #define ID_EDIT_SELECTALL               32778
 #define ID_COPY_BINARY                  32779

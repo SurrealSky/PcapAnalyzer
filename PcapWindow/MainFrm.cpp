@@ -86,7 +86,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // 未能创建
 	}
 
-	//LoadUI();
+	LoadUI();
 
 	//CString strToolBarName;
 	//bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
@@ -205,20 +205,61 @@ void CMainFrame::LoadUI()
 	int index = 0;
 	RECT rect;
 	int width = 20;
+	int offset = 0;
 	int num = 0;
 	m_wndToolBar.GetItemRect(0, &rect);
 	m_wndToolBar.GetItemRect(1, &rect);
 	m_wndToolBar.GetItemRect(2, &rect);
-	m_wndToolBar.GetItemRect(3, &rect);
-	m_wndToolBar.GetItemRect(4, &rect);
-	m_wndToolBar.GetItemRect(5, &rect);
+
+	////设置指定工具项的宽度并获取新的区域  20是宽度
+	////index = m_wndToolBar.CommandToIndex(ID_NET_DEVS);
+	//index = 3;
+	//m_wndToolBar.SetButtonInfo(index, ID_PLUGINS, TBBS_SEPARATOR, 1);
+	//m_wndToolBar.GetItemRect(index, &rect);
+	//rect.right = rect.left + width * 4;
+	//offset = rect.right;
+	//rect.bottom += 100;
+	////rect.top += 2;
+	////rect.bottom -= 5;
+	//// 创建并显示控件
+	//if (!m_wndPlugins.Create(WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL, rect,
+	//	&m_wndToolBar, ID_PLUGINS))
+	//{
+	//	TRACE0("Failed to create combo-box\n");
+	//	return;
+	//}
+	//m_wndPlugins.ShowWindow(SW_HIDE);
 
 	//设置指定工具项的宽度并获取新的区域  20是宽度
-	index = m_wndToolBar.CommandToIndex(ID_CAPTURE_START);
-	m_wndToolBar.SetButtonInfo(index, ID_CAPTURE_START, TBBS_SEPARATOR, 0);
+	//index = m_wndToolBar.CommandToIndex(ID_NET_DEVS);
+	index = 3;
+	m_wndToolBar.SetButtonInfo(index, ID_NET_DEVS, TBBS_SEPARATOR, 1);
 	m_wndToolBar.GetItemRect(index, &rect);
-	rect.left += width*(num++) + 2;
+	rect.right = rect.left + width * 8;
+	offset = rect.right;
+	rect.bottom += 100;
+	//rect.top += 2;
+	rect.bottom -= 5;
+	// 创建并显示控件
+	if (!m_wndDevs.Create(WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL, rect,
+		&m_wndToolBar, ID_NET_DEVS))
+	{
+		TRACE0("Failed to create combo-box\n");
+		return;
+	}
+	// 设置按钮1图片
+	m_wndDevs.ShowWindow(SW_HIDE);
+
+	//设置指定工具项的宽度并获取新的区域  20是宽度
+	//index=m_wndToolBar.GetCount();
+	index = 4;
+	m_wndToolBar.SetButtonInfo(index, ID_CAPTURE_START, TBBS_SEPARATOR, 1);
+	m_wndToolBar.GetItemRect(index, &rect);
+	rect.left = offset;
+	rect.right = rect.left + width;
+	offset = rect.right;
 	rect.top += 2;
+	rect.bottom -= 2;
 	// 创建并显示控件
 	if (!m_StartCapture.Create("",WS_CHILD | WS_VISIBLE, rect,
 		&m_wndToolBar, ID_CAPTURE_START))
@@ -232,11 +273,15 @@ void CMainFrame::LoadUI()
 	m_StartCapture.ShowWindow(SW_HIDE);
 
 	//设置指定工具项的宽度并获取新的区域  80是宽度
-	index = m_wndToolBar.CommandToIndex(ID_CAPTURE_STOP);
-	m_wndToolBar.SetButtonInfo(index, ID_CAPTURE_STOP, TBBS_SEPARATOR, 0);
+	//index = m_wndToolBar.CommandToIndex(ID_CAPTURE_STOP);
+	index = 5;
+	m_wndToolBar.SetButtonInfo(index, ID_CAPTURE_STOP, TBBS_SEPARATOR, 1);
 	m_wndToolBar.GetItemRect(index, &rect);
-	rect.left += width*(num++) + 2;
+	rect.left = offset;
+	rect.right = rect.left + width;
+	offset = rect.right;
 	rect.top += 2;
+	rect.bottom -= 2;
 	// 创建并显示控件
 	if (!m_StopCapture.Create("", WS_CHILD | WS_VISIBLE, rect,
 		&m_wndToolBar, ID_CAPTURE_STOP))
@@ -250,11 +295,15 @@ void CMainFrame::LoadUI()
 	m_StopCapture.ShowWindow(SW_HIDE);
 
 	//设置指定工具项的宽度并获取新的区域  80是宽度
-	index = m_wndToolBar.CommandToIndex(ID_CAPTURE_RESTART);
-	m_wndToolBar.SetButtonInfo(index, ID_CAPTURE_RESTART, TBBS_SEPARATOR,0);
+	//index = m_wndToolBar.CommandToIndex(ID_CAPTURE_RESTART);
+	index = 6;
+	m_wndToolBar.SetButtonInfo(index, ID_CAPTURE_RESTART, TBBS_SEPARATOR,1);
 	m_wndToolBar.GetItemRect(index, &rect);
-	rect.left += width*(num++) + 2;
+	rect.left = offset;
+	rect.right = rect.left + width;
+	offset = rect.right;
 	rect.top += 2;
+	rect.bottom -= 2;
 	// 创建并显示控件
 	if (!m_RestartCapture.Create("", WS_CHILD | WS_VISIBLE, rect,
 		&m_wndToolBar, ID_CAPTURE_RESTART))
@@ -266,22 +315,6 @@ void CMainFrame::LoadUI()
 	m_RestartCapture.SetImagePng(IDB_PNG6);
 	m_RestartCapture.SetTransparentColor(RGB(74, 144, 226), 100, 155);//設置按鈕顯示半透明貼膜
 	m_RestartCapture.ShowWindow(SW_HIDE);
-
-	//设置指定工具项的宽度并获取新的区域  20是宽度
-	index = m_wndToolBar.CommandToIndex(ID_NET_DEVS);
-	m_wndToolBar.SetButtonInfo(index, ID_NET_DEVS, TBBS_SEPARATOR, 0);
-	m_wndToolBar.GetItemRect(index, &rect);
-	rect.left += width*(num++) + 2;
-	rect.top += 2;
-	// 创建并显示控件
-	if (!m_wndDevs.Create(WS_CHILD | WS_VISIBLE, rect,
-		&m_wndToolBar, ID_NET_DEVS))
-	{
-		TRACE0("Failed to create combo-box\n");
-		return;
-	}
-	// 设置按钮1图片
-	m_wndDevs.ShowWindow(SW_HIDE);
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
@@ -512,15 +545,11 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 	//	}
 	//}
 	//必须在主界面ui绘制结束才能进行其它UI绘制
-	LoadUI();
+	//m_wndPlugins.ShowWindow(SW_SHOW);
+	m_wndDevs.ShowWindow(SW_SHOW);
 	m_StartCapture.ShowWindow(SW_SHOW);
-	m_StartCapture.Invalidate(TRUE);
 	m_StopCapture.ShowWindow(SW_SHOW);
-	m_StopCapture.Invalidate(TRUE);
 	m_RestartCapture.ShowWindow(SW_SHOW);
-	m_RestartCapture.Invalidate(TRUE);
-	m_wndDevs.ShowWindow(SW_HIDE);
-	m_wndDevs.Invalidate(TRUE);
 	return TRUE;
 }
 
