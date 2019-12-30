@@ -59,4 +59,8 @@ public:
 	void AddPacket2PacketView(CSyncStream*);
 	void Packet2HexView(CSyncPacket*);
 	void Result2AnalysisView(std::map<std::string, std::string>);
+public:
+	void OnCaptureStop();
+	void OnCaptureRestart();
+	virtual void OnCloseDocument();
 };

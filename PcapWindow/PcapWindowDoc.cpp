@@ -14,6 +14,7 @@
 #include"PacketsView.h"
 #include"DlgPlugins.h"
 #include"AnalysisView.h"
+#include"MainFrm.h"
 
 #include <propkey.h>
 
@@ -42,19 +43,6 @@ CPcapWindowDoc::~CPcapWindowDoc()
 {
 	mSessions.ClearStream();
 }
-
-BOOL CPcapWindowDoc::OnNewDocument()
-{
-	if (!CDocument::OnNewDocument())
-		return FALSE;
-
-	// TODO: 在此添加重新初始化代码
-	// (SDI 文档将重用该文档)
-
-	return TRUE;
-}
-
-
 
 
 // CPcapWindowDoc 序列化
@@ -250,4 +238,71 @@ BOOL CPcapWindowDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		return FALSE;
 	}
 	return TRUE;
+}
+
+BOOL CPcapWindowDoc::OnNewDocument()
+{
+	if (!CDocument::OnNewDocument())
+		return FALSE;
+
+	CMainFrame *pMain = (CMainFrame *)AfxGetMainWnd();
+	if (pMain)
+	{
+		CString strdev;
+		pMain->m_wndDevs.GetWindowTextA(strdev);
+		if (strdev.GetLength())
+		{
+			std::string plugin = "";
+			CDlgPlugins mdlg;
+			INT_PTR RESULT = mdlg.DoModal();
+			if (RESULT == IDOK)
+			{
+				if (!CACap.StartOpenSniffer(mSessions, strdev.GetString(), mdlg.plugin))
+				{
+					AfxMessageBox("PCAP文件错误!");
+					return FALSE;
+				}
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+	}
+	//std::string plugin = "";
+	//CDlgPlugins mdlg;
+	//INT_PTR RESULT = mdlg.DoModal();
+	//if (RESULT == IDOK)
+	//{
+	//	SetPathName(lpszPathName, TRUE);
+	//	if (!CACap.OpenPcapFileByPacket(mSessions, GetPathName().GetString(), mdlg.plugin))
+	//	{
+	//		AfxMessageBox("PCAP文件错误!");
+	//		return FALSE;
+	//	}
+	//}
+	//else
+	//{
+	//	return FALSE;
+	//}
+
+	return TRUE;
+}
+
+afx_msg void CPcapWindowDoc::OnCaptureStop()
+{
+	CACap.StopOpenSniffer();
+}
+
+afx_msg void CPcapWindowDoc::OnCaptureRestart()
+{
+	// CACap();
+}
+
+void CPcapWindowDoc::OnCloseDocument()
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (CACap.IsSniffing())
+		CACap.StopOpenSniffer();
+	CDocument::OnCloseDocument();
 }

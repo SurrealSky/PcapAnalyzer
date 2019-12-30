@@ -32,6 +32,7 @@ CAnalysisCap::~CAnalysisCap()
 	//	fp = NULL;
 	//}
 	//卸载协议解析器
+	if (IsSniffing()) StopOpenSniffer();
 	PluginManager::GetInstance().UnloadAll();
 }
 
@@ -348,6 +349,11 @@ std::map<std::string, std::string> CAnalysisCap::PacketAnalysis(const char *pbod
 	return result;
 }
 
+void CAnalysisCap::LoadNetDevs(std::vector<NetCardInfo> &devs)
+{
+	devs=CPacketCapture::devs;
+}
+
 bool CAnalysisCap::StartOpenSniffer(const char * name, CSessions &mSessions, std::string _plugin)
 {
 	plugin = _plugin;
@@ -369,6 +375,11 @@ void CAnalysisCap::StopOpenSniffer()
 {
 	//先结束线程
 	mSniffer.StopCapture();
+}
+
+bool CAnalysisCap::IsSniffing()
+{
+	return mSniffer.isSniffing;
 }
 
 unsigned int __stdcall CAnalysisCap::snifferThreadFunc(void* pParam)

@@ -8,6 +8,7 @@
 #include "MainFrm.h"
 #include"include.h"
 #include"resource.h"
+#include"PcapWindowDoc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -23,6 +24,9 @@ const UINT uiLastUserToolBarId = uiFirstUserToolBarId + iMaxUserToolbars - 1;
 
 BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_CREATE()
+	ON_COMMAND(ID_CAPTURE_START, &CMainFrame::OnCaptureStart)
+	ON_COMMAND(ID_CAPTURE_STOP, &CMainFrame::OnCaptureStop)
+	ON_COMMAND(ID_CAPTURE_RESTART, &CMainFrame::OnCaptureRestart)
 	ON_COMMAND(ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager)
 	ON_COMMAND(ID_VIEW_CUSTOMIZE, &CMainFrame::OnViewCustomize)
 	ON_REGISTERED_MESSAGE(AFX_WM_CREATETOOLBAR, &CMainFrame::OnToolbarCreateNew)
@@ -30,6 +34,9 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_WM_SETTINGCHANGE()
 	ON_MESSAGE(WM_HEXVIEW_PACKET, &CMainFrame::OnHexviewPacket)
+	ON_UPDATE_COMMAND_UI(ID_CAPTURE_START, &CMainFrame::OnUpdateCaptureStart)
+	ON_UPDATE_COMMAND_UI(ID_CAPTURE_RESTART, &CMainFrame::OnUpdateCaptureRestart)
+	ON_UPDATE_COMMAND_UI(ID_CAPTURE_STOP, &CMainFrame::OnUpdateCaptureStop)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -200,16 +207,32 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
+CString CMainFrame::SplicFullFilePath(CString strExeModuleName)
+{
+	// 提取当前路径
+	// 准备写文件
+	CHAR strPath[MAX_PATH + 1] = { 0 };
+	CHAR * pTempPath;
+	GetModuleFileName(NULL, strPath, MAX_PATH);
+	pTempPath = strPath;
+	while (strchr(pTempPath, '\\'))
+	{
+		pTempPath = strchr(pTempPath, '\\');
+		pTempPath++;
+	}
+	*pTempPath = 0;
+
+	CString strPathName;
+	strPathName += strPath + strExeModuleName;
+	return strPathName;
+}
+
 void CMainFrame::LoadUI()
 {
 	int index = 0;
 	RECT rect;
 	int width = 20;
 	int offset = 0;
-	int num = 0;
-	m_wndToolBar.GetItemRect(0, &rect);
-	m_wndToolBar.GetItemRect(1, &rect);
-	m_wndToolBar.GetItemRect(2, &rect);
 
 	////设置指定工具项的宽度并获取新的区域  20是宽度
 	////index = m_wndToolBar.CommandToIndex(ID_NET_DEVS);
@@ -230,25 +253,33 @@ void CMainFrame::LoadUI()
 	//}
 	//m_wndPlugins.ShowWindow(SW_HIDE);
 
-	//设置指定工具项的宽度并获取新的区域  20是宽度
+	//设置指定工具项的宽度并获取新的区域  1是宽度
 	//index = m_wndToolBar.CommandToIndex(ID_NET_DEVS);
 	index = 3;
 	m_wndToolBar.SetButtonInfo(index, ID_NET_DEVS, TBBS_SEPARATOR, 1);
 	m_wndToolBar.GetItemRect(index, &rect);
-	rect.right = rect.left + width * 8;
+	rect.right = rect.left + width * 15;
 	offset = rect.right;
 	rect.bottom += 100;
 	//rect.top += 2;
 	rect.bottom -= 5;
-	// 创建并显示控件
 	if (!m_wndDevs.Create(WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL, rect,
 		&m_wndToolBar, ID_NET_DEVS))
 	{
 		TRACE0("Failed to create combo-box\n");
 		return;
 	}
-	// 设置按钮1图片
 	m_wndDevs.ShowWindow(SW_HIDE);
+	//加载网卡数据
+	std::vector<NetCardInfo> devs;
+	PcapAnalyzer::LoadNetDevs(devs);
+	std::vector<NetCardInfo>::const_iterator iter = devs.begin();
+	for (; iter != devs.end(); iter++)
+	{
+		m_wndDevs.InsertString(m_wndDevs.GetCount(), iter->description.c_str());
+	}
+	m_wndDevs.SetCurSel(0);
+
 
 	//设置指定工具项的宽度并获取新的区域  20是宽度
 	//index=m_wndToolBar.GetCount();
@@ -261,21 +292,18 @@ void CMainFrame::LoadUI()
 	rect.top += 2;
 	rect.bottom -= 2;
 	// 创建并显示控件
-	if (!m_StartCapture.Create("",WS_CHILD | WS_VISIBLE, rect,
+	if (!m_StartCapture.Create("", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_OWNERDRAW | WS_CLIPCHILDREN, rect,
 		&m_wndToolBar, ID_CAPTURE_START))
 	{
 		TRACE0("Failed to create combo-box\n");
 		return;
 	}
 	// 设置按钮1图片
-	m_StartCapture.SetBackImage(NULL, TEXT("Res\\Button\\allbtn_highlight.png"), TEXT("Res\\Button\\allbtn_down.png"), NULL);
-	m_StartCapture.SetIconImage(TEXT("Res\\Button\\message.png"));
-	m_StartCapture.SetButtonType(en_IconButton);
-	//m_StartCapture.SetParentBack(hParentDC);
-	m_StartCapture.SetSize(22, 22);
-	//m_StartCapture.SetImagePng(IDB_PNG4);
-	//m_StartCapture.SetTransparentColor(RGB(74, 144, 226), 100, 155);//設置按鈕顯示半透明貼膜
-	//m_StartCapture.ShowWindow(SW_HIDE);
+	
+	m_StartCapture.SetImagePng(SplicFullFilePath("Res\\Button\\x-capture-start.png"), SplicFullFilePath("Res\\Button\\x-capture-start-white.png"));
+	m_StartCapture.SetTransparentColor(RGB(74, 144, 226), 100, 155);//設置按鈕顯示半透明貼膜
+	m_StartCapture.ShowWindow(SW_HIDE);
+	m_StartCapture.SizeToContent();
 
 	//设置指定工具项的宽度并获取新的区域  80是宽度
 	//index = m_wndToolBar.CommandToIndex(ID_CAPTURE_STOP);
@@ -295,7 +323,7 @@ void CMainFrame::LoadUI()
 		return;
 	}
 	// 设置按钮1图片
-	m_StopCapture.SetImagePng(IDB_PNG5);
+	m_StopCapture.SetImagePng(SplicFullFilePath("Res\\Button\\x-capture-stop.png"), SplicFullFilePath("Res\\Button\\x-capture-stop-white.png"));
 	m_StopCapture.SetTransparentColor(RGB(74, 144, 226), 100, 155);//設置按鈕顯示半透明貼膜
 	m_StopCapture.ShowWindow(SW_HIDE);
 
@@ -317,7 +345,7 @@ void CMainFrame::LoadUI()
 		return;
 	}
 	// 设置按钮1图片
-	m_RestartCapture.SetImagePng(IDB_PNG6);
+	m_RestartCapture.SetImagePng(SplicFullFilePath("Res\\Button\\x-capture-restart.png"), SplicFullFilePath("Res\\Button\\x-capture-restart-turn1.png"));
 	m_RestartCapture.SetTransparentColor(RGB(74, 144, 226), 100, 155);//設置按鈕顯示半透明貼膜
 	m_RestartCapture.ShowWindow(SW_HIDE);
 }
@@ -525,7 +553,6 @@ void CMainFrame::OnUpdateApplicationLook(CCmdUI* pCmdUI)
 	pCmdUI->SetRadio(theApp.m_nAppLook == pCmdUI->m_nID);
 }
 
-
 BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParentWnd, CCreateContext* pContext) 
 {
 	// 基类将执行真正的工作
@@ -558,17 +585,81 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 	return TRUE;
 }
 
-
 void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 {
 	CMDIFrameWndEx::OnSettingChange(uFlags, lpszSection);
 	m_wndOutput.UpdateFonts();
 }
 
-
 afx_msg LRESULT CMainFrame::OnHexviewPacket(WPARAM wParam, LPARAM lParam)
 {
 	CSyncPacket *packet = static_cast<CSyncPacket*>((void*)wParam);
 	m_wndOutput.Data2HexView(packet->_payload.size(), (STu8*)(packet->_payload.contents()));
 	return 0;
+}
+
+afx_msg void CMainFrame::OnCaptureStart()
+{
+	PostMessage(WM_COMMAND, ID_FILE_NEW, 0);
+}
+afx_msg void CMainFrame::OnCaptureStop()
+{
+	CMDIChildWnd* pActiveChild = MDIGetActive();
+	CPcapWindowDoc *pDoc = (CPcapWindowDoc *)pActiveChild->GetActiveDocument();
+	pDoc->OnCaptureStop();
+}
+afx_msg void CMainFrame::OnCaptureRestart()
+{
+	CMDIChildWnd* pActiveChild = MDIGetActive();
+	CPcapWindowDoc *pDoc = (CPcapWindowDoc *)pActiveChild->GetActiveDocument();
+	pDoc->OnCaptureRestart();
+}
+
+
+void CMainFrame::OnUpdateCaptureStart(CCmdUI *pCmdUI)
+{
+	// TODO: 在此添加命令更新用户界面处理程序代码
+	CMDIChildWnd* pActiveChild = MDIGetActive();
+	if (pActiveChild)
+	{
+		CPcapWindowDoc *pDoc = (CPcapWindowDoc *)pActiveChild->GetActiveDocument();
+		if (pDoc->CACap.IsSniffing())
+		{
+			pCmdUI->Enable(FALSE);
+			return;
+		}
+	}
+	pCmdUI->Enable(TRUE);
+}
+
+void CMainFrame::OnUpdateCaptureStop(CCmdUI *pCmdUI)
+{
+	// TODO: 在此添加命令更新用户界面处理程序代码
+	CMDIChildWnd* pActiveChild = MDIGetActive();
+	if (pActiveChild)
+	{
+		CPcapWindowDoc *pDoc = (CPcapWindowDoc *)pActiveChild->GetActiveDocument();
+		if (pDoc->CACap.IsSniffing())
+		{
+			pCmdUI->Enable(TRUE);
+			return;
+		}
+	}
+	pCmdUI->Enable(FALSE);
+}
+
+void CMainFrame::OnUpdateCaptureRestart(CCmdUI *pCmdUI)
+{
+	// TODO: 在此添加命令更新用户界面处理程序代码
+	CMDIChildWnd* pActiveChild = MDIGetActive();
+	if (pActiveChild)
+	{
+		CPcapWindowDoc *pDoc = (CPcapWindowDoc *)pActiveChild->GetActiveDocument();
+		if (pDoc->CACap.IsSniffing())
+		{
+			pCmdUI->Enable(TRUE);
+			return;
+		}
+	}
+	pCmdUI->Enable(FALSE);
 }

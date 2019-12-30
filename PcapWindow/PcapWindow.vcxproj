@@ -187,6 +187,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\CommonLib\include\MFCUI\GdiPlusMakeUi.h" />
+    <ClInclude Include="..\CommonLib\include\MFCUI\ImageButton.h" />
+    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawCheckButton.h" />
+    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawCombox.h" />
+    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawMenu.h" />
+    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawRadioButton.h" />
+    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawStatic.h" />
+    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawTabList.h" />
     <ClInclude Include="AnalysisView.h" />
     <ClInclude Include="AutoComplete.h" />
     <ClInclude Include="ChildFrm.h" />
@@ -194,12 +202,8 @@
     <ClInclude Include="DlgPlugins.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="HexEdit.h" />
-    <ClInclude Include="ImageEx.h" />
     <ClInclude Include="include.h" />
-    <ClInclude Include="ISkinControl.h" />
-    <ClInclude Include="Macro.h" />
     <ClInclude Include="MainFrm.h" />
-    <ClInclude Include="MemoryDC.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="PacketsView.h" />
     <ClInclude Include="PcapWindow.h" />
@@ -207,16 +211,21 @@
     <ClInclude Include="PcapWindowView.h" />
     <ClInclude Include="PngButton.h" />
     <ClInclude Include="PropertiesWnd.h" />
-    <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="SkinButton.h" />
-    <ClInclude Include="SkinComboBox.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StreamsView.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\CommonLib\include\MFCUI\GdiPlusMakeUi.cpp" />
+    <ClCompile Include="..\CommonLib\include\MFCUI\ImageButton.cpp" />
+    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawCheckButton.cpp" />
+    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawCombox.cpp" />
+    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawMenu.cpp" />
+    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawRadioButton.cpp" />
+    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawStatic.cpp" />
+    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawTabList.cpp" />
     <ClCompile Include="AnalysisView.cpp" />
     <ClCompile Include="AutoComplete.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
@@ -226,10 +235,7 @@
     <ClCompile Include="HexEdit.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ImageEx.cpp" />
-    <ClCompile Include="ISkinControl.cpp" />
     <ClCompile Include="MainFrm.cpp" />
-    <ClCompile Include="MemoryDC.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PacketsView.cpp" />
     <ClCompile Include="PcapWindow.cpp" />
@@ -237,9 +243,6 @@
     <ClCompile Include="PcapWindowView.cpp" />
     <ClCompile Include="PngButton.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
-    <ClCompile Include="RenderManager.cpp" />
-    <ClCompile Include="SkinButton.cpp" />
-    <ClCompile Include="SkinComboBox.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -257,9 +260,6 @@
     <ResourceCompile Include="PcapWindow.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\1.png" />
-    <Image Include="res\2.png" />
-    <Image Include="res\3.png" />
     <Image Include="res\classview.bmp" />
     <Image Include="res\classview_hc.bmp" />
     <Image Include="res\class_view.ico" />
@@ -286,9 +286,6 @@
     <Image Include="res\Toolbar.bmp" />
     <Image Include="res\toolbar1.bmp" />
     <Image Include="res\Toolbar256.bmp" />
-    <Image Include="res\x-capture-restart.png" />
-    <Image Include="res\x-capture-start.png" />
-    <Image Include="res\x-capture-stop.png" />
     <Image Include="UserImages.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

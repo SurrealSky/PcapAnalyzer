@@ -57,9 +57,10 @@ public:
 	std::string Protocol2String(STu16 protocol);
 public:
 	//sniffer
-	void LoadNetDevs(std::vector<NetCardInfo>&);
+	static void LoadNetDevs(std::vector<NetCardInfo>&);
 	bool StartOpenSniffer(CSessions &mSessions, const char * dev, std::string plugin = "");
 	void StopOpenSniffer();
+	bool IsSniffing();
 public:
 	//·ÖÎö
 	std::map<std::string, std::string> PacketAnalysis(ByteBuffer &payload, const unsigned int srcPort, const unsigned int dstPort);

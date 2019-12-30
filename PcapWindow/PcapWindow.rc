@@ -135,10 +135,10 @@ BEGIN
     BUTTON      ID_FILE_NEW
     BUTTON      ID_FILE_OPEN
     BUTTON      ID_FILE_SAVE
-	SEPARATOR
-	SEPARATOR
-	SEPARATOR
-	SEPARATOR
+    SEPARATOR
+    SEPARATOR
+    SEPARATOR
+    SEPARATOR
 END
 
 IDR_SORT TOOLBAR 16, 15
@@ -509,24 +509,6 @@ IDD_DIALOG1 AFX_DIALOG_LAYOUT
 BEGIN
     0
 END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// PNG
-//
-
-IDB_PNG1                PNG                     "res\\x-capture-restart.png"
-
-IDB_PNG2                PNG                     "res\\x-capture-start.png"
-
-IDB_PNG3                PNG                     "res\\x-capture-stop.png"
-
-IDB_PNG4                PNG                     "res\\1.png"
-
-IDB_PNG5                PNG                     "res\\2.png"
-
-IDB_PNG6                PNG                     "res\\3.png"
 
 
 /////////////////////////////////////////////////////////////////////////////

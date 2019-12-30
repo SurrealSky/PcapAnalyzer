@@ -9,7 +9,7 @@
 #include "PropertiesWnd.h"
 #include"include.h"
 #include"PngButton.h"
-#include"SkinButton.h"
+#include<MFCUI\OwnerDrawCombox.h>
 
 
 class CMainFrame : public CMDIFrameWndEx
@@ -46,11 +46,10 @@ protected:  // 控件条嵌入成员
 	CClassView        m_wndClassView;
 	COutputWnd        m_wndOutput;
 	CPropertiesWnd    m_wndProperties;
-	CSkinButton		m_StartCapture;
-	//CPngButton		m_StartCapture;
+	CPngButton		m_StartCapture;
 	CPngButton		m_StopCapture;
 	CPngButton		m_RestartCapture;
-	//CSkinComboBox m_wndDevs;
+public:
 	CComboBox		m_wndDevs;
 	//CComboBox		m_wndPlugins;
 
@@ -63,6 +62,9 @@ protected:
 	afx_msg void OnApplicationLook(UINT id);
 	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
+	afx_msg void OnCaptureStart();
+	afx_msg void OnCaptureStop();
+	afx_msg void OnCaptureRestart();
 	DECLARE_MESSAGE_MAP()
 
 	BOOL CreateDockingWindows();
@@ -70,6 +72,11 @@ protected:
 	afx_msg LRESULT OnHexviewPacket(WPARAM wParam, LPARAM lParam);
 private:
 	void LoadUI();
+	CString SplicFullFilePath(CString strExeModuleName);
+public:
+	afx_msg void OnUpdateCaptureStart(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateCaptureRestart(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateCaptureStop(CCmdUI *pCmdUI);
 };
 
 

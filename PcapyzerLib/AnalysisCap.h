@@ -34,10 +34,13 @@ private:
 public:
 	//根据插件分析数据包
 	std::map<std::string, std::string> PacketAnalysis(const char *data, const unsigned int size,const unsigned int srcPort, const unsigned int dstPort);
-public:
+private:
 	CPacketCapture mSniffer;
+public:
+	static void LoadNetDevs(std::vector<NetCardInfo>&);
 	bool StartOpenSniffer(const char * name, CSessions &, std::string plugin);
 	void StopOpenSniffer();
+	bool IsSniffing();
 private:
 	static unsigned int __stdcall snifferThreadFunc(void* pParam);
 	static void packet_handler(void* uParam, const unsigned char *pkt_data, unsigned int len,unsigned long long time);

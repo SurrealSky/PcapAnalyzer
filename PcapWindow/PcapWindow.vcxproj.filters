@@ -19,8 +19,8 @@
     <Filter Include="pngbutton">
       <UniqueIdentifier>{c8711309-7039-45ba-8f04-04ea20bc5c5f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SkinCommbox">
-      <UniqueIdentifier>{1f4db71c-bb41-4c69-9d2d-23f9ae4ed9b3}</UniqueIdentifier>
+    <Filter Include="CommonLib\MFCUI">
+      <UniqueIdentifier>{5e9cd1ff-c749-4752-b282-6d183ee9c62b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,26 +90,29 @@
     <ClInclude Include="PngButton.h">
       <Filter>pngbutton</Filter>
     </ClInclude>
-    <ClInclude Include="SkinComboBox.h">
-      <Filter>SkinCommbox</Filter>
+    <ClInclude Include="..\CommonLib\include\MFCUI\GdiPlusMakeUi.h">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClInclude>
-    <ClInclude Include="ImageEx.h">
-      <Filter>SkinCommbox</Filter>
+    <ClInclude Include="..\CommonLib\include\MFCUI\ImageButton.h">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClInclude>
-    <ClInclude Include="ISkinControl.h">
-      <Filter>SkinCommbox</Filter>
+    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawCheckButton.h">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClInclude>
-    <ClInclude Include="RenderManager.h">
-      <Filter>SkinCommbox</Filter>
+    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawCombox.h">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClInclude>
-    <ClInclude Include="MemoryDC.h">
-      <Filter>SkinCommbox</Filter>
+    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawMenu.h">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClInclude>
-    <ClInclude Include="Macro.h">
-      <Filter>SkinCommbox</Filter>
+    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawRadioButton.h">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClInclude>
-    <ClInclude Include="SkinButton.h">
-      <Filter>SkinCommbox</Filter>
+    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawStatic.h">
+      <Filter>CommonLib\MFCUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawTabList.h">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -167,23 +170,29 @@
     <ClCompile Include="PngButton.cpp">
       <Filter>pngbutton</Filter>
     </ClCompile>
-    <ClCompile Include="SkinComboBox.cpp">
-      <Filter>SkinCommbox</Filter>
+    <ClCompile Include="..\CommonLib\include\MFCUI\GdiPlusMakeUi.cpp">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClCompile>
-    <ClCompile Include="ImageEx.cpp">
-      <Filter>SkinCommbox</Filter>
+    <ClCompile Include="..\CommonLib\include\MFCUI\ImageButton.cpp">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClCompile>
-    <ClCompile Include="ISkinControl.cpp">
-      <Filter>SkinCommbox</Filter>
+    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawCheckButton.cpp">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClCompile>
-    <ClCompile Include="RenderManager.cpp">
-      <Filter>SkinCommbox</Filter>
+    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawCombox.cpp">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClCompile>
-    <ClCompile Include="MemoryDC.cpp">
-      <Filter>SkinCommbox</Filter>
+    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawMenu.cpp">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClCompile>
-    <ClCompile Include="SkinButton.cpp">
-      <Filter>SkinCommbox</Filter>
+    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawRadioButton.cpp">
+      <Filter>CommonLib\MFCUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawStatic.cpp">
+      <Filter>CommonLib\MFCUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawTabList.cpp">
+      <Filter>CommonLib\MFCUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -276,25 +285,7 @@
     <Image Include="res\toolbar1.bmp">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="res\x-capture-restart.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\x-capture-start.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\x-capture-stop.png">
-      <Filter>资源文件</Filter>
-    </Image>
     <Image Include="res\close.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\1.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\2.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\3.png">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

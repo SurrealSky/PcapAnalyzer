@@ -1,24 +1,15 @@
 #include "PacketCapture.h"
+#include<LogLib\DebugLog.h>
 
 using namespace Packetyzer::Analyzers;
 using namespace Packetyzer::Capture;
 using namespace std;
 
+std::vector<NetCardInfo> CPacketCapture::devs;
+
 CPacketCapture::CPacketCapture()
 {
-	pcap_findalldevs_ex(PCAP_SRC_IF_STRING, NULL, &allDevs, errbuf);
-	pcap_if_t *dev;
-	for (dev = allDevs; dev->next != NULL; dev = dev->next) 
-	{
-		NetCardInfo info;
-		info.name = dev->name;
-		info.description = dev->description;
-		if (dev->addresses != NULL)
-			info.netmask = ((struct sockaddr_in*)(dev->addresses->netmask))->sin_addr.S_un.S_addr;
-		else
-			info.netmask = 0xffffff;
-		devs.push_back(info);
-	}
+	isSniffing = false;
 }
 
 
@@ -26,13 +17,37 @@ CPacketCapture::~CPacketCapture()
 {
 }
 
+void CPacketCapture::LoadNetDevs(std::vector<NetCardInfo> &tempdevs)
+{
+	pcap_if_t *allDevs;
+	CHAR errbuf[PCAP_ERRBUF_SIZE];
+	pcap_findalldevs_ex(PCAP_SRC_IF_STRING, NULL, &allDevs, errbuf);
+	pcap_if_t *dev;
+	for (dev = allDevs; dev->next != NULL; dev = dev->next)
+	{
+		NetCardInfo info;
+		info.name = dev->name;
+		std::string str = dev->description;
+		size_t first = str.find_first_of('\'');
+		size_t last = str.find_last_of('\'');
+		str = str.substr(first+1, last - first-1);
+		info.description = str;
+		if (dev->addresses != NULL)
+			info.netmask = ((struct sockaddr_in*)(dev->addresses->netmask))->sin_addr.S_un.S_addr;
+		else
+			info.netmask = 0xffffff;
+		CPacketCapture::devs.push_back(info);
+	}
+	pcap_freealldevs(allDevs);
+	tempdevs = CPacketCapture::devs;
+}
+
 BOOL CPacketCapture::CapturePackets(LPVOID uParam, packet_call_handler pFunc, UINT AdapterIndex, UINT MaxNumOfPackets, const CHAR* Filter = NULL)
 {
-
 	INT retValue;UINT n = 0; nCapturedPackets = 0;
 
 	if (AdapterIndex< 0 || AdapterIndex > devs.size()-1) return FALSE;
-	if ((fp = pcap_open(devs[AdapterIndex].name.c_str(), 65536, PCAP_OPENFLAG_PROMISCUOUS, 1000, NULL, errbuf)) == NULL) return FALSE;
+	if ((fp = pcap_open(devs[AdapterIndex].name.c_str(), 65536, PCAP_OPENFLAG_PROMISCUOUS, 1000, NULL, NULL)) == NULL) return FALSE;
 
 	UINT netmask = devs[AdapterIndex].netmask;
 	struct bpf_program fcode;
@@ -43,7 +58,7 @@ BOOL CPacketCapture::CapturePackets(LPVOID uParam, packet_call_handler pFunc, UI
 	m_hListenEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	while ((retValue = pcap_next_ex(fp, &PacketHeader, &PacketData)) >= 0 && n < MaxNumOfPackets)
 	{
-
+		isSniffing = true;
 		DWORD dwRetVal;
 		dwRetVal = WaitForSingleObject(m_hSnifferEvent, 100);
 		if (dwRetVal == WAIT_TIMEOUT)
@@ -62,6 +77,7 @@ BOOL CPacketCapture::CapturePackets(LPVOID uParam, packet_call_handler pFunc, UI
 			break;
 		}
 	}
+	isSniffing = false;
 	if (retValue == -1) return FALSE;
 	return TRUE;
 }
@@ -69,8 +85,9 @@ BOOL CPacketCapture::CapturePackets(LPVOID uParam, packet_call_handler pFunc, UI
 BOOL CPacketCapture::StopCapture()
 {
 	SetEvent(m_hSnifferEvent);
-	CloseHandle(m_hSnifferEvent);
 	DWORD dwRetVal = WaitForSingleObject(m_hListenEvent, INFINITE);
 	CloseHandle(m_hListenEvent);
+	CloseHandle(m_hSnifferEvent);
+	isSniffing = false;
 	return TRUE;
 }

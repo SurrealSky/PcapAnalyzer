@@ -10,7 +10,6 @@ PcapAnalyzer::PcapAnalyzer()
 	pImplFilter = new XmlFilter();
 }
 
-
 PcapAnalyzer::~PcapAnalyzer()
 {
 	if (pImplAnalysis)
@@ -142,7 +141,7 @@ std::map<std::string,std::string> PcapAnalyzer::PacketAnalysis(ByteBuffer &paylo
 
 void PcapAnalyzer::LoadNetDevs(std::vector<NetCardInfo> &devs)
 {
-	devs = pImplAnalysis->mSniffer.devs;
+	CPacketCapture::LoadNetDevs(devs);
 }
 
 bool PcapAnalyzer::StartOpenSniffer(CSessions &mSessions,const char * name, std::string _plugin)
@@ -153,5 +152,10 @@ bool PcapAnalyzer::StartOpenSniffer(CSessions &mSessions,const char * name, std:
 void PcapAnalyzer::StopOpenSniffer()
 {
 	//先结束线程
-	pImplAnalysis->mSniffer.StopCapture();
+	pImplAnalysis->StopOpenSniffer();
+}
+
+bool PcapAnalyzer::IsSniffing()
+{
+	return pImplAnalysis->IsSniffing();
 }
