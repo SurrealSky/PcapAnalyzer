@@ -361,7 +361,7 @@ bool CAnalysisCap::StartOpenSniffer(const char * name, CSessions &mSessions, std
 	int sel = 0;
 	for (UINT i = 0; i< mSniffer.devs.size(); i++)
 	{
-		if (strcmp(mSniffer.devs[i].name.c_str(), name) == 0)
+		if (strcmp(mSniffer.devs[i].description.c_str(), name) == 0)
 			sel = i;
 	}
 	mSniffer.pSession = &mSessions;

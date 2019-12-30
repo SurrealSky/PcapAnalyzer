@@ -269,23 +269,6 @@ BOOL CPcapWindowDoc::OnNewDocument()
 			}
 		}
 	}
-	//std::string plugin = "";
-	//CDlgPlugins mdlg;
-	//INT_PTR RESULT = mdlg.DoModal();
-	//if (RESULT == IDOK)
-	//{
-	//	SetPathName(lpszPathName, TRUE);
-	//	if (!CACap.OpenPcapFileByPacket(mSessions, GetPathName().GetString(), mdlg.plugin))
-	//	{
-	//		AfxMessageBox("PCAP文件错误!");
-	//		return FALSE;
-	//	}
-	//}
-	//else
-	//{
-	//	return FALSE;
-	//}
-
 	return TRUE;
 }
 
@@ -297,6 +280,34 @@ afx_msg void CPcapWindowDoc::OnCaptureStop()
 afx_msg void CPcapWindowDoc::OnCaptureRestart()
 {
 	// CACap();
+	if (CACap.IsSniffing())
+	{
+		CACap.StopOpenSniffer();
+		CMainFrame *pMain = (CMainFrame *)AfxGetMainWnd();
+		if (pMain)
+		{
+			CString strdev;
+			pMain->m_wndDevs.GetWindowTextA(strdev);
+			if (strdev.GetLength())
+			{
+				std::string plugin = "";
+				CDlgPlugins mdlg;
+				INT_PTR RESULT = mdlg.DoModal();
+				if (RESULT == IDOK)
+				{
+					if (!CACap.StartOpenSniffer(mSessions, strdev.GetString(), mdlg.plugin))
+					{
+						AfxMessageBox("PCAP文件错误!");
+						return;
+					}
+				}
+				else
+				{
+					return;
+				}
+			}
+		}
+	}
 }
 
 void CPcapWindowDoc::OnCloseDocument()

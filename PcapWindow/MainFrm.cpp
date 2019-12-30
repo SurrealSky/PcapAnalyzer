@@ -602,19 +602,20 @@ afx_msg void CMainFrame::OnCaptureStart()
 {
 	PostMessage(WM_COMMAND, ID_FILE_NEW, 0);
 }
+
 afx_msg void CMainFrame::OnCaptureStop()
 {
 	CMDIChildWnd* pActiveChild = MDIGetActive();
 	CPcapWindowDoc *pDoc = (CPcapWindowDoc *)pActiveChild->GetActiveDocument();
 	pDoc->OnCaptureStop();
 }
+
 afx_msg void CMainFrame::OnCaptureRestart()
 {
 	CMDIChildWnd* pActiveChild = MDIGetActive();
 	CPcapWindowDoc *pDoc = (CPcapWindowDoc *)pActiveChild->GetActiveDocument();
 	pDoc->OnCaptureRestart();
 }
-
 
 void CMainFrame::OnUpdateCaptureStart(CCmdUI *pCmdUI)
 {
