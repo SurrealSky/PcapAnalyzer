@@ -83,7 +83,7 @@ void CAnalysisView::OnInitialUpdate()
 BOOL CAnalysisView::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: 在此添加专用代码和/或调用基类
-	cs.style = cs.style | LVS_REPORT;// 设置成报告列表的显示形式
+	cs.style = cs.style | LVS_REPORT| LVS_SINGLESEL;// 设置成报告列表的显示形式
 	return CListView::PreCreateWindow(cs);
 }
 

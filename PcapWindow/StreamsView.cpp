@@ -165,6 +165,26 @@ void CStreamsView::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult)
 void CStreamsView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	//POSITION pos = GetListCtrl().GetFirstSelectedItemPosition();
+	//int i = 0;
+	//if (pos == NULL)
+	//{
+
+	//	//未选中
+
+	//}
+
+	//else
+	//{
+	//	//有选中
+	//	while (pos)
+	//	{
+	//		i++;
+	//	    int nItem = GetListCtrl().GetNextSelectedItem(pos);
+	//		//      TRACE1("Item %d was selected!/n", nItem);
+	//		//      you could do your own processing on nItem here
+	//	}
+	//}
 	CPcapWindowDoc *pDoc = static_cast<CPcapWindowDoc*>(this->GetDocument());
 	if (pNMItemActivate->iItem == -1)
 	{
