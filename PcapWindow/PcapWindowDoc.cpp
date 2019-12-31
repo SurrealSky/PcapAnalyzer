@@ -200,6 +200,15 @@ void CPcapWindowDoc::Packet2HexView(CSyncPacket* packet)
 	pApp->GetMainWnd()->SendMessage(WM_HEXVIEW_PACKET, (WPARAM)packet, (LPARAM)0);
 }
 
+void CPcapWindowDoc::Result2HexView(std::pair<std::string, std::string> *element)
+{
+	if (element->second.size() != 0)
+	{
+		CWinAppEx *pApp = (CWinAppEx *)AfxGetApp();
+		pApp->GetMainWnd()->SendMessage(WM_HEXVIEW_PAIR, (WPARAM)element, (LPARAM)0);
+	}
+}
+
 void CPcapWindowDoc::Result2AnalysisView(std::map<std::string, std::string> result)
 {
 	curResult = result;

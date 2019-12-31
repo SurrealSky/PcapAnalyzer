@@ -23,6 +23,7 @@ CAnalysisView::~CAnalysisView()
 
 BEGIN_MESSAGE_MAP(CAnalysisView, CListView)
 	ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, &CAnalysisView::OnNMCustomdraw)
+	ON_NOTIFY_REFLECT(NM_CLICK, &CAnalysisView::OnNMClick)
 END_MESSAGE_MAP()
 
 
@@ -155,4 +156,20 @@ void CAnalysisView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		CListCtrl &p = GetListCtrl();
 		p.DeleteAllItems();
 	}
+}
+
+
+void CAnalysisView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+
+	if (pNMLV->iItem == -1) return;
+	int dwIndex = pNMLV->iItem;
+	//第几项
+	CPcapWindowDoc *pDoc = static_cast<CPcapWindowDoc*>(this->GetDocument());
+	pDoc->curElement = (void*)GetListCtrl().GetItemData(dwIndex);
+	pDoc->Result2HexView((std::pair<std::string,std::string>*)(pDoc->curElement));
+	*pResult = 0;
 }

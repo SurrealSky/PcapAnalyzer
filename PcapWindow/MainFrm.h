@@ -79,6 +79,7 @@ public:
 	afx_msg void OnUpdateCaptureStop(CCmdUI *pCmdUI);
 protected:
 	afx_msg LRESULT OnHexviewClear(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnHexviewPair(WPARAM wParam, LPARAM lParam);
 };
 
 

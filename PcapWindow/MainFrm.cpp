@@ -38,6 +38,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_CAPTURE_RESTART, &CMainFrame::OnUpdateCaptureRestart)
 	ON_UPDATE_COMMAND_UI(ID_CAPTURE_STOP, &CMainFrame::OnUpdateCaptureStop)
 	ON_MESSAGE(WM_HEXVIEW_CLEAR, &CMainFrame::OnHexviewClear)
+	ON_MESSAGE(WM_HEXVIEW_PAIR, &CMainFrame::OnHexviewPair)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -666,9 +667,16 @@ void CMainFrame::OnUpdateCaptureRestart(CCmdUI *pCmdUI)
 	pCmdUI->Enable(FALSE);
 }
 
-
 afx_msg LRESULT CMainFrame::OnHexviewClear(WPARAM wParam, LPARAM lParam)
 {
 	m_wndOutput.ClearHexView();
+	return 0;
+}
+
+
+afx_msg LRESULT CMainFrame::OnHexviewPair(WPARAM wParam, LPARAM lParam)
+{
+	std::pair<std::string,std::string> *element = static_cast<std::pair<std::string, std::string>*>((void*)wParam);
+	m_wndOutput.Data2HexView(element->second.size(), (STu8*)(element->second.c_str()));
 	return 0;
 }

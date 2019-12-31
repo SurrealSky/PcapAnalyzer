@@ -27,6 +27,8 @@ public:
 	afx_msg void OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult);
 protected:
 	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
+public:
+	afx_msg void OnNMClick(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
 

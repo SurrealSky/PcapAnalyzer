@@ -19,6 +19,7 @@ public:
 	CSessions	mSessions;
 	CSyncStream *curStream;
 	void *curPacket;
+	void *curElement;
 	std::map<std::string, std::string> curResult;
 // ²Ù×÷
 public:
@@ -58,6 +59,7 @@ public:
 	void AddPacket2StreamView(CSyncStream*);
 	void AddPacket2PacketView(CSyncStream*);
 	void Packet2HexView(CSyncPacket*);
+	void Result2HexView(std::pair<std::string,std::string> *);
 	void Result2AnalysisView(std::map<std::string, std::string>);
 	void OnCaptureStop();
 	void OnCaptureRestart();
