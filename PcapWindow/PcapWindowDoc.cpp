@@ -332,7 +332,6 @@ void CPcapWindowDoc::OnCloseDocument()
 	CDocument::OnCloseDocument();
 }
 
-
 BOOL CPcapWindowDoc::OnSaveDocument(LPCTSTR lpszPathName)
 {
 	// TODO: 在此添加专用代码和/或调用基类
