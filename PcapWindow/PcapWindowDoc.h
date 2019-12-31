@@ -59,8 +59,10 @@ public:
 	void AddPacket2PacketView(CSyncStream*);
 	void Packet2HexView(CSyncPacket*);
 	void Result2AnalysisView(std::map<std::string, std::string>);
-public:
 	void OnCaptureStop();
 	void OnCaptureRestart();
+	void HexViewClear();
+public:
 	virtual void OnCloseDocument();
+	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
 };

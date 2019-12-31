@@ -139,14 +139,14 @@ void CPcapWindowDoc::_stream_call_handler(void* uParam1, void* uParam2, unsigned
 		case 1:
 		{
 			p->AddPacket2StreamView((CSyncStream*)uParam2);
-			//p->AddPacket2PacketView((CSyncStream*)uParam2);
 		}break;
 	}
 }
 
 void CPcapWindowDoc::AddStream2StreamView(CSyncStream *stream)
 {
-	POSITION pos = m_viewList.GetHeadPosition();
+	UpdateAllViews(NULL, WM_STREAMVIEW_ADDSTREAM, (CObject*)stream);
+	/*POSITION pos = m_viewList.GetHeadPosition();
 	while (pos != NULL)
 	{
 		CView * cView = (CView *)m_viewList.GetNext(pos);
@@ -154,15 +154,16 @@ void CPcapWindowDoc::AddStream2StreamView(CSyncStream *stream)
 		{
 			if (cView->IsKindOf(RUNTIME_CLASS(CStreamsView)))
 			{
-				PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDSTREAM, (WPARAM)stream, (LPARAM)0);
+				UpdateAllViews(NULL, WM_STREAMVIEW_ADDSTREAM, (CObject*)stream);
 			}
 		}
-	}
+	}*/
 }
 
 void CPcapWindowDoc::AddPacket2StreamView(CSyncStream *stream)
 {
-	POSITION pos = m_viewList.GetHeadPosition();
+	UpdateAllViews(NULL, WM_STREAMVIEW_ADDPACKET, (CObject*)stream);
+	/*POSITION pos = m_viewList.GetHeadPosition();
 	while (pos != NULL)
 	{
 		CView * cView = (CView *)m_viewList.GetNext(pos);
@@ -170,15 +171,16 @@ void CPcapWindowDoc::AddPacket2StreamView(CSyncStream *stream)
 		{
 			if (cView->IsKindOf(RUNTIME_CLASS(CStreamsView)))
 			{
-				PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)stream, (LPARAM)0);
+				UpdateAllViews(NULL, WM_STREAMVIEW_ADDPACKET, (CObject*)stream);
 			}
 		}
-	}
+	}*/
 }
 
 void CPcapWindowDoc::AddPacket2PacketView(CSyncStream *stream)
 {
-	POSITION pos = m_viewList.GetHeadPosition();
+	UpdateAllViews(NULL, WM_PACKETVIEW_ADDPACKET, (CObject*)stream);
+	/*POSITION pos = m_viewList.GetHeadPosition();
 	while (pos != NULL)
 	{
 		CView * cView = (CView *)m_viewList.GetNext(pos);
@@ -186,10 +188,10 @@ void CPcapWindowDoc::AddPacket2PacketView(CSyncStream *stream)
 		{
 			if (cView->IsKindOf(RUNTIME_CLASS(CPacketsView)))
 			{
-				PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)stream, (LPARAM)0);
+				PostMessage(cView->m_hWnd, WM_PACKETVIEW_ADDPACKET, (WPARAM)stream, (LPARAM)0);
 			}
 		}
-	}
+	}*/
 }
 
 void CPcapWindowDoc::Packet2HexView(CSyncPacket* packet)
@@ -201,7 +203,8 @@ void CPcapWindowDoc::Packet2HexView(CSyncPacket* packet)
 void CPcapWindowDoc::Result2AnalysisView(std::map<std::string, std::string> result)
 {
 	curResult = result;
-	POSITION pos = m_viewList.GetHeadPosition();
+	UpdateAllViews(NULL, WM_ANALYSISVIEW_MAP, (CObject*)0);
+	/*POSITION pos = m_viewList.GetHeadPosition();
 	while (pos != NULL)
 	{
 		CView * cView = (CView *)m_viewList.GetNext(pos);
@@ -209,10 +212,10 @@ void CPcapWindowDoc::Result2AnalysisView(std::map<std::string, std::string> resu
 		{
 			if (cView->IsKindOf(RUNTIME_CLASS(CAnalysisView)))
 			{
-				PostMessage(cView->m_hWnd, WM_STREAMVIEW_ADDPACKET, (WPARAM)0, (LPARAM)0);
+				PostMessage(cView->m_hWnd, WM_ANALYSISVIEW_MAP, (WPARAM)0, (LPARAM)0);
 			}
 		}
-	}
+	}*/
 }
 
 BOOL CPcapWindowDoc::OnOpenDocument(LPCTSTR lpszPathName)
@@ -242,8 +245,8 @@ BOOL CPcapWindowDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 BOOL CPcapWindowDoc::OnNewDocument()
 {
-	if (!CDocument::OnNewDocument())
-		return FALSE;
+	/*if (!CDocument::OnNewDocument())
+		return FALSE;*/
 
 	CMainFrame *pMain = (CMainFrame *)AfxGetMainWnd();
 	if (pMain)
@@ -272,14 +275,18 @@ BOOL CPcapWindowDoc::OnNewDocument()
 	return TRUE;
 }
 
-afx_msg void CPcapWindowDoc::OnCaptureStop()
+void CPcapWindowDoc::OnCaptureStop()
 {
 	CACap.StopOpenSniffer();
 }
 
-afx_msg void CPcapWindowDoc::OnCaptureRestart()
+void CPcapWindowDoc::OnCaptureRestart()
 {
-	// CACap();
+	mSessions.ClearStream();
+	//更新view UI
+	UpdateAllViews(NULL, WM_VIEW_CLEAR, (CObject*)0);
+	HexViewClear();
+	//重新开始
 	if (CACap.IsSniffing())
 	{
 		CACap.StopOpenSniffer();
@@ -310,10 +317,25 @@ afx_msg void CPcapWindowDoc::OnCaptureRestart()
 	}
 }
 
+void CPcapWindowDoc::HexViewClear()
+{
+	CWinAppEx *pApp = (CWinAppEx *)AfxGetApp();
+	pApp->GetMainWnd()->SendMessage(WM_HEXVIEW_CLEAR, (WPARAM)0, (LPARAM)0);
+}
+
 void CPcapWindowDoc::OnCloseDocument()
 {
 	// TODO: 在此添加专用代码和/或调用基类
 	if (CACap.IsSniffing())
 		CACap.StopOpenSniffer();
+	HexViewClear();
 	CDocument::OnCloseDocument();
+}
+
+
+BOOL CPcapWindowDoc::OnSaveDocument(LPCTSTR lpszPathName)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	return TRUE;
+	//return CDocument::OnSaveDocument(lpszPathName);
 }

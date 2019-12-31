@@ -129,6 +129,12 @@ void COutputWnd::Data2HexView(STu64 length, STu8 *data)
 	m_wndOutputHex.SetData(length, data);
 }
 
+void COutputWnd::ClearHexView()
+{
+	m_wndTabs.SetActiveTab(0);
+	m_wndOutputHex.SetData(0, 0);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // COutputList1
 

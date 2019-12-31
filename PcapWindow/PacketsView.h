@@ -36,7 +36,6 @@ public:
 	afx_msg void OnCbnSelchangeCombo();
 	afx_msg void OnCbnEditchangeCombo();
 protected:
-	afx_msg LRESULT OnStreamviewAddpacket(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnUpdateui(WPARAM wParam, LPARAM lParam);
 public:
 	virtual void OnInitialUpdate();
@@ -45,6 +44,7 @@ public:
 public:
 	void AddPacket2UI(CSyncPacket*, std::string strExp);	
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
 };
 
 

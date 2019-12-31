@@ -37,6 +37,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_CAPTURE_START, &CMainFrame::OnUpdateCaptureStart)
 	ON_UPDATE_COMMAND_UI(ID_CAPTURE_RESTART, &CMainFrame::OnUpdateCaptureRestart)
 	ON_UPDATE_COMMAND_UI(ID_CAPTURE_STOP, &CMainFrame::OnUpdateCaptureStop)
+	ON_MESSAGE(WM_HEXVIEW_CLEAR, &CMainFrame::OnHexviewClear)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -663,4 +664,11 @@ void CMainFrame::OnUpdateCaptureRestart(CCmdUI *pCmdUI)
 		}
 	}
 	pCmdUI->Enable(FALSE);
+}
+
+
+afx_msg LRESULT CMainFrame::OnHexviewClear(WPARAM wParam, LPARAM lParam)
+{
+	m_wndOutput.ClearHexView();
+	return 0;
 }

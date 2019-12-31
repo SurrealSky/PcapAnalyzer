@@ -23,7 +23,6 @@ CAnalysisView::~CAnalysisView()
 
 BEGIN_MESSAGE_MAP(CAnalysisView, CListView)
 	ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, &CAnalysisView::OnNMCustomdraw)
-	ON_MESSAGE(WM_STREAMVIEW_ADDPACKET, &CAnalysisView::OnStreamviewAddpacket)
 END_MESSAGE_MAP()
 
 
@@ -32,7 +31,7 @@ END_MESSAGE_MAP()
 #ifdef _DEBUG
 void CAnalysisView::AssertValid() const
 {
-	CListView::AssertValid();
+	//CListView::AssertValid();
 }
 
 #ifndef _WIN32_WCE
@@ -124,28 +123,36 @@ void CAnalysisView::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult)
 }
 
 
-afx_msg LRESULT CAnalysisView::OnStreamviewAddpacket(WPARAM wParam, LPARAM lParam)
+void CAnalysisView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
-	CPcapWindowDoc *pDoc = static_cast<CPcapWindowDoc*>(this->GetDocument());
-	CListCtrl &p = GetListCtrl();
-	p.DeleteAllItems();
-	std::map<std::string, std::string>::const_iterator iter = pDoc->curResult.begin();
-	STu32 index = 0;
-	for (; iter != pDoc->curResult.end(); iter++)
+	// TODO: 在此添加专用代码和/或调用基类
+	if (lHint == WM_ANALYSISVIEW_MAP)
 	{
-		CString item = "";
-		item.Format("%d", index + 1);
-		p.InsertItem(index, item);
+		CPcapWindowDoc *pDoc = static_cast<CPcapWindowDoc*>(this->GetDocument());
+		CListCtrl &p = GetListCtrl();
+		p.DeleteAllItems();
+		std::map<std::string, std::string>::const_iterator iter = pDoc->curResult.begin();
+		STu32 index = 0;
+		for (; iter != pDoc->curResult.end(); iter++)
+		{
+			CString item = "";
+			item.Format("%d", index + 1);
+			p.InsertItem(index, item);
 
-		p.SetItemText(index, 1, iter->first.c_str());
+			p.SetItemText(index, 1, iter->first.c_str());
 
-		p.SetItemText(index, 2, iter->second.c_str());
+			p.SetItemText(index, 2, iter->second.c_str());
 
-		SurrealHex::HexConvert mHex;
-		p.SetItemText(index, 3, mHex.HexToStr((BYTE*)(iter->second.c_str()), iter->second.size()).c_str());
+			SurrealHex::HexConvert mHex;
+			p.SetItemText(index, 3, mHex.HexToStr((BYTE*)(iter->second.c_str()), iter->second.size()).c_str());
 
-		p.SetItemData(index, (DWORD_PTR)&(*iter));
-		index++;
+			p.SetItemData(index, (DWORD_PTR)&(*iter));
+			index++;
+		}
 	}
-	return 0;
+	else if (lHint == WM_VIEW_CLEAR)
+	{
+		CListCtrl &p = GetListCtrl();
+		p.DeleteAllItems();
+	}
 }

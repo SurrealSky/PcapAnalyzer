@@ -59,5 +59,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	void Data2HexView(STu64 length,STu8 *data);
+	void ClearHexView();
 };
 

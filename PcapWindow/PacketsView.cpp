@@ -29,7 +29,6 @@ void CPacketsView::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CPacketsView, CFormView)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
-	ON_MESSAGE(WM_STREAMVIEW_ADDPACKET, &CPacketsView::OnStreamviewAddpacket)
 	ON_CBN_SELCHANGE(IDD_AUTO_CTRL, &CPacketsView::OnCbnSelchangeCombo)
 	ON_NOTIFY(NM_CLICK,IDD_PACKETS_LIST, &CPacketsView::OnPacketsNMClick)
 	ON_NOTIFY(NM_CUSTOMDRAW, IDD_PACKETS_LIST, &CPacketsView::OnNMCustomdraw)
@@ -43,7 +42,7 @@ END_MESSAGE_MAP()
 #ifdef _DEBUG
 void CPacketsView::AssertValid() const
 {
-	CFormView::AssertValid();
+	//CFormView::AssertValid();
 }
 
 #ifndef _WIN32_WCE
@@ -114,25 +113,6 @@ void CPacketsView::OnSize(UINT nType, int cx, int cy)
 	size.cx = rect.right - rect.left;
 	size.cy = rect.bottom - rect.top;
 	SetScrollSizes(MM_HIMETRIC, size); // 将CScrollView的大小设置为当前客户区大小
-}
-
-afx_msg LRESULT CPacketsView::OnStreamviewAddpacket(WPARAM wParam, LPARAM lParam)
-{
-	CPcapWindowDoc *pDoc = static_cast<CPcapWindowDoc*>(this->GetDocument());
-	CSyncStream *stream = static_cast<CSyncStream*>((void*)wParam);
-	if (stream)
-	{
-		CListCtrl &p = packets;
-		p.DeleteAllItems();
-		std::list<CSyncPacket>::iterator iter;
-		for (iter = stream->GetBegin(); iter != stream->GetEnd(); iter++)
-		{
-			CString strExp;
-			dfilterEdt.GetWindowTextA(strExp);
-			AddPacket2UI(&*iter, strExp.GetBuffer(0));
-		}
-	}
-	return 0;
 }
 
 void CPacketsView::OnPacketsNMClick(NMHDR *pNMHDR, LRESULT *pResult)
@@ -314,4 +294,31 @@ BOOL CPacketsView::PreTranslateMessage(MSG* pMsg)
 		return TRUE;
 	}
 	return CFormView::PreTranslateMessage(pMsg);
+}
+
+
+void CPacketsView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (lHint == WM_PACKETVIEW_ADDPACKET)
+	{
+		CPcapWindowDoc *pDoc = static_cast<CPcapWindowDoc*>(this->GetDocument());
+		CSyncStream *stream = static_cast<CSyncStream*>((void*)pHint);
+		if (stream)
+		{
+			CListCtrl &p = packets;
+			p.DeleteAllItems();
+			std::list<CSyncPacket>::iterator iter;
+			for (iter = stream->GetBegin(); iter != stream->GetEnd(); iter++)
+			{
+				CString strExp;
+				dfilterEdt.GetWindowTextA(strExp);
+				AddPacket2UI(&*iter, strExp.GetBuffer(0));
+			}
+		}
+	}
+	else if (lHint == WM_VIEW_CLEAR)
+	{
+		packets.DeleteAllItems();
+	}
 }
