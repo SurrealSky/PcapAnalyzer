@@ -349,6 +349,28 @@ std::map<std::string, std::string> CAnalysisCap::PacketAnalysis(const char *pbod
 	return result;
 }
 
+std::map<std::string, std::string> CAnalysisCap::PacketAnalysis(std::list<CSyncPacket> &packets)
+{
+	std::map<std::string, std::string> result;
+	IAnalyzer *qq = AnalyzerFactory::CreateAnalyzerer(plugin.c_str());
+	if (qq)
+	{
+		std::list<AnalyzerPacket> mypackets;
+		std::list<CSyncPacket>::iterator iter = packets.begin();
+		for (; iter != packets.end(); iter++)
+		{
+			AnalyzerPacket packet;
+			packet.payload.append((char*)iter->_payload.contents(), iter->_payload.size());;
+			packet.srcPort = iter->mNetInfo.srcport;
+			packet.dstPrt = iter->mNetInfo.dstport;
+			mypackets.push_back(packet);
+		}
+		result = qq->AnalysisList(mypackets);
+		delete qq;
+	}
+	return result;
+}
+
 void CAnalysisCap::LoadNetDevs(std::vector<NetCardInfo> &devs)
 {
 	devs=CPacketCapture::devs;

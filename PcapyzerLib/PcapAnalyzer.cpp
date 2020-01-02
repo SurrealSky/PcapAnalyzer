@@ -139,6 +139,11 @@ std::map<std::string,std::string> PcapAnalyzer::PacketAnalysis(ByteBuffer &paylo
 	return pImplAnalysis->PacketAnalysis((char*)payload.contents(), payload.size(),srcPort,dstPort);
 }
 
+std::map<std::string, std::string> PcapAnalyzer::PacketAnalysis(std::list<CSyncPacket> &packets)
+{
+	return pImplAnalysis->PacketAnalysis(packets);
+}
+
 void PcapAnalyzer::LoadNetDevs(std::vector<NetCardInfo> &devs)
 {
 	CPacketCapture::LoadNetDevs(devs);

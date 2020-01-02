@@ -64,5 +64,6 @@ public:
 public:
 	//·ÖÎö
 	std::map<std::string, std::string> PacketAnalysis(ByteBuffer &payload, const unsigned int srcPort, const unsigned int dstPort);
+	std::map<std::string, std::string> PacketAnalysis(std::list<CSyncPacket> &packets);
 };
 

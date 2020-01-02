@@ -29,6 +29,8 @@ public:
 	afx_msg void OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMClick(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnTJFX(CCmdUI *pCmdUI);
+	afx_msg void OnNMRClick(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
 

@@ -24,7 +24,9 @@ CStreamsView::~CStreamsView()
 BEGIN_MESSAGE_MAP(CStreamsView, CListView)
 	ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, &CStreamsView::OnNMCustomdraw)
 	ON_NOTIFY_REFLECT(NM_CLICK, &CStreamsView::OnNMClick)
+	ON_UPDATE_COMMAND_UI(ID_TJFX, &CStreamsView::OnTJFX)
 	ON_WM_CREATE()
+	ON_NOTIFY_REFLECT(NM_RCLICK, &CStreamsView::OnNMRClick)
 END_MESSAGE_MAP()
 
 
@@ -165,26 +167,6 @@ void CStreamsView::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult)
 void CStreamsView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	//POSITION pos = GetListCtrl().GetFirstSelectedItemPosition();
-	//int i = 0;
-	//if (pos == NULL)
-	//{
-
-	//	//未选中
-
-	//}
-
-	//else
-	//{
-	//	//有选中
-	//	while (pos)
-	//	{
-	//		i++;
-	//	    int nItem = GetListCtrl().GetNextSelectedItem(pos);
-	//		//      TRACE1("Item %d was selected!/n", nItem);
-	//		//      you could do your own processing on nItem here
-	//	}
-	//}
 	CPcapWindowDoc *pDoc = static_cast<CPcapWindowDoc*>(this->GetDocument());
 	if (pNMItemActivate->iItem == -1)
 	{
@@ -197,6 +179,22 @@ void CStreamsView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 	*pResult = 0;
 }
 
+void CStreamsView::OnNMRClick(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	CPcapWindowDoc *pDoc = static_cast<CPcapWindowDoc*>(this->GetDocument());
+	if (!pDoc->CACap.IsSniffing())
+	{
+		CMenu menu;
+		menu.LoadMenu(IDR_POPUP_TJFX);      //加载菜单资源
+		CMenu* pPopup = menu.GetSubMenu(0);
+		CPoint myPoint;
+		GetCursorPos(&myPoint);      //获取鼠标坐标
+		pPopup->TrackPopupMenu(TPM_LEFTALIGN, myPoint.x, myPoint.y, this);
+	}
+	*pResult = 0;
+}
 
 int CStreamsView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
@@ -220,4 +218,40 @@ int CStreamsView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		listctrl.InsertColumn(i, m_ColumnLabelStr[i], LVCFMT_LEFT, width[i]); // 设置表头
 	}
 	return 0;
+}
+
+afx_msg void CStreamsView::OnTJFX(CCmdUI *pCmdUI)
+{
+	POSITION pos = GetListCtrl().GetFirstSelectedItemPosition();
+	int i = 0;
+	if (pos == NULL)
+	{
+		//未选中
+	}
+	else
+	{
+		//有选中
+		std::list<CSyncPacket> packets;
+		while (pos)
+		{
+			i++;
+		    int nItem = GetListCtrl().GetNextSelectedItem(pos);
+			CSyncStream *stream = (CSyncStream*)GetListCtrl().GetItemData(nItem);
+			if (stream&&stream->GetCount() > 0)
+			{
+				std::list<CSyncPacket>::iterator iter;
+				for (iter = stream->GetBegin(); iter != stream->GetEnd(); iter++)
+				{
+					packets.push_back(*iter);
+				}
+			}
+		}
+		CPcapWindowDoc *pDoc = static_cast<CPcapWindowDoc*>(this->GetDocument());
+		if (packets.size() > 0)
+		{
+			std::map<std::string, std::string> result;
+			result = pDoc->CACap.PacketAnalysis(packets);
+			pDoc->Result2AnalysisView(result);
+		}
+	}
 }

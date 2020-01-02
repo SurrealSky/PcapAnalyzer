@@ -34,6 +34,7 @@ private:
 public:
 	//根据插件分析数据包
 	std::map<std::string, std::string> PacketAnalysis(const char *data, const unsigned int size,const unsigned int srcPort, const unsigned int dstPort);
+	std::map<std::string, std::string> PacketAnalysis(std::list<CSyncPacket> &packets);
 private:
 	CPacketCapture mSniffer;
 public:

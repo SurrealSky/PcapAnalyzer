@@ -25,7 +25,6 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 	CComboBox mPlugins;
-	//CSkinComboBox mPlugins;
 	std::string plugin;
 public:
 	afx_msg void OnBnClickedOk();

@@ -307,6 +307,7 @@ void CPacketsView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		if (stream)
 		{
 			CListCtrl &p = packets;
+			p.SetRedraw(FALSE);//避免列表界面闪烁
 			p.DeleteAllItems();
 			std::list<CSyncPacket>::iterator iter;
 			for (iter = stream->GetBegin(); iter != stream->GetEnd(); iter++)
@@ -315,6 +316,7 @@ void CPacketsView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 				dfilterEdt.GetWindowTextA(strExp);
 				AddPacket2UI(&*iter, strExp.GetBuffer(0));
 			}
+			p.SetRedraw(TRUE);
 		}
 	}
 	else if (lHint == WM_VIEW_CLEAR)

@@ -90,8 +90,8 @@ void CChildFrame::OnSize(UINT nType, int cx, int cy)
 	unsigned int width = rect.right - rect.left;
 	unsigned int height = rect.bottom - rect.top;
 	rect.right = rect.left + width / 2;
-	//if (m_wndSplitter.m_hWnd)
-		//m_wndSplitter.SetColumnInfo(0, 415, 0);
-	//if(m_wndSplitter2.m_hWnd)
-	//	m_wndSplitter2.SetRowInfo(0, 100, 0);
+	/*if (m_wndSplitter.m_hWnd)
+		m_wndSplitter.SetColumnInfo(0, 415, 0);
+	if(m_wndSplitter2.m_hWnd)
+		m_wndSplitter2.SetRowInfo(0, 200, 0);*/
 }

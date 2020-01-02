@@ -80,34 +80,34 @@ int CClassView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // 未能创建
 	}
 
-	// 加载图像: 
-	//m_wndToolBar.Create(this, AFX_DEFAULT_TOOLBAR_STYLE, IDR_SORT);
-	//m_wndToolBar.LoadToolBar(IDR_SORT, 0, 0, TRUE /* 已锁定*/);
+	 加载图像: 
+	m_wndToolBar.Create(this, AFX_DEFAULT_TOOLBAR_STYLE, IDR_SORT);
+	m_wndToolBar.LoadToolBar(IDR_SORT, 0, 0, TRUE /* 已锁定*/);
 
-	//OnChangeVisualStyle();
+	OnChangeVisualStyle();
 
-	//m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() | CBRS_TOOLTIPS | CBRS_FLYBY);
-	//m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() & ~(CBRS_GRIPPER | CBRS_SIZE_DYNAMIC | CBRS_BORDER_TOP | CBRS_BORDER_BOTTOM | CBRS_BORDER_LEFT | CBRS_BORDER_RIGHT));
+	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() | CBRS_TOOLTIPS | CBRS_FLYBY);
+	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() & ~(CBRS_GRIPPER | CBRS_SIZE_DYNAMIC | CBRS_BORDER_TOP | CBRS_BORDER_BOTTOM | CBRS_BORDER_LEFT | CBRS_BORDER_RIGHT));
 
-	//m_wndToolBar.SetOwner(this);
+	m_wndToolBar.SetOwner(this);
 
-	//// 所有命令将通过此控件路由，而不是通过主框架路由: 
-	//m_wndToolBar.SetRouteCommandsViaFrame(FALSE);
+	// 所有命令将通过此控件路由，而不是通过主框架路由: 
+	m_wndToolBar.SetRouteCommandsViaFrame(FALSE);
 
-	//CMenu menuSort;
-	//menuSort.LoadMenu(IDR_POPUP_SORT);
+	CMenu menuSort;
+	menuSort.LoadMenu(IDR_POPUP_SORT);
 
-	//m_wndToolBar.ReplaceButton(ID_SORT_MENU, CClassViewMenuButton(menuSort.GetSubMenu(0)->GetSafeHmenu()));
+	m_wndToolBar.ReplaceButton(ID_SORT_MENU, CClassViewMenuButton(menuSort.GetSubMenu(0)->GetSafeHmenu()));
 
-	//CClassViewMenuButton* pButton =  DYNAMIC_DOWNCAST(CClassViewMenuButton, m_wndToolBar.GetButton(0));
+	CClassViewMenuButton* pButton =  DYNAMIC_DOWNCAST(CClassViewMenuButton, m_wndToolBar.GetButton(0));
 
-	//if (pButton != NULL)
-	//{
-	//	pButton->m_bText = FALSE;
-	//	pButton->m_bImage = TRUE;
-	//	pButton->SetImage(GetCmdMgr()->GetCmdImage(m_nCurrSort));
-	//	pButton->SetMessageWnd(this);
-	//}
+	if (pButton != NULL)
+	{
+		pButton->m_bText = FALSE;
+		pButton->m_bImage = TRUE;
+		pButton->SetImage(GetCmdMgr()->GetCmdImage(m_nCurrSort));
+		pButton->SetMessageWnd(this);
+	}
 
 	//// 填入一些静态树视图数据(此处只需填入虚拟代码，而不是复杂的数据)
 	//FillClassView();
@@ -212,10 +212,10 @@ void CClassView::AdjustLayout()
 	CRect rectClient;
 	GetClientRect(rectClient);
 
-	//int cyTlb = m_wndToolBar.CalcFixedLayout(FALSE, TRUE).cy;
+	int cyTlb = m_wndToolBar.CalcFixedLayout(FALSE, TRUE).cy;
 
-	//m_wndToolBar.SetWindowPos(NULL, rectClient.left, rectClient.top, rectClient.Width(), cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
-	m_wndClassView.SetWindowPos(NULL, rectClient.left + 1, rectClient.top + /*cyTlb*/ + 1, rectClient.Width() - 2, rectClient.Height() - /*cyTlb*/ - 2, SWP_NOACTIVATE | SWP_NOZORDER);
+	m_wndToolBar.SetWindowPos(NULL, rectClient.left, rectClient.top, rectClient.Width(), cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
+	m_wndClassView.SetWindowPos(NULL, rectClient.left + 1, rectClient.top + cyTlb + 1, rectClient.Width() - 2, rectClient.Height() - cyTlb - 2, SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
 BOOL CClassView::PreTranslateMessage(MSG* pMsg)

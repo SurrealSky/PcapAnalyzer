@@ -43,6 +43,7 @@ BOOL CDlgPlugins::OnInitDialog()
 
 	// TODO:  在此添加额外的初始化
 	SetWindowTextA("插件");
+
 	mPlugins.InsertString(0, "---------------------------");
 	std::vector<std::string> plugins = PcapAnalyzer::GetAllPlugins();
 	for (int i = 0; i < plugins.size(); i++)
@@ -50,6 +51,7 @@ BOOL CDlgPlugins::OnInitDialog()
 		mPlugins.InsertString(i + 1, plugins[i].c_str());
 	}
 	mPlugins.SetCurSel(0);
+
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE

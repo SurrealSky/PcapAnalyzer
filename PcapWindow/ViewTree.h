@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CViewTree ´°¿Ú
 
-class CViewTree : public CMFCShellTreeCtrl
+class CViewTree : public CMFCShellTreeCtrl /*public CTreeCtrl*/
 {
 // ¹¹Ôì
 public:

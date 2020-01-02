@@ -269,6 +269,12 @@ public:
 		}
 		return mapresult;
 	}
+	std::map<std::string, std::string> AnalysisList(const std::list<AnalyzerPacket>& packets)
+	{
+		std::map<std::string, std::string> mapresult;
+		mapresult.insert(std::pair<std::string, std::string>("error", "N/A"));
+		return mapresult;
+	}
 };
 
 PLUGIN_FUNC IAnalyzer *CreateAnalyzer()

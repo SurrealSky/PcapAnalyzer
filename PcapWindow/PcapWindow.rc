@@ -368,6 +368,14 @@ BEGIN
     END
 END
 
+IDR_POPUP_TJFX MENU
+BEGIN
+    POPUP "统计分析"
+    BEGIN
+        MENUITEM "统计分析",                        ID_TJFX
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
