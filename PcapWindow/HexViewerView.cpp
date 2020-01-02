@@ -3,11 +3,9 @@
 //
 
 #include "stdafx.h"
-// SHARED_HANDLERS 可以在实现预览、缩略图和搜索筛选器句柄的
-// ATL 项目中进行定义，并允许与该项目共享文档代码。
 
-#include "PcapWindowDoc.h"
 #include "HexViewerView.h"
+#include "resource.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -21,7 +19,6 @@
 BEGIN_MESSAGE_MAP(CHexViewerView, CWnd)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
-	ON_WM_LBUTTONDBLCLK()
 	ON_WM_CREATE()
 	ON_WM_HSCROLL()
 	ON_WM_VSCROLL()
@@ -32,6 +29,7 @@ BEGIN_MESSAGE_MAP(CHexViewerView, CWnd)
 	ON_WM_SIZE()
 	//ON_COMMAND(ID_CHECK_GOTO, &CHexViewerView::OnCheckGoto)
 	ON_WM_PAINT()
+	ON_COMMAND(ID_EDIT_SAVE, &CHexViewerView::OnEditSave)
 END_MESSAGE_MAP()
 
 // CHexViewerView 构造/析构
@@ -43,17 +41,17 @@ CHexViewerView::CHexViewerView()
 	, m_nVSPos(0)
 	, m_nLineSel(-1)
 	, m_nColSel(-1)
-	, m_cxPrinter(0)
+	/*, m_cxPrinter(0)
 	, m_cxWidth(0)
 	, m_cyPrinter(0)
-	, m_cxOffset(0)
-	, m_nLinesPerPage(0)
+	, m_cxOffset(0)*/
+	/*, m_nLinesPerPage(0)*/
 	, m_nLinesPerScroll(0)
 {
 	// TODO:  在此处添加构造代码
-	m_ullFileLength = 200;
-	m_pFileData = (BYTE*)malloc(m_ullFileLength);
-	m_uLines = (m_ullFileLength + BYTES_ONE_LINE - 1) / BYTES_ONE_LINE;
+	m_ullFileLength = 0;
+	m_pFileData = 0;
+	m_uLines = 0;
 }
 
 CHexViewerView::~CHexViewerView()
@@ -95,7 +93,7 @@ void CHexViewerView::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 	::SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &m_nLinesPerScroll, 0);
 }
 
-void CHexViewerView::DrawSelText(CPcapWindowDoc* pDoc, CPaintDC* pDC)
+void CHexViewerView::DrawSelText(CPaintDC* pDC)
 {
 	if (m_nColSel == -1 || m_nLineSel == -1)
 		return;
@@ -104,7 +102,7 @@ void CHexViewerView::DrawSelText(CPcapWindowDoc* pDoc, CPaintDC* pDC)
 	GetLineText(m_nLineSel, strLineText);
 
 	COLORREF OldTextColor = pDC->SetTextColor(RGB(255, 255, 255));
-	COLORREF OldBkColor = pDC->SetBkColor(RGB(255, 0, 0));
+	COLORREF OldBkColor = pDC->SetBkColor(RGB(0, 0, 0));
 
 	if (m_nColSel < 8) {
 		pDC->TextOut((m_nColSel * 3 + 12)*m_cxChar, m_nLineSel*m_cyChar,
@@ -122,71 +120,6 @@ void CHexViewerView::DrawSelText(CPcapWindowDoc* pDoc, CPaintDC* pDC)
 	return;
 }
 
-void CHexViewerView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
-{
-	//打印行格式
-	CString strLine(TEXT("00000000    00 00 00 00 00 00 00 00 - 00 00 00 00 00 00 00 00    1234567890123456"));
-
-	m_fontPrinter.CreatePointFont(100, TEXT("Courier New"), pDC);
-
-	TEXTMETRIC tm;
-	CFont *pOldFont = pDC->SelectObject(&m_fontPrinter);
-	pDC->GetTextMetrics(&tm);
-	m_cyPrinter = tm.tmHeight + tm.tmExternalLeading;
-	m_cxWidth = pDC->GetTextExtent(strLine, 81).cx;
-	pDC->SelectObject(pOldFont);
-
-	m_nLinesPerPage = (pDC->GetDeviceCaps(VERTRES) - (m_cyPrinter * 7)) / m_cyPrinter;
-	UINT nMaxPage = max(1, (m_uLines +	(m_nLinesPerPage - 1)) / m_nLinesPerPage);
-	pInfo->SetMaxPage(nMaxPage);
-
-	m_cxOffset = (pDC->GetDeviceCaps(HORZRES) - m_cxWidth) / 2;
-}
-
-void CHexViewerView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
-{
-	// TODO:  添加打印后进行的清理过程
-}
-
-void CHexViewerView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
-{
-	int nDocLines = m_uLines;
-	if (!nDocLines)
-		return;
-
-	int nStart = (pInfo->m_nCurPage - 1) * m_nLinesPerPage;
-	int nEnd = min(nDocLines, nStart + m_nLinesPerPage);
-	CFont *pOldFont = pDC->SelectObject(&m_fontPrinter);
-	PrintHeader(0, pDC, pInfo);
-	for (int i = nStart; i < nEnd; ++i) {
-		CString strLineText;
-		GetLineText(i, strLineText);
-		pDC->TextOut(m_cxOffset, m_cyPrinter * (5 + i - nStart), strLineText);
-	}
-	pDC->SelectObject(pOldFont);
-}
-
-void CHexViewerView::PrintHeader(CPcapWindowDoc* pDoc, CDC* pDC, CPrintInfo* pInfo)
-{
-	CString strFileName = pDoc->GetPathName();
-	if (strFileName.GetLength() > 60)
-		strFileName = pDoc->GetTitle();
-
-	CString strPageNum;
-	strPageNum.Format(TEXT("%d/%d"), pInfo->m_nCurPage, pInfo->GetMaxPage());
-
-	pDC->TextOut(m_cxOffset, m_cyPrinter * 3, strFileName);
-	UINT nOldTextAlign = pDC->SetTextAlign(TA_RIGHT);
-	pDC->TextOut(m_cxOffset + m_cxWidth, m_cyPrinter * 3, strPageNum);
-	pDC->SetTextAlign(nOldTextAlign);
-
-	pDC->MoveTo(m_cxOffset, m_cyPrinter * 4);
-	pDC->LineTo(m_cxOffset + m_cxWidth, m_cyPrinter * 4);
-	pDC->MoveTo(m_cxOffset, m_cyPrinter*(m_nLinesPerPage + 6));
-	pDC->LineTo(m_cxOffset + m_cxWidth, m_cyPrinter*(m_nLinesPerPage + 6));
-}
-
-
 void CHexViewerView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
 	ClientToScreen(&point);
@@ -195,22 +128,31 @@ void CHexViewerView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 
 void CHexViewerView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 {
-//#ifndef SHARED_HANDLERS
-//	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
-//#endif
+	CMenu PopupMenu;
+	if (PopupMenu.LoadMenu(IDR_HEXCTRLMENU))
+	{
+		CMenu* pPopupMenu = PopupMenu.GetSubMenu(0);
+		// Enable/disable menu commands
+		/*pPopupMenu->EnableMenuItem(ID_EDIT_CUT,
+			HasSelection() && !m_bReadOnly ? MF_ENABLED : MF_GRAYED);
+		pPopupMenu->EnableMenuItem(ID_EDIT_COPY,
+			HasSelection() ? MF_ENABLED : MF_GRAYED);
+		pPopupMenu->EnableMenuItem(ID_EDIT_PASTE,
+			CanPaste() && !m_bReadOnly ? MF_ENABLED : MF_GRAYED);
+		pPopupMenu->EnableMenuItem(ID_EDIT_DELETE,
+			HasSelection() && !m_bReadOnly ? MF_ENABLED : MF_GRAYED);*/
+		// Check for pop-up menu from keyboard
+		if (point.x == -1 && point.y == -1)
+		{
+			point = CPoint(5, 5);
+			ClientToScreen(&point);
+		}
+		pPopupMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, this);
+	}
 }
 
 
 // CHexViewerView 消息处理程序
-
-
-void CHexViewerView::OnLButtonDblClk(UINT nFlags, CPoint point)
-{
-	GetParent()->SendMessage(WM_COMMAND, ID_FILE_OPEN);
-
-	CWnd::OnLButtonDblClk(nFlags, point);
-}
-
 
 void CHexViewerView::ResetScroll()
 {
@@ -423,12 +365,6 @@ void CHexViewerView::OnSize(UINT nType, int cx, int cy)
 }
 
 
-
-void CHexViewerView::OnCheckGoto()
-{
-	MessageBox(TEXT("asdf"));
-}
-
 // 获取特定行的内容
 void CHexViewerView::GetLineText(UINT uLine, CString & strText)
 {
@@ -446,7 +382,7 @@ void CHexViewerView::GetLineText(UINT uLine, CString & strText)
 
 	CStringA strTemp;
 	strTemp.Format("%0.8X    %0.2X %0.2X %0.2X %0.2X "\
-		"%0.2X %0.2X %0.2X %0.2X - %0.2X %0.2X %0.2X %0.2X "\
+		"%0.2X %0.2X %0.2X %0.2X   %0.2X %0.2X %0.2X %0.2X "\
 		"%0.2X %0.2X %0.2X %0.2X    ", uLine * 16, p[0], p[1],
 		p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9], p[10],
 		p[11], p[12], p[13], p[14], p[15]);
@@ -495,10 +431,12 @@ void CHexViewerView::GetLineText(UINT uLine, CString & strText)
 
 void CHexViewerView::OnPaint()
 {
-	CPaintDC pDC(this); // device context for painting
-					   // TODO: 在此处添加消息处理程序代码
-					   // 不为绘图消息调用 CWnd::OnPaint()
-					   //根据文件内容指针判断当前是否已成功打开文件
+	//绘制白色背景
+	CRect rc;
+	CPaintDC pDC(this);
+	GetClientRect(&rc);
+	pDC.FillSolidRect(rc, RGB(0xFF, 0xFF, 0xFF));
+
 	if (!m_pFileData) {
 		//未打开文件，显示提示信息
 		CRect rect;
@@ -507,7 +445,7 @@ void CHexViewerView::OnPaint()
 		font.CreatePointFont(200, TEXT("华文行楷"));
 		CFont *pOldFont = pDC.SelectObject(&font);
 		COLORREF clrOld = pDC.SetTextColor(RGB(192, 192, 192));
-		pDC.DrawText(TEXT("双击窗口或将文件拖拽到窗口以打开文件"), rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+		pDC.DrawText(TEXT("HexView by Surreal ^-^"), rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 		pDC.SelectObject(pOldFont);
 		pDC.SetTextColor(clrOld);
 		return;
@@ -526,6 +464,55 @@ void CHexViewerView::OnPaint()
 		pDC.TextOut(0, i*m_cyChar, strLineText);
 	}
 	if (m_nLineSel >= nLineStart && m_nLineSel <= nLineEnd)
-		DrawSelText(0, &pDC);
+		DrawSelText(&pDC);
 	pDC.SelectObject(pOldFont);
+}
+
+void CHexViewerView::OnEditSave()
+{
+	// TODO:  在此添加命令处理程序代码
+	if (m_ullFileLength > 0)
+	{
+		CStdioFile file;
+		CString filepath;
+		TCHAR szFilter[] = _T("文本文件(*.dat)|*.dat|所有文件(*.*)|*.*||");
+		CFileDialog fileDlg(FALSE, _T("dat"), "temp", OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter, this);
+
+		if (IDOK == fileDlg.DoModal())
+		{
+			filepath = fileDlg.GetPathName();
+			file.Open(filepath, CFile::modeCreate | CFile::modeWrite | CFile::typeText);
+			file.Write(m_pFileData, m_ullFileLength);
+			file.Close();
+		}
+	}
+}
+
+void CHexViewerView::SetDataView(BYTE *buffer, ULONGLONG size)
+{
+	if (size > 0)
+	{
+		if (m_pFileData != 0)
+		{
+			free(m_pFileData);
+			m_pFileData = 0;
+		}
+		m_ullFileLength = size;
+		m_pFileData = (BYTE*)malloc(m_ullFileLength);
+		memcpy(m_pFileData, buffer, size);
+		m_uLines = (m_ullFileLength + BYTES_ONE_LINE - 1) / BYTES_ONE_LINE;
+		ResetScroll();
+		Invalidate(TRUE);
+	}
+}
+
+void CHexViewerView::ClearView()
+{
+	if (m_pFileData)
+	{
+		free(m_pFileData);
+		m_pFileData = 0;
+		m_ullFileLength = 0;
+		m_uLines = 0;
+	}
 }

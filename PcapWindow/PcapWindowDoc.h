@@ -68,6 +68,3 @@ public:
 	virtual void OnCloseDocument();
 	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
 };
-
-
-#define BYTES_ONE_LINE			16

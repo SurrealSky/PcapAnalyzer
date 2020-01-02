@@ -4,7 +4,6 @@
 
 #pragma once
 #include "afxwin.h"
-#include"PcapWindowDoc.h"
 
 
 class CHexViewerView : public CWnd
@@ -23,9 +22,6 @@ public:
 	// 重写
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-protected:
-	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
-	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
 
 	// 实现
 public:
@@ -49,19 +45,16 @@ public:
 	int m_nLineSel;
 	CFont m_fontView;
 	//打印相关参数
-	CFont m_fontPrinter;
-	int m_cxPrinter;
-	int m_cxWidth;
-	int m_cyPrinter;
-	int m_cxOffset;
-	int m_nLinesPerPage;
+	//CFont m_fontPrinter;
+	//int m_cxPrinter;
+	//int m_cxWidth;
+	//int m_cyPrinter;
+	//int m_cxOffset;
+	/*int m_nLinesPerPage;*/
 	int m_nLinesPerScroll;
 
 public:
-	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
-	void DrawSelText(CPcapWindowDoc* pDoc, CPaintDC* pDC);
-	virtual void OnPrint(CDC* pDC, CPrintInfo* pInfo);
-	void PrintHeader(CPcapWindowDoc* pDoc, CDC* pDC, CPrintInfo* pInfo);
+	void DrawSelText(CPaintDC* pDC);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	void ResetScroll();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
@@ -71,7 +64,8 @@ public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnCheckGoto();
+	afx_msg void OnPaint();
+	afx_msg void OnEditSave();
 public:
 	// 文档的总行数
 	UINT m_uLines;
@@ -81,6 +75,9 @@ public:
 	BYTE* m_pFileData;
 	// 获取特定行的内容
 	void GetLineText(UINT uLine, CString & strText);
-	afx_msg void OnPaint();
+public:
+	void SetDataView(BYTE *buffer, ULONGLONG size);
+	void ClearView();
 };
 
+#define BYTES_ONE_LINE			16

@@ -126,13 +126,13 @@ void COutputWnd::UpdateFonts()
 void COutputWnd::Data2HexView(STu64 length, STu8 *data)
 {
 	m_wndTabs.SetActiveTab(1);
-	//m_wndOutputHex.SetData(length, data);
+	m_wndOutputHex.SetDataView(data, length);
 }
 
 void COutputWnd::ClearHexView()
 {
 	m_wndTabs.SetActiveTab(0);
-	//m_wndOutputHex.SetData(0, 0);
+	m_wndOutputHex.ClearView();
 }
 
 /////////////////////////////////////////////////////////////////////////////
