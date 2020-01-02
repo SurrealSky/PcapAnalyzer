@@ -106,6 +106,7 @@
 #define ID_COPY_HEXSTRING               32791
 #define ID_PASTE_HEXSTRING              32792
 #define ID_COPY_VIEW                    32793
+#define ID_EDIT_SAVE					32794
 
 // Next default values for new objects
 // 

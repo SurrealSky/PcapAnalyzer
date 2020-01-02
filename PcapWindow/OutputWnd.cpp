@@ -51,7 +51,7 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("未能创建输出窗口\n");
 		return -1;      // 未能创建
 	}
-	m_wndOutputHex.SetWideView(TRUE);
+	//m_wndOutputHex.SetWideView(TRUE);
 	//m_wndOutputHex.SetReadOnly(TRUE);
 	//BYTE buffer[0x100] = { 0xff };
 	//m_wndOutputHex.SetData(sizeof(buffer), buffer);
@@ -126,13 +126,13 @@ void COutputWnd::UpdateFonts()
 void COutputWnd::Data2HexView(STu64 length, STu8 *data)
 {
 	m_wndTabs.SetActiveTab(1);
-	m_wndOutputHex.SetData(length, data);
+	//m_wndOutputHex.SetData(length, data);
 }
 
 void COutputWnd::ClearHexView()
 {
 	m_wndTabs.SetActiveTab(0);
-	m_wndOutputHex.SetData(0, 0);
+	//m_wndOutputHex.SetData(0, 0);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -22,6 +22,9 @@
     <Filter Include="CommonLib\MFCUI">
       <UniqueIdentifier>{5e9cd1ff-c749-4752-b282-6d183ee9c62b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HexView">
+      <UniqueIdentifier>{71444eeb-65a9-453e-a7bb-28573a65fa45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -81,9 +84,6 @@
     <ClInclude Include="DlgPlugins.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="HexEdit.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="AnalysisView.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -113,6 +113,12 @@
     </ClInclude>
     <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawTabList.h">
       <Filter>CommonLib\MFCUI</Filter>
+    </ClInclude>
+    <ClInclude Include="HexViewerView.h">
+      <Filter>HexView</Filter>
+    </ClInclude>
+    <ClInclude Include="HexEdit.h">
+      <Filter>HexView</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -161,9 +167,6 @@
     <ClCompile Include="DlgPlugins.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="HexEdit.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="AnalysisView.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -193,6 +196,12 @@
     </ClCompile>
     <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawTabList.cpp">
       <Filter>CommonLib\MFCUI</Filter>
+    </ClCompile>
+    <ClCompile Include="HexViewerView.cpp">
+      <Filter>HexView</Filter>
+    </ClCompile>
+    <ClCompile Include="HexEdit.cpp">
+      <Filter>HexView</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

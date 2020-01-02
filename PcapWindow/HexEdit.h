@@ -164,6 +164,7 @@ protected:
 	afx_msg void OnPasteString();
 	afx_msg void OnPasteHexstring();
 	afx_msg void OnCopyView();
+	afx_msg void OnEditSave();
 
 	DECLARE_MESSAGE_MAP()
 public:

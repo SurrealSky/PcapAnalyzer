@@ -65,6 +65,7 @@ BEGIN_MESSAGE_MAP(CHexEdit, CWnd)
 	ON_COMMAND(ID_COPY_HEXSTRING, &CHexEdit::OnCopyHexstring)
 	ON_COMMAND(ID_PASTE_HEXSTRING, &CHexEdit::OnPasteHexstring)
 	ON_COMMAND(ID_COPY_VIEW, &CHexEdit::OnCopyView)
+	ON_COMMAND(ID_EDIT_SAVE, &CHexEdit::OnEditSave)
 END_MESSAGE_MAP()
 
 
@@ -82,7 +83,7 @@ CHexEdit::CHexEdit()
 	m_bHexCol = TRUE;
 	m_bReadOnly = FALSE;
 	m_nBytesPerRow = 0x08;
-	m_nLimit = 0xFFFF;	// Default max bytes
+	m_nLimit = 0xFFFFFFFF;	// Default max bytes
 
 	m_nTimerID = 0;
 
@@ -1997,7 +1998,6 @@ void CHexEdit::OnPasteHexstring()
 	}
 }
 
-
 void CHexEdit::HexToStr(BYTE *pbSrc, int nLen, BYTE *dstbuffer)
 {
 	char ddl, ddh;
@@ -2046,5 +2046,29 @@ void CHexEdit::OnCopyView()
 		COleDataSource* pDataSource = CreateDataSource(CT_View);
 		if (pDataSource != NULL)
 			pDataSource->SetClipboard();
+	}
+}
+
+void CHexEdit::OnEditSave()
+{
+	// TODO:  在此添加命令处理程序代码
+	unsigned int len = GetDataLength();
+	if (len > 0)
+	{
+		BYTE *buffer = (BYTE*)malloc(len);
+		GetData(len, buffer);
+		CStdioFile file;
+		CString filepath;
+		TCHAR szFilter[] = _T("文本文件(*.dat)|*.dat|所有文件(*.*)|*.*||");
+		CFileDialog fileDlg(FALSE, _T("dat"), "temp", OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter, this);
+
+		if (IDOK == fileDlg.DoModal())
+		{
+			filepath = fileDlg.GetPathName();
+			file.Open(filepath, CFile::modeCreate | CFile::modeWrite | CFile::typeText);
+			file.Write(buffer, len);
+			file.Close();
+		}
+		free(buffer);
 	}
 }

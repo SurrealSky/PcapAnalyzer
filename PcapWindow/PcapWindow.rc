@@ -364,7 +364,8 @@ BEGIN
         END
         MENUITEM "&Delete",                     ID_EDIT_DELETE
         MENUITEM SEPARATOR
-        MENUITEM "&Select All",                 ID_EDIT_SELECTALL
+        MENUITEM "Select &All",                 ID_EDIT_SELECTALL
+        MENUITEM "&Save",                       ID_EDIT_SAVE
     END
 END
 
