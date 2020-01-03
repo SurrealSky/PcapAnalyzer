@@ -39,14 +39,13 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_CAPTURE_STOP, &CMainFrame::OnUpdateCaptureStop)
 	ON_MESSAGE(WM_HEXVIEW_CLEAR, &CMainFrame::OnHexviewClear)
 	ON_MESSAGE(WM_HEXVIEW_PAIR, &CMainFrame::OnHexviewPair)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
 {
 	ID_SEPARATOR,           // 状态行指示器
-	ID_INDICATOR_CAPS,
-	ID_INDICATOR_NUM,
-	ID_INDICATOR_SCRL,
+	ID_INDICATOR_TIME,
 };
 
 // CMainFrame 构造/析构
@@ -350,6 +349,9 @@ void CMainFrame::LoadUI()
 	m_RestartCapture.SetImagePng(SplicFullFilePath("Res\\Button\\x-capture-restart.png"), SplicFullFilePath("Res\\Button\\x-capture-restart-turn1.png"));
 	m_RestartCapture.SetTransparentColor(RGB(74, 144, 226), 100, 155);//設置按鈕顯示半透明貼膜
 	m_RestartCapture.ShowWindow(SW_HIDE);
+
+	//设置定时器
+	SetTimer(EVENT_TIME, 1000, NULL);
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
@@ -673,10 +675,25 @@ afx_msg LRESULT CMainFrame::OnHexviewClear(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-
 afx_msg LRESULT CMainFrame::OnHexviewPair(WPARAM wParam, LPARAM lParam)
 {
 	std::pair<std::string,std::string> *element = static_cast<std::pair<std::string, std::string>*>((void*)wParam);
 	m_wndOutput.Data2HexView(element->second.size(), (STu8*)(element->second.c_str()));
 	return 0;
+}
+
+void CMainFrame::OnTimer(UINT_PTR nIDEvent)
+{
+	if (nIDEvent == EVENT_TIME)
+	{
+		CTime t = CTime::GetCurrentTime();          //获得当前的系统时间
+		CClientDC dc(this);
+		CString str = t.Format("%H:%M:%S");       //格式可以参考MSDN中的strftime函数
+		CSize sz = dc.GetTextExtent(str);              //设置一个CClientDC对象来获取str的长度
+		int index = 0;
+		index = m_wndStatusBar.CommandToIndex(ID_INDICATOR_TIME);
+		m_wndStatusBar.SetPaneInfo(index, ID_INDICATOR_TIME, SBPS_NORMAL, sz.cx);
+		m_wndStatusBar.SetPaneText(index, str);            //设置IDS_TIMER指示器字符串
+	}
+	CMDIFrameWndEx::OnTimer(nIDEvent);
 }

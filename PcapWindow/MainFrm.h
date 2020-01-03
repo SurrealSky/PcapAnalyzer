@@ -80,6 +80,8 @@ public:
 protected:
 	afx_msg LRESULT OnHexviewClear(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnHexviewPair(WPARAM wParam, LPARAM lParam);
+public:
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
 
 

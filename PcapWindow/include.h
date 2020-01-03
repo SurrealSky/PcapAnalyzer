@@ -23,6 +23,9 @@
 #include<LogLib\DebugLog.h>
 
 
+//event id
+#define EVENT_TIME		0x1
+
 //message
 //CAutoComplete
 #define WM_SHOWDROP		WM_USER + 201
