@@ -348,24 +348,7 @@ IDR_HEXCTRLMENU MENU
 BEGIN
     POPUP "Edit"
     BEGIN
-        MENUITEM "Cu&t",                        ID_EDIT_CUT
-        POPUP "&Copy"
-        BEGIN
-            MENUITEM "Current View",                ID_COPY_VIEW
-            MENUITEM "HEX Stream",                  ID_COPY_BINARY
-            MENUITEM "C Array",                     ID_COPY_STRING
-            MENUITEM "HEX String",                  ID_COPY_HEXSTRING
-        END
-        POPUP "&Paste"
-        BEGIN
-            MENUITEM "Hex Stream",                  ID_PASTE_BINARY
-            MENUITEM "C Array",                     ID_PASTE_STRING
-            MENUITEM "Hex String",                  ID_PASTE_HEXSTRING
-        END
-        MENUITEM "&Delete",                     ID_EDIT_DELETE
-        MENUITEM SEPARATOR
-        MENUITEM "Select &All",                 ID_EDIT_SELECTALL
-        MENUITEM "&Save",                       ID_EDIT_SAVE
+        MENUITEM "&Save As File",               ID_EDIT_SAVE
     END
 END
 

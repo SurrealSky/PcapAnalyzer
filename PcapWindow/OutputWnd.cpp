@@ -51,10 +51,6 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("未能创建输出窗口\n");
 		return -1;      // 未能创建
 	}
-	//m_wndOutputHex.SetWideView(TRUE);
-	//m_wndOutputHex.SetReadOnly(TRUE);
-	//BYTE buffer[0x100] = { 0xff };
-	//m_wndOutputHex.SetData(sizeof(buffer), buffer);
 
 	UpdateFonts();
 
