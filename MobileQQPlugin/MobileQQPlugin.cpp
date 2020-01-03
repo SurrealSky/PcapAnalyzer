@@ -20,8 +20,11 @@ private:
 		if (offset >= len) return 0;
 
 		STu32 size = STswab32(*(int*)data);
-		if (size>4)
+		if (size > 4)
+		{
+			if (size + offset > len) size = len - offset;
 			value.append(data + 4, size - 4);
+		}
 		return size;
 	}
 	unsigned int Skip2LV(const char *data, const unsigned int offset, const unsigned int len, std::string &value)
