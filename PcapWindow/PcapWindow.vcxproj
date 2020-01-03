@@ -204,7 +204,6 @@
     <ClInclude Include="ClassView.h" />
     <ClInclude Include="DlgPlugins.h" />
     <ClInclude Include="FileView.h" />
-    <ClInclude Include="HexEdit.h" />
     <ClInclude Include="HexViewerView.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="MainFrm.h" />
@@ -236,10 +235,6 @@
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="DlgPlugins.cpp" />
     <ClCompile Include="FileView.cpp" />
-    <ClCompile Include="HexEdit.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="HexViewerView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />

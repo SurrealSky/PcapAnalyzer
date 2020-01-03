@@ -14,7 +14,18 @@
 
 // CHexViewerView
 
-//IMPLEMENT_DYNCREATE(CHexViewerView, CView)
+//////////////////////////////////////////////////////////////////////////////
+// CHexEdit
+
+// Control class name
+const _TCHAR CHexViewerView::m_szWndClassName[] = _T("SoftCircuitsHexEdit");
+
+// Flag to indicate class is registered
+// As a static variable, this causes RegisterWndClass() to be called
+// automatically during application start up
+BOOL CHexViewerView::m_bIsRegistered = CHexViewerView::RegisterWndClass();
+
+
 
 BEGIN_MESSAGE_MAP(CHexViewerView, CWnd)
 	ON_WM_CONTEXTMENU()
@@ -27,7 +38,6 @@ BEGIN_MESSAGE_MAP(CHexViewerView, CWnd)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_SETTINGCHANGE()
 	ON_WM_SIZE()
-	//ON_COMMAND(ID_CHECK_GOTO, &CHexViewerView::OnCheckGoto)
 	ON_WM_PAINT()
 	ON_COMMAND(ID_EDIT_SAVE, &CHexViewerView::OnEditSave)
 END_MESSAGE_MAP()
@@ -56,6 +66,59 @@ CHexViewerView::CHexViewerView()
 
 CHexViewerView::~CHexViewerView()
 {
+}
+
+// Registers our Windows class
+BOOL CHexViewerView::RegisterWndClass()
+{
+	WNDCLASS wndclass;
+
+	if (m_bIsRegistered)
+		return TRUE;
+
+	// Register new window control class
+	wndclass.style = 0;
+	wndclass.lpfnWndProc = ::DefWindowProc;
+	wndclass.cbClsExtra = 0;
+	wndclass.cbWndExtra = 0;
+	//wndclass.hInstance = (HINSTANCE)::GetModuleHandle(NULL);
+	HMODULE hModule = GetCurrentModule(FALSE);
+	wndclass.hInstance = (HINSTANCE)hModule;
+	wndclass.hIcon = NULL;
+	wndclass.hCursor = AfxGetApp()->LoadStandardCursor(IDC_IBEAM);
+	wndclass.hbrBackground = NULL;
+
+	wndclass.lpszMenuName = NULL;
+	wndclass.lpszClassName = m_szWndClassName;
+
+	if (!AfxRegisterClass(&wndclass))
+	{
+		AfxThrowResourceException();
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+HMODULE CHexViewerView::GetCurrentModule(BOOL bRef/* = FALSE*/)
+{
+	HMODULE hModule = NULL;
+#ifdef UNICODE
+	if (GetModuleHandleEx(bRef ? GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS : (GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS
+		| GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT), (LPCWSTR)GetCurrentModule, &hModule))
+	{
+		return hModule;
+	}
+#else
+	if (GetModuleHandleEx(bRef ? GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS : (GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS
+		| GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT), (LPCSTR)GetCurrentModule, &hModule))
+	{
+		return hModule;
+	}
+#endif // !UNICODE
+
+
+	return NULL;
 }
 
 BOOL CHexViewerView::PreCreateWindow(CREATESTRUCT& cs)
@@ -473,7 +536,7 @@ void CHexViewerView::OnEditSave()
 	// TODO:  在此添加命令处理程序代码
 	if (m_ullFileLength > 0)
 	{
-		CStdioFile file;
+		CFile file;
 		CString filepath;
 		TCHAR szFilter[] = _T("文本文件(*.dat)|*.dat|所有文件(*.*)|*.*||");
 		CFileDialog fileDlg(FALSE, _T("dat"), "temp", OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter, this);
@@ -481,7 +544,7 @@ void CHexViewerView::OnEditSave()
 		if (IDOK == fileDlg.DoModal())
 		{
 			filepath = fileDlg.GetPathName();
-			file.Open(filepath, CFile::modeCreate | CFile::modeWrite | CFile::typeText);
+			file.Open(filepath, CFile::modeCreate|CFile::modeReadWrite);
 			file.Write(m_pFileData, m_ullFileLength);
 			file.Close();
 		}

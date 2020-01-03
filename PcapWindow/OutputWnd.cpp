@@ -46,7 +46,7 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	const DWORD dwStyle = LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL;
 
 	if (!m_wndOutputText.Create(dwStyle, rectDummy, &m_wndTabs, 2) ||
-		!m_wndOutputHex.Create("SoftCircuitsHexEdit","SoftCircuitsHexEdit", WS_CHILD, rectDummy,&m_wndTabs,3))
+		!m_wndOutputHex.Create(CHexViewerView::m_szWndClassName, CHexViewerView::m_szWndClassName, WS_CHILD, rectDummy,&m_wndTabs,3))
 	{
 		TRACE0("未能创建输出窗口\n");
 		return -1;      // 未能创建

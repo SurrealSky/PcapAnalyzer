@@ -1,6 +1,5 @@
 
 #pragma once
-#include"HexEdit.h"
 #include"HexViewerView.h"
 #include"include.h"
 
@@ -39,7 +38,6 @@ protected:
 	CMFCTabCtrl	m_wndTabs;
 
 	COutputList m_wndOutputText;
-	//CHexEdit	m_wndOutputHex;
 	CHexViewerView m_wndOutputHex;
 
 protected:

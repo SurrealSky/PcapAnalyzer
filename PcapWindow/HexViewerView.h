@@ -10,24 +10,17 @@ class CHexViewerView : public CWnd
 {
 public:
 	CHexViewerView();
-	//DECLARE_DYNCREATE(CHexViewerView)
-
-	// 特性
-//public:
-//	CPcapWindowDoc* GetDocument() const;
-
-	// 操作
-public:
-
+	virtual ~CHexViewerView();
 	// 重写
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 
-	// 实现
 public:
-	virtual ~CHexViewerView();
-
+	static const TCHAR m_szWndClassName[];
+	
 protected:
+	static BOOL m_bIsRegistered;
+	static BOOL RegisterWndClass();
 
 	// 生成的消息映射函数
 protected:
@@ -78,6 +71,7 @@ public:
 public:
 	void SetDataView(BYTE *buffer, ULONGLONG size);
 	void ClearView();
+	static HMODULE GetCurrentModule(BOOL bRef/* = FALSE*/);
 };
 
 #define BYTES_ONE_LINE			16

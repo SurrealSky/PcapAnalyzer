@@ -117,9 +117,6 @@
     <ClInclude Include="HexViewerView.h">
       <Filter>HexView</Filter>
     </ClInclude>
-    <ClInclude Include="HexEdit.h">
-      <Filter>HexView</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PcapWindow.cpp">
@@ -198,9 +195,6 @@
       <Filter>CommonLib\MFCUI</Filter>
     </ClCompile>
     <ClCompile Include="HexViewerView.cpp">
-      <Filter>HexView</Filter>
-    </ClCompile>
-    <ClCompile Include="HexEdit.cpp">
       <Filter>HexView</Filter>
     </ClCompile>
   </ItemGroup>
