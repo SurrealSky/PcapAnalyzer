@@ -5,11 +5,22 @@
 #include<map>
 #include<list>
 
-typedef struct AnalyzerPacket
+
+class IAnalyzerData
 {
-	std::string payload;	//存储单个业务数据包
-	unsigned int srcPort;	//源端口
-	unsigned int dstPrt;	//目的端口
+	//用于插件和调用模块进行数据传递
+public:
+	IAnalyzerData()
+	{
+		payload = "";
+		srcPort = 0;
+		dstPort = 0;
+	}
+	virtual ~IAnalyzerData() {}
+public:
+	std::string payload;
+	unsigned int srcPort;
+	unsigned int dstPort;
 };
 
 class IAnalyzer
@@ -47,13 +58,13 @@ public:
 	*参数三/isClient2Server：ture（C->S数据），false（S->C数据）
 	*返回值：业务数据包分析结果，以map结构存储
 	*/
-	virtual std::map<std::string,std::string> Analysis(const char *pBody, const unsigned int len, const bool isClient2Server) = 0;
+	virtual std::map<std::string, std::string> Analysis(const char *pBody, const unsigned int len, const bool isClient2Server) = 0;
 	/*
 	*函数作用：分析多个业务数据包
 	*参数一：业务数据包集合
 	*返回值：业务数据包分析结果，以map结构存储
 	*/
-	virtual std::map<std::string, std::string> AnalysisList(const std::list<AnalyzerPacket>&) = 0;
+	virtual std::map<std::string, std::string> AnalysisList(const std::list<IAnalyzerData>&) = 0;
 };
 
 #endif
