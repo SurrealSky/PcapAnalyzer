@@ -239,7 +239,9 @@ BOOL CPcapWindowDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	if (RESULT == IDOK)
 	{
 		SetPathName(lpszPathName, TRUE);
-		if (!CACap.OpenPcapFileByPacket(mSessions, GetPathName().GetString(), mdlg.plugin))
+
+		if (!CACap.OpenPcapFileByStream(mSessions, GetPathName().GetString(), mdlg.plugin))
+		//if (!CACap.OpenPcapFileByPacket(mSessions, GetPathName().GetString(), mdlg.plugin))
 		{
 			AfxMessageBox("PCAPÎÄ¼þ´íÎó!");
 			return FALSE;
