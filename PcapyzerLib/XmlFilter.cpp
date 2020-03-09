@@ -1,5 +1,4 @@
 #include<regex>
-#include<Packetyzer\Packetyzer.h>
 #include "XmlFilter.h"
 #include"../CommonLib/include/Hex.h"
 #include"RegexFilter.h"
@@ -165,7 +164,7 @@ VALUE_TYPE XmlFilter::ValueValueType(std::string value)
 
 std::string XmlFilter::ValueValue(VALUE_TYPE type, std::string value)
 {
-	std:string strResult;
+	std::string strResult;
 	if (type == VALUE_TYPE::VALUE_BYTE)
 	{
 		STu8 c=ValueDigit(value);
@@ -291,14 +290,15 @@ void XmlFilter::ValueMAC(VALUE_TYPE valuetype, std::string value, STu8 MAC[])
 
 STu16 XmlFilter::ValueEthernetProtocol(std::string value)
 {
-	if (strcmp(value.c_str(), "IPv4") == 0)
-	{
-		return ETHERTYPE_IP;
-	}
-	else if (strcmp(value.c_str(), "IPv6") == 0)
-	{
-		return ETHERTYPE_IPV6;
-	}
+	//if (strcmp(value.c_str(), "IPv4") == 0)
+	//{
+	//	return ETHERTYPE_IP;
+	//}
+	//else if (strcmp(value.c_str(), "IPv6") == 0)
+	//{
+	//	return ETHERTYPE_IPV6;
+	//}
+	return 0;
 }
 
 STu32 XmlFilter::ValueIP(VALUE_TYPE valuetype, std::string value)
@@ -307,7 +307,7 @@ STu32 XmlFilter::ValueIP(VALUE_TYPE valuetype, std::string value)
 	{
 		//点分十进制转换为整形
 		UINT dwServerIp = 0;
-		inet_pton(AF_INET, value.c_str(), &dwServerIp);
+		//inet_pton(AF_INET, value.c_str(), &dwServerIp);
 		dwServerIp = STswab32(dwServerIp);
 		return dwServerIp;
 	}
@@ -345,7 +345,7 @@ STu32 XmlFilter::CalcOffset(OffsetType type, STu32 _offset, STu32 step)
 
 STu16 XmlFilter::ValueIPProtocol(std::string value)
 {
-	if (strcmp(value.c_str(), "TCP") == 0)
+	/*if (strcmp(value.c_str(), "TCP") == 0)
 	{
 		return TCP_PACKET;
 	}
@@ -360,7 +360,8 @@ STu16 XmlFilter::ValueIPProtocol(std::string value)
 	else if (strcmp(value.c_str(), "IGMP") == 0)
 	{
 		return IGMP_PACKET;
-	}
+	}*/
+	return 0;
 }
 
 unsigned char XmlFilter::ValueEndian(std::string value)
@@ -375,7 +376,7 @@ unsigned char XmlFilter::ValueEndian(std::string value)
 
 std::string XmlFilter::IPProtocol2String(STu16 protocol)
 {
-	switch (protocol)
+	/*switch (protocol)
 	{
 		case TCP_PACKET:
 		{
@@ -397,38 +398,39 @@ std::string XmlFilter::IPProtocol2String(STu16 protocol)
 		{
 			return "UnknowProtocol";
 		}break;
-	}
+	}*/
+	return "";
 }
 
 bool XmlFilter::IsHexadecimal(std::string value)
 {
-	const string pattern = "(^[A-Fa-f0-9]+(h|H)$)|(^0[xX][A-Fa-f0-9]+$)";
+	const std::string pattern = "(^[A-Fa-f0-9]+(h|H)$)|(^0[xX][A-Fa-f0-9]+$)";
 	std::regex express(pattern);
 	return std::regex_search(value.c_str(), express);
 }
 
 bool XmlFilter::IsOctal(std::string value)
 {
-	const string pattern = "(^[0-7]+(o|O)$)|(^0[0-7]+$)";
+	const std::string pattern = "(^[0-7]+(o|O)$)|(^0[0-7]+$)";
 	std::regex express(pattern);
 	return std::regex_search(value.c_str(), express);
 }
 
-bool XmlFilter::IsBinary(string value)
+bool XmlFilter::IsBinary(std::string value)
 {
-	const string pattern = "(^[0-1]+(b|B)$)|(^0[bB][0-1]+$)";
+	const std::string pattern = "(^[0-1]+(b|B)$)|(^0[bB][0-1]+$)";
 	std::regex express(pattern);
 	return std::regex_search(value.c_str(), express);
 }
 
-bool XmlFilter::IsDecimal(string value)
+bool XmlFilter::IsDecimal(std::string value)
 {
-	const string pattern = "(^[0-9]+(d|D)$)|(^[0-9]+$)";
+	const std::string pattern = "(^[0-9]+(d|D)$)|(^[0-9]+$)";
 	std::regex express(pattern);
 	return std::regex_search(value.c_str(), express);
 }
 
-STu32 XmlFilter::ValueDigit(string value)
+STu32 XmlFilter::ValueDigit(std::string value)
 {
 	int radix = 10;
 	if (IsHexadecimal(value))
@@ -687,81 +689,6 @@ bool XmlFilter::ReadFiltersFromXML(std::string file,std::string action,std::stri
 	return false;
 }
 
-bool XmlFilter::ForNotSupportFilter(const cPacket *packet)
-{
-	//Packetyzer库不支持ipv6协议解析
-	if (packet->isIPv6Packet) return true;
-	return false;
-}
-
-bool XmlFilter::ForEthernetFilter(const EthernetFilter &filter,const cConnection * con)
-{
-	if (filter.isProtocolFilter&&filter.Protocol != con->Protocol) return false;
-	if (filter.isSourceMACFilter)
-	{
-		if (memcmp(filter.SourceMAC, con->ClientMAC, ETHER_ADDR_LEN) != 0) return false;
-	}
-	if (filter.isDestinationMACFilter)
-	{
-		if (memcmp(filter.DestinationMAC, con->ServerMAC, ETHER_ADDR_LEN) != 0) return false;
-	}
-	//全部规则都匹配
-	return true;
-}
-
-bool XmlFilter::ForIPv4Filter(const IPv4Filter &filter, const cPacket *packet)
-{
-	if (!packet->isIPPacket) return false;
-	if (filter.isProtocolFilter)
-	{
-		if (filter.Protocol != packet->IPHeader->Protocol) return false;
-	}
-	if (filter.isSourceIPFilter)
-	{
-		if (filter.SourceIP != STswab32(packet->IPHeader->SourceAddress)) return false;
-	}
-	if (filter.isDestinationIPFilter)
-	{
-		if (filter.DestinationIP != STswab32(packet->IPHeader->DestinationAddress)) return false;
-	}
-	return true;
-}
-
-/*
-bool XmlFilter::ForIPv6Filter(const IPv6Filter &filter, const cPacket *packet)
-{
-	return true;
-}
-*/
-
-bool XmlFilter::ForTCPFilter(const TCPFilter &filter, const cPacket *packet)
-{
-	if (!packet->isTCPPacket) return false;
-	if (filter.isSourcePortFilter)
-	{
-		if (filter.SourcePort != STswab16(packet->TCPHeader->SourcePort)) return false;
-	}
-	if (filter.isDestinationPortFilter)
-	{
-		if (filter.DestinationPort != STswab16(packet->TCPHeader->DestinationPort)) return false;
-	}
-	return true;
-}
-
-bool XmlFilter::ForUDPFilter(const UDPFilter &filter, const cPacket *packet)
-{
-	if (!packet->isUDPPacket) return false;
-	if (filter.isSourcePortFilter)
-	{
-		if (filter.SourcePort != STswab16(packet->UDPHeader->SourcePort)) return false;
-	}
-	if (filter.isDestinationPortFilter)
-	{
-		if (filter.DestinationPort != STswab16(packet->UDPHeader->DestinationPort)) return false;
-	}
-	return true;
-}
-
 bool XmlFilter::ForSigCodeFilter(const SigCode &filter, const STu8 *data, const STu32 size)
 {
 	if (filter.offsettype == OffsetType::OFFSET_FRONT)
@@ -906,49 +833,6 @@ bool XmlFilter::ForPrivateFilter(const STu8 *data, const STu32 size)
 	return true;
 }
 
-bool XmlFilter::ForFilter(const cConnection *conn,STu32 number)
-{
-	cPacket *packet = conn->Packets[number];
-
-	UCHAR *data = packet->UDPDataSize == 0 ? packet->TCPData : packet->UDPData;
-	UINT size = packet->UDPDataSize == 0 ? packet->TCPDataSize : packet->UDPDataSize;
-	if (size == 0) return false;
-
-	std::list<LayerFilter*>::iterator iter=mDataFilter.GetBeginItor();
-	for (; iter != mDataFilter.GetEndItor(); iter++)
-	{
-		if (!(*iter)->GetFilter()) continue;
-		if ((*iter)->GetLayerType() == EthernetType)
-		{
-			if (!ForEthernetFilter(*(EthernetFilter*)(*iter), conn)) return false;
-		}
-		else if ((*iter)->GetLayerType() == IPv4Type)
-		{
-
-		}
-		else if ((*iter)->GetLayerType() == IPv6Type)
-		{
-
-		}
-		else if ((*iter)->GetLayerType() == TCPType)
-		{
-
-		}
-		else if ((*iter)->GetLayerType() == UDPType)
-		{
-
-		}
-		else if ((*iter)->GetLayerType() == Private)
-		{
-			//应用层私有协议只过滤TCP/UDP数据
-			if (!packet->isUDPPacket&&!packet->isTCPPacket) return false;
-			if (packet->TCPDataSize == 0 && packet->UDPDataSize == 0) return false;
-			if (!ForPrivateFilter(*(PrivateFilter*)(*iter), data,size)) return false;
-		}
-	}
-	//全部规则都匹配
-	return true;
-}
 
 bool XmlFilter::ForFilter(const STu8 *data, const STu32 size, std::string exp)
 {

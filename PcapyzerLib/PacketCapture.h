@@ -1,6 +1,6 @@
 #pragma once
 #include<pcap.h>
-#include<Packetyzer/Packetyzer.h>
+//#include<Packetyzer/Packetyzer.h>
 #include"SyncStream.h"
 #include"Sessions.h"
 

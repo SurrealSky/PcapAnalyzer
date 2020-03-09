@@ -4,8 +4,6 @@
 
 #pragma comment(lib,"Iphlpapi.lib")
 
-using namespace Packetyzer::Analyzers;
-using namespace Packetyzer::Capture;
 using namespace std;
 
 std::vector<NetCardInfo> CPacketCapture::devs;

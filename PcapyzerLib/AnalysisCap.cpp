@@ -49,28 +49,316 @@ std::vector<std::string> CAnalysisCap::GetAllPlugins()
 	return result;
 }
 
-bool CAnalysisCap::capOpen(const char *File, CSessions &mSessions, std::string _plugin)
+/**
+* The callback being called by the TCP reassembly module whenever new data arrives on a certain connection
+*/
+void CAnalysisCap::tcpReassemblyMsgReadyCallback(int sideIndex, const TcpStreamData& tcpData, void* userCookie)
+{
+	// extract the connection manager from the user cookie
+	TcpReassemblyMgr* mMgr = (TcpReassemblyMgr*)userCookie;
+
+	// check if this flow already appears in the connection manager. If not add it
+	TcpReassemblyConnMgrIter iter = (mMgr->connMgr).find(tcpData.getConnectionData().flowKey);
+	if (iter == mMgr->connMgr.end())
+	{
+		mMgr->connMgr.insert(std::make_pair(tcpData.getConnectionData().flowKey, TcpReassemblyData()));
+		iter = mMgr->connMgr.find(tcpData.getConnectionData().flowKey);
+	}
+
+	int side;
+
+	// if the user wants to write each side in a different file - set side as the sideIndex, otherwise write everything to the same file ("side 0")
+	if (GlobalConfig::getInstance().separateSides)
+		side = sideIndex;
+	else
+		side = 0;
+
+	// if the file stream on the relevant side isn't open yet (meaning it's the first data on this connection)
+	if (iter->second.fileStreams[side] == NULL)
+	{
+		// add the flow key of this connection to the list of open connections. If the return value isn't NULL it means that there are too many open files
+		// and we need to close the connection with least recently used file(s) in order to open a new one.
+		// The connection with the least recently used file is the return value
+		uint32_t flowKeyToCloseFiles;
+		int result = GlobalConfig::getInstance().getRecentConnsWithActivity()->put(tcpData.getConnectionData().flowKey, &flowKeyToCloseFiles);
+
+		// if result equals to 1 it means we need to close the open files in this connection (the one with the least recently used files)
+		if (result == 1)
+		{
+			// find the connection from the flow key
+			TcpReassemblyConnMgrIter iter2 = mMgr->connMgr.find(flowKeyToCloseFiles);
+			if (iter2 != mMgr->connMgr.end())
+			{
+				// close files on both sides (if they're open)
+				for (int index = 0; index < 2; index++)
+				{
+					if (iter2->second.fileStreams[index] != NULL)
+					{
+						// close the file
+						GlobalConfig::getInstance().closeFileSteam(iter2->second.fileStreams[index]);
+						iter2->second.fileStreams[index] = NULL;
+
+						// set the reopen flag to true to indicate that next time this file will be opened it will be opened in append mode (and not overwrite mode)
+						iter2->second.reopenFileStreams[index] = true;
+					}
+				}
+			}
+		}
+
+		// get the file name according to the 5-tuple etc.
+		std::string fileName = GlobalConfig::getInstance().getFileName(tcpData.getConnectionData(), sideIndex, GlobalConfig::getInstance().separateSides) + ".txt";
+
+		// open the file in overwrite mode (if this is the first time the file is opened) or in append mode (if it was already opened before)
+		iter->second.fileStreams[side] = GlobalConfig::getInstance().openFileStream(fileName, iter->second.reopenFileStreams[side]);
+	}
+
+	// if this messages comes on a different side than previous message seen on this connection
+	if (sideIndex != iter->second.curSide)
+	{
+		// count number of message in each side
+		iter->second.numOfMessagesFromSide[sideIndex]++;
+
+		// set side index as the current active side
+		iter->second.curSide = sideIndex;
+	}
+
+	// count number of packets and bytes in each side of the connection
+	iter->second.numOfDataPackets[sideIndex]++;
+	iter->second.bytesFromSide[sideIndex] += (int)tcpData.getDataLength();
+
+	// write the new data to the file
+	iter->second.fileStreams[side]->write((char*)tcpData.getData(), tcpData.getDataLength());
+
+	unsigned char *pbody = NULL;
+	unsigned int bodylen = 0;
+	CNetInfo nTemp;
+	PacketAttach attach;
+	pbody = (unsigned char*)tcpData.getData();
+	bodylen = tcpData.getDataLength();
+	nTemp.proto = TCP;
+	if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv4AddressType)
+	{
+		nTemp.srcip = ((IPv4Address*)(tcpData.getConnectionData().srcIP))->toInt();
+	}
+	else if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv6AddressType)
+	{
+		//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().srcIP))->toIn6Addr();
+	}
+	nTemp.srcport = tcpData.getConnectionData().srcPort;
+	if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv4AddressType)
+	{
+		nTemp.srcip = ((IPv4Address*)(tcpData.getConnectionData().dstIP))->toInt();
+	}
+	else if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv6AddressType)
+	{
+		//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().dstIP))->toIn6Addr();
+	}
+	nTemp.dstport = tcpData.getConnectionData().dstPort;
+	attach.time = 0;
+	CAnalysisCap *p = static_cast<CAnalysisCap*>(mMgr->thisdata);
+	p->EnterPacket(*(CSessions*)(mMgr->sessions), pbody, bodylen, nTemp, attach);
+}
+
+/**
+* The callback being called by the TCP reassembly module whenever a new connection is found. This method adds the connection to the connection manager
+*/
+void CAnalysisCap::tcpReassemblyConnectionStartCallback(const ConnectionData& connectionData, void* userCookie)
+{
+	// get a pointer to the connection manager
+	TcpReassemblyConnMgr* connMgr = (TcpReassemblyConnMgr*)userCookie;
+
+	// look for the connection in the connection manager
+	TcpReassemblyConnMgrIter iter = connMgr->find(connectionData.flowKey);
+
+	// assuming it's a new connection
+	if (iter == connMgr->end())
+	{
+		// add it to the connection manager
+		connMgr->insert(std::make_pair(connectionData.flowKey, TcpReassemblyData()));
+	}
+}
+
+/**
+* The callback being called by the TCP reassembly module whenever a connection is ending. This method removes the connection from the connection manager and writes the metadata file if requested
+* by the user
+*/
+void CAnalysisCap::tcpReassemblyConnectionEndCallback(const ConnectionData& connectionData, TcpReassembly::ConnectionEndReason reason, void* userCookie)
+{
+	// get a pointer to the connection manager
+	TcpReassemblyConnMgr* connMgr = (TcpReassemblyConnMgr*)userCookie;
+
+	// find the connection in the connection manager by the flow key
+	TcpReassemblyConnMgrIter iter = connMgr->find(connectionData.flowKey);
+
+	// connection wasn't found - shouldn't get here
+	if (iter == connMgr->end())
+		return;
+
+	// write a metadata file if required by the user
+	if (GlobalConfig::getInstance().writeMetadata)
+	{
+		std::string fileName = GlobalConfig::getInstance().getFileName(connectionData, 0, false) + "-metadata.txt";
+		std::ofstream metadataFile(fileName.c_str());
+		metadataFile << "Number of data packets in side 0:  " << iter->second.numOfDataPackets[0] << std::endl;
+		metadataFile << "Number of data packets in side 1:  " << iter->second.numOfDataPackets[1] << std::endl;
+		metadataFile << "Total number of data packets:      " << (iter->second.numOfDataPackets[0] + iter->second.numOfDataPackets[1]) << std::endl;
+		metadataFile << std::endl;
+		metadataFile << "Number of bytes in side 0:         " << iter->second.bytesFromSide[0] << std::endl;
+		metadataFile << "Number of bytes in side 1:         " << iter->second.bytesFromSide[1] << std::endl;
+		metadataFile << "Total number of bytes:             " << (iter->second.bytesFromSide[0] + iter->second.bytesFromSide[1]) << std::endl;
+		metadataFile << std::endl;
+		metadataFile << "Number of messages in side 0:      " << iter->second.numOfMessagesFromSide[0] << std::endl;
+		metadataFile << "Number of messages in side 1:      " << iter->second.numOfMessagesFromSide[1] << std::endl;
+		metadataFile.close();
+	}
+
+	// remove the connection from the connection manager
+	connMgr->erase(iter);
+}
+
+bool CAnalysisCap::doTcpReassemblyOnPcapFile(const char *fileName, CSessions &mSessions, std::string _plugin,std::string bpfFiler)
 {
 	plugin = _plugin;
-	Packetyzer::Analyzers::cPcapFile* pckts = new Packetyzer::Analyzers::cPcapFile((char*)File);
-	if (!pckts->FileLoaded)
+
+	// set global config singleton with input configuration
+	GlobalConfig::getInstance().writeMetadata = false;
+	GlobalConfig::getInstance().writeToConsole = true;
+	GlobalConfig::getInstance().separateSides = true;
+
+	TcpReassemblyMgr mMgr;
+	mMgr.thisdata = this;
+	mMgr.sessions = &mSessions;
+	// create the TCP reassembly instance
+	TcpReassembly tcpReassembly(tcpReassemblyMsgReadyCallback, &mMgr, tcpReassemblyConnectionStartCallback, tcpReassemblyConnectionEndCallback);
+
+	// open input file (pcap or pcapng file)
+	IFileReaderDevice* reader = IFileReaderDevice::getReader(fileName);
+
+	// try to open the file device
+	if (!reader->open())
 	{
-		delete pckts;
-		pckts = NULL;
+		//EXIT_WITH_ERROR("Cannot open pcap/pcapng file");
 		return false;
 	}
-	for (STu32 i = 0; i < pckts->Traffic->nConnections; i++)
+
+	// set BPF filter if set by the user
+	if (bpfFiler != "")
 	{
-		EnterConnect(pckts->Traffic->Connections[i], mSessions);
+		if (!reader->setFilter(bpfFiler))
+		{
+			//EXIT_WITH_ERROR("Cannot set BPF filter to pcap file");
+			return false;
+		}
+			
 	}
-	delete pckts;
-	pckts = NULL;
+
+	// run in a loop that reads one packet from the file in each iteration and feeds it to the TCP reassembly instance
+	RawPacket rawPacket;
+	while (reader->getNextPacket(rawPacket))
+	{
+		tcpReassembly.reassemblePacket(&rawPacket);
+	}
+	// extract number of connections before closing all of them
+	size_t numOfConnectionsProcessed = tcpReassembly.getConnectionInformation().size();
+
+	// after all packets have been read - close the connections which are still opened
+	tcpReassembly.closeAllConnections();
+
+	// close the reader and free its memory
+	reader->close();
+	delete reader;
+
 	return true;
 }
 
-void CAnalysisCap::EnterConnect(cConnection *con, CSessions &mSessions)
+/**
+* packet capture callback - called whenever a packet arrives on the live device (in live device capturing mode)
+*/
+void CAnalysisCap::onPacketArrives(RawPacket* packet, PcapLiveDevice* dev, void* tcpReassemblyCookie)
 {
-	for (STu32 packetnum = 0; packetnum < con->nPackets; packetnum++)
+	// get a pointer to the TCP reassembly instance and feed the packet arrived to it
+	TcpReassembly* tcpReassembly = (TcpReassembly*)tcpReassemblyCookie;
+	tcpReassembly->reassemblePacket(packet);
+}
+
+/**
+* The callback to be called when application is terminated by ctrl-c. Stops the endless while loop
+*/
+void CAnalysisCap::onApplicationInterrupted(void* cookie)
+{
+	bool* shouldStop = (bool*)cookie;
+	*shouldStop = true;
+}
+
+bool CAnalysisCap::doTcpReassemblyOnLiveTraffic(const char *interfaceNameOrIP, CSessions &mSessions, std::string _plugin, std::string bpfFiler)
+{
+	plugin = _plugin;
+	TcpReassemblyConnMgr connMgr;
+	// create the TCP reassembly instance
+	TcpReassembly tcpReassembly(tcpReassemblyMsgReadyCallback, &connMgr, tcpReassemblyConnectionStartCallback, tcpReassemblyConnectionEndCallback);
+
+	PcapLiveDevice* dev = NULL;
+	IPv4Address interfaceIP(interfaceNameOrIP);
+	if (interfaceIP.isValid())
+	{
+		dev = PcapLiveDeviceList::getInstance().getPcapLiveDeviceByIp(interfaceIP);
+		if (dev == NULL)
+		{
+			return false;
+			//EXIT_WITH_ERROR("Couldn't find interface by provided IP");
+		}
+			
+	}
+	else
+	{
+		dev = PcapLiveDeviceList::getInstance().getPcapLiveDeviceByName(interfaceNameOrIP);
+		if (dev == NULL)
+		{
+			return false;
+			//EXIT_WITH_ERROR("Couldn't find interface by provided name");
+		}
+	}
+	// try to open device
+	if (!dev->open())
+	{
+		//EXIT_WITH_ERROR("Cannot open interface");
+		return false;
+	}
+
+	// set BPF filter if set by the user
+	if (bpfFiler != "")
+	{
+		if (!dev->setFilter(bpfFiler))
+		{
+			//EXIT_WITH_ERROR("Cannot set BPF filter to interface");
+			return false;
+		}
+	}
+
+	// start capturing packets. Each packet arrived will be handled by onPacketArrives method
+	dev->startCapture(onPacketArrives, &tcpReassembly);
+
+	// register the on app close event to print summary stats on app termination
+	bool shouldStop = false;
+	ApplicationEventHandler::getInstance().onApplicationInterrupted(onApplicationInterrupted, &shouldStop);
+
+	// run in an endless loop until the user presses ctrl+c
+	while (!shouldStop)
+		PCAP_SLEEP(1);
+
+	// stop capturing and close the live device
+	dev->stopCapture();
+	dev->close();
+
+	// close all connections which are still opened
+	tcpReassembly.closeAllConnections();
+
+
+}
+
+void CAnalysisCap::EnterConnect(void *cConnection , CSessions &mSessions)
+{
+	/*for (STu32 packetnum = 0; packetnum < con->nPackets; packetnum++)
 	{
 		unsigned char *pbody = NULL;
 		unsigned int bodylen = 0;
@@ -104,7 +392,7 @@ void CAnalysisCap::EnterConnect(cConnection *con, CSessions &mSessions)
 			continue;
 		}
 		EnterPacket(mSessions,pbody, bodylen, nTemp,attach);
-	}
+	}*/
 }
 
 bool CAnalysisCap::isFileLoaded()
@@ -126,7 +414,7 @@ bool CAnalysisCap::pcapOpen(const char *File,CSessions &mSessions,std::string _p
 	const u_char *pkt_data;
 	while ((res = pcap_next_ex(fp, &header, &pkt_data)) >= 0)
 	{
-		cPacket* TestPacket = new cPacket((UCHAR*)pkt_data, header->len);
+		/*cPacket* TestPacket = new cPacket((UCHAR*)pkt_data, header->len);
 		unsigned char *pbody = NULL;
 		unsigned int bodylen = 0;
 		CNetInfo nTemp;
@@ -159,7 +447,7 @@ bool CAnalysisCap::pcapOpen(const char *File,CSessions &mSessions,std::string _p
 			continue;
 		}
 		EnterPacket(mSessions,pbody, bodylen, nTemp,attach);
-		delete(TestPacket);
+		delete(TestPacket);*/
 	}
 	if (fp)
 	{
@@ -416,7 +704,7 @@ void CAnalysisCap::packet_handler(void* uParam, const unsigned char *pkt_data, u
 {
 	CAnalysisCap* pAnalysis = (CAnalysisCap*)uParam;
 	//开始处理packet
-	cPacket* TestPacket = new cPacket((UCHAR*)pkt_data, len);
+	/*cPacket* TestPacket = new cPacket((UCHAR*)pkt_data, len);
 	unsigned char *pbody = NULL;
 	unsigned int bodylen = 0;
 	CNetInfo nTemp;
@@ -448,6 +736,6 @@ void CAnalysisCap::packet_handler(void* uParam, const unsigned char *pkt_data, u
 		delete(TestPacket);
 		return;
 	}
-	pAnalysis->EnterPacket(*(pAnalysis->mSniffer.pSession), pbody, bodylen, nTemp, attach);
-	delete(TestPacket);
+	pAnalysis->EnterPacket(*(pAnalysis->mSniffer.pSession), pbody, bodylen, nTemp, attach);*/
+	//delete(TestPacket);
 }

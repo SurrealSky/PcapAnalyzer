@@ -35,13 +35,9 @@ public:
 	static std::vector<std::string> GetAllPlugins();
 public:
 	/*
-	*作用：调用pcap原始库进行组流，并处理业务数据包
-	*/
-	STbool OpenPcapFileByPacket(CSessions&,std::string,std::string plugin="");
-	/*
 	*作用：调用第三方库进行组流,未处理业务数据包
 	*/
-	STbool OpenPcapFileByStream(CSessions&,std::string,std::string plugin="");
+	STbool OpenPcapFile(CSessions&,std::string,std::string plugin="");
 	STbool isFileLoaded();
 private:
 	//xml操作

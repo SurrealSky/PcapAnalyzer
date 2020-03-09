@@ -2,7 +2,6 @@
 #include"AnalysisCap.h"
 #include"XmlFilter.h"
 #include"PacketCapture.h"
-#include<Packetyzer\Packetyzer.h>
 
 PcapAnalyzer::PcapAnalyzer()
 {
@@ -29,16 +28,10 @@ std::vector<std::string> PcapAnalyzer::GetAllPlugins()
 	return CAnalysisCap::GetAllPlugins();
 }
 
-STbool PcapAnalyzer::OpenPcapFileByPacket(CSessions &mSessions,std::string file, std::string plugin)
+STbool PcapAnalyzer::OpenPcapFile(CSessions &mSessions,std::string file, std::string plugin)
 {
 	mSessions.ClearStream();
-	return pImplAnalysis->pcapOpen(file.c_str(),mSessions,plugin);
-}
-
-STbool PcapAnalyzer::OpenPcapFileByStream(CSessions &mSessions, std::string file, std::string plugin)
-{
-	mSessions.ClearStream();
-	return pImplAnalysis->capOpen(file.c_str(), mSessions, plugin);
+	return pImplAnalysis->doTcpReassemblyOnPcapFile(file.c_str(),mSessions,plugin);
 }
 
 STbool PcapAnalyzer::isFileLoaded()
@@ -78,7 +71,7 @@ std::string PcapAnalyzer::FormatTime(time_t time)
 
 std::string PcapAnalyzer::IPProtocol2String(STu16 protocol)
 {
-	switch (protocol)
+	/*switch (protocol)
 	{
 	case TCP_PACKET:
 	{
@@ -100,12 +93,13 @@ std::string PcapAnalyzer::IPProtocol2String(STu16 protocol)
 	{
 		return "UnknowProtocol";
 	}break;
-	}
+	}*/
+	return "";
 }
 
 std::string PcapAnalyzer::Protocol2String(STu16 protocol)
 {
-	switch (protocol)
+	/*switch (protocol)
 	{
 	case ETHERTYPE_IP:
 	{
@@ -131,7 +125,8 @@ std::string PcapAnalyzer::Protocol2String(STu16 protocol)
 	{
 		return "UnknowProtocol";
 	}break;
-	}
+	}*/
+	return "";
 }
 
 std::map<std::string,std::string> PcapAnalyzer::PacketAnalysis(ByteBuffer &payload,const unsigned int srcPort,const unsigned int dstPort)

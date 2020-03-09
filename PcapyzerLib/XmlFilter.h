@@ -1,7 +1,7 @@
 #pragma once
+#include<string>
 #include<xml\Markup.h>
 #include<list>
-#include<Packetyzer\Packetyzer.h>
 #include"packet.h"
 #include"EthernetFilter.h"
 #include"IPv4Filter.h"
@@ -64,27 +64,12 @@ using namespace SurrealTypes;
 		*返回：false，数据包与规则不匹配
 		*/
 		bool ForBackFillFilter(const BackFill &sig, const STu8 *, const STu32);
-		bool ForNotSupportFilter(const cPacket *);
-		/*
-		*返回：true，数据包与规则匹配
-		*返回：false，数据包与规则不匹配
-		*/
-		bool ForEthernetFilter(const EthernetFilter&, const cConnection *);
-		bool ForIPv4Filter(const IPv4Filter&, const cPacket *);
-		//bool ForIPv6Filter(const IPv6Filter&, const cPacket *);
-		bool ForTCPFilter(const TCPFilter&, const cPacket *);
-		bool ForUDPFilter(const UDPFilter&, const cPacket *);
 		/*
 		*返回：true，数据包与规则匹配
 		*返回：false，数据包与规则不匹配
 		*/
 		bool ForPrivateFilter(const PrivateFilter &, const STu8 *, const STu32 size);
 	public:
-		/*
-		*返回：true，数据包与规则匹配
-		*返回：false，数据包与规则不匹配
-		*/
-		bool ForFilter(const cConnection *,STu32 number);
 		/*
 		*返回：true，数据包与规则匹配
 		*返回：false，数据包与规则不匹配
