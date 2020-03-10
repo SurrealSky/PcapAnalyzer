@@ -99,25 +99,25 @@ std::string PcapAnalyzer::IPProtocol2String(STu16 protocol)
 
 std::string PcapAnalyzer::Protocol2String(STu16 protocol)
 {
-	/*switch (protocol)
+	switch (protocol)
 	{
-	case ETHERTYPE_IP:
+	case IPv4:
 	{
 		return "IPv4";
 	}break;
-	case ETHERTYPE_ARP:
+	case ARP:
 	{
 		return "ARP";
 	}break;
-	case ETHERTYPE_IPV6:
+	case IPv6:
 	{
 		return "IPv6";
 	}break;
-	case TCP_PACKET:
+	case TCP:
 	{
 		return "TCP";
 	}break;
-	case UDP_PACKET:
+	case UDP:
 	{
 		return "UDP";
 	}break;
@@ -125,8 +125,7 @@ std::string PcapAnalyzer::Protocol2String(STu16 protocol)
 	{
 		return "UnknowProtocol";
 	}break;
-	}*/
-	return "";
+	}
 }
 
 std::map<std::string,std::string> PcapAnalyzer::PacketAnalysis(ByteBuffer &payload,const unsigned int srcPort,const unsigned int dstPort)

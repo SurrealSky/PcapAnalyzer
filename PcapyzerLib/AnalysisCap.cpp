@@ -147,14 +147,14 @@ void CAnalysisCap::tcpReassemblyMsgReadyCallback(int sideIndex, const TcpStreamD
 	nTemp.srcport = tcpData.getConnectionData().srcPort;
 	if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv4AddressType)
 	{
-		nTemp.srcip = ((IPv4Address*)(tcpData.getConnectionData().dstIP))->toInt();
+		nTemp.dstip = ((IPv4Address*)(tcpData.getConnectionData().dstIP))->toInt();
 	}
 	else if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv6AddressType)
 	{
 		//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().dstIP))->toIn6Addr();
 	}
 	nTemp.dstport = tcpData.getConnectionData().dstPort;
-	attach.time = 0;
+	attach.time = ((time_t)tcpData.getConnectionData().startTime.tv_sec) * 1000000 + tcpData.getConnectionData().startTime.tv_usec;
 	CAnalysisCap *p = static_cast<CAnalysisCap*>(mMgr->thisdata);
 	p->EnterPacket(*(CSessions*)(mMgr->sessions), pbody, bodylen, nTemp, attach);
 }

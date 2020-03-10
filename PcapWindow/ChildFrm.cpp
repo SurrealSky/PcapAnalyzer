@@ -75,6 +75,10 @@ BOOL CChildFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	m_wndSplitter2.CreateStatic(&m_wndSplitter, 2, 1, WS_CHILD | WS_VISIBLE, m_wndSplitter.IdFromRowCol(0, 1));
 	m_wndSplitter2.CreateView(0, 0, RUNTIME_CLASS(CPacketsView), CSize(width/2, height/2), pContext);
 	m_wndSplitter2.CreateView(1, 0, RUNTIME_CLASS(CAnalysisView), CSize(width/2, height/2), pContext);
+	if (m_wndSplitter.m_hWnd)
+		m_wndSplitter.SetColumnInfo(0, 450, 0);
+	if (m_wndSplitter2.m_hWnd)
+		m_wndSplitter2.SetRowInfo(0, 200, 0);
 	return TRUE;
 	//return CMDIChildWndEx::OnCreateClient(lpcs, pContext);
 }
@@ -85,13 +89,13 @@ void CChildFrame::OnSize(UINT nType, int cx, int cy)
 	CMDIChildWndEx::OnSize(nType, cx, cy);
 
 	// TODO: 在此处添加消息处理程序代码
-	CRect rect;
+	/*CRect rect;
 	GetWindowRect(&rect);
 	unsigned int width = rect.right - rect.left;
 	unsigned int height = rect.bottom - rect.top;
 	rect.right = rect.left + width / 2;
-	/*if (m_wndSplitter.m_hWnd)
-		m_wndSplitter.SetColumnInfo(0, 415, 0);
+	if (m_wndSplitter.m_hWnd)
+		m_wndSplitter.SetColumnInfo(0, 450, 0);
 	if(m_wndSplitter2.m_hWnd)
 		m_wndSplitter2.SetRowInfo(0, 200, 0);*/
 }

@@ -73,9 +73,9 @@ int CPacketsView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//dwStyle |= LVS_SHOWSELALWAYS;
 	dwStyle |= LVS_EX_UNDERLINEHOT;
 	packets.SetExtendedStyle(dwStyle);
-	CString m_ColumnLabelStr[] = { "ÐòºÅ","Time","SrcPort","DstPort","Length" };
-	int width[6] = { 30,105,80, 80, 40 };
-	for (int i = 0; i < 5; i++)
+	CString m_ColumnLabelStr[] = { "ÐòºÅ","SrcPort","DstPort","Length" };
+	int width[6] = { 40,80, 80, 80 };
+	for (int i = 0; i < 4; i++)
 	{
 		packets.InsertColumn(i, m_ColumnLabelStr[i], LVCFMT_LEFT, width[i]); // ÉèÖÃ±íÍ·
 	}
@@ -206,16 +206,16 @@ void CPacketsView::AddPacket2UI(CSyncPacket *pack, std::string strExp)
 	item.Format("%d", count + 1);
 	packets.InsertItem(count, item);
 
-	packets.SetItemText(count, 1, pDoc->CACap.FormatTime(pack->time).c_str());
+	//packets.SetItemText(count, 1, pDoc->CACap.FormatTime(pack->time).c_str());
 
 	item.Format("%d", pack->mNetInfo.srcport);
-	packets.SetItemText(count, 2, item);
+	packets.SetItemText(count, 1, item);
 
 	item.Format("%d", pack->mNetInfo.dstport);
-	packets.SetItemText(count, 3, item);
+	packets.SetItemText(count, 2, item);
 
 	item.Format("%d", pack->_payload.size());
-	packets.SetItemText(count, 4, item);
+	packets.SetItemText(count, 3, item);
 
 	packets.SetItemData(count, (DWORD_PTR)(pack));
 	packets.EnsureVisible(count, FALSE);

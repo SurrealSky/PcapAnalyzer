@@ -71,7 +71,7 @@ void CAnalysisView::OnInitialUpdate()
 
 	listctrl.SetExtendedStyle(dwStyle);//列表风格
 
-	int width[6] = { 30,105,100, 100 };
+	int width[6] = { 40,105,100, 100 };
 
 	for (int i = 0; i < 4; i++)
 	{
