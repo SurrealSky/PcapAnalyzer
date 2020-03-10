@@ -1,1 +1,3 @@
-﻿根据新的第三方框架改造，实时截取数据
+﻿tcpReassemblyMsgReadyCallback函数取端口数据有问题
+根据新的第三方框架改造，实时截取数据
+UDP协议的支持
