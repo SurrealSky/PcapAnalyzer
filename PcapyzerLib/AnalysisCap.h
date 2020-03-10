@@ -250,7 +250,7 @@ public:
 	bool doTcpReassemblyOnPcapFile(const char *fileName,CSessions &mSessions,std::string plugin, std::string bpfFiler = "");
 	bool doTcpReassemblyOnLiveTraffic(const char *interfaceNameOrIP, CSessions &mSessions, std::string plugin,std::string bpfFiler = "");
 private:
-	void EnterConnect(void * cConnection, CSessions &);
+	void EnterConnection(const TcpReassemblyData &tcpReassemblyData, const ConnectionData& connectionData,CSessions &);
 public:
 	//使用pcap原始库函数进行分析
 	bool pcapOpen(const char *File, CSessions&, std::string plugin);
