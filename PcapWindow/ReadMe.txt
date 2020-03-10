@@ -1,3 +1,3 @@
-﻿tcpReassemblyMsgReadyCallback函数取端口数据有问题
+﻿tcpReassemblyMsgReadyCallback函数取端口数据有问题(还是根据side判断客户端还是服务端，0为客户端，1为服务端)
 根据新的第三方框架改造，实时截取数据
 UDP协议的支持

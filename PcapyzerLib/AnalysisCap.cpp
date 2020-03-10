@@ -130,34 +130,60 @@ void CAnalysisCap::tcpReassemblyMsgReadyCallback(int sideIndex, const TcpStreamD
 	iter->second.fileStreams[side]->write((char*)tcpData.getData(), tcpData.getDataLength());
 
 	//处理数据包
-	//unsigned char *pbody = NULL;
-	//unsigned int bodylen = 0;
-	//CNetInfo nTemp;
-	//PacketAttach attach;
-	//pbody = (unsigned char*)tcpData.getData();
-	//bodylen = tcpData.getDataLength();
-	//nTemp.proto = TCP;
-	//if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv4AddressType)
-	//{
-	//	nTemp.srcip = ((IPv4Address*)(tcpData.getConnectionData().srcIP))->toInt();
-	//}
-	//else if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv6AddressType)
-	//{
-	//	//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().srcIP))->toIn6Addr();
-	//}
-	//nTemp.srcport = tcpData.getConnectionData().srcPort;
-	//if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv4AddressType)
-	//{
-	//	nTemp.dstip = ((IPv4Address*)(tcpData.getConnectionData().dstIP))->toInt();
-	//}
-	//else if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv6AddressType)
-	//{
-	//	//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().dstIP))->toIn6Addr();
-	//}
-	//nTemp.dstport = tcpData.getConnectionData().dstPort;
-	//attach.time = ((time_t)tcpData.getConnectionData().startTime.tv_sec) * 1000000 + tcpData.getConnectionData().startTime.tv_usec;
-	//CAnalysisCap *p = static_cast<CAnalysisCap*>(mMgr->thisdata);
-	//p->EnterPacket(*(CSessions*)(mMgr->sessions), pbody, bodylen, nTemp, attach);
+	unsigned char *pbody = NULL;
+	unsigned int bodylen = 0;
+	CNetInfo nTemp;
+	PacketAttach attach;
+	pbody = (unsigned char*)tcpData.getData();
+	bodylen = tcpData.getDataLength();
+	nTemp.proto = TCP;
+	if (side == 0)
+	{
+		//c->s
+		if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv4AddressType)
+		{
+			nTemp.srcip = ((IPv4Address*)(tcpData.getConnectionData().srcIP))->toInt();
+		}
+		else if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv6AddressType)
+		{
+			//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().srcIP))->toIn6Addr();
+		}
+		nTemp.srcport = tcpData.getConnectionData().srcPort;
+		if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv4AddressType)
+		{
+			nTemp.dstip = ((IPv4Address*)(tcpData.getConnectionData().dstIP))->toInt();
+		}
+		else if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv6AddressType)
+		{
+			//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().dstIP))->toIn6Addr();
+		}
+		nTemp.dstport = tcpData.getConnectionData().dstPort;
+	}
+	else
+	{
+		//s->c
+		if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv4AddressType)
+		{
+			nTemp.srcip = ((IPv4Address*)(tcpData.getConnectionData().dstIP))->toInt();
+		}
+		else if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv6AddressType)
+		{
+			//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().dstIP))->toIn6Addr();
+		}
+		nTemp.srcport = tcpData.getConnectionData().dstPort;
+		if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv4AddressType)
+		{
+			nTemp.dstip = ((IPv4Address*)(tcpData.getConnectionData().srcIP))->toInt();
+		}
+		else if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv6AddressType)
+		{
+			//nTemp.dstip = ((IPv6Address*)(tcpData.getConnectionData().srcIP))->toIn6Addr();
+		}
+		nTemp.dstport = tcpData.getConnectionData().srcPort;
+	}
+	attach.time = ((time_t)tcpData.getConnectionData().startTime.tv_sec) * 1000000 + tcpData.getConnectionData().startTime.tv_usec;
+	CAnalysisCap *p = static_cast<CAnalysisCap*>(mMgr->thisdata);
+	p->EnterPacket(*(CSessions*)(mMgr->sessions), pbody, bodylen, nTemp, attach);
 }
 
 /**
@@ -262,15 +288,16 @@ bool CAnalysisCap::doTcpReassemblyOnPcapFile(const char *fileName, CSessions &mS
 	// extract number of connections before closing all of them
 	size_t numOfConnectionsProcessed = tcpReassembly.getConnectionInformation().size();
 
-	//处理流
-	if (mMgr.connMgr.size() > 0)
-	{
-		TcpReassemblyConnMgrIter iter = mMgr.connMgr.begin();
-		for (; iter != mMgr.connMgr.end(); iter++)
-		{
-			EnterConnection(iter->second, tcpReassembly.getConnectionInformation().at(iter->first), mSessions);
-		}
-	}
+	////处理流
+	//if (mMgr.connMgr.size() > 0)
+	//{
+	//	TcpReassemblyConnMgrIter iter = mMgr.connMgr.begin();
+	//	for (; iter != mMgr.connMgr.end(); iter++)
+	//	{
+	//		EnterConnection(iter->second, tcpReassembly.getConnectionInformation().at(iter->first), mSessions);
+	//	}
+	//}
+
 	// after all packets have been read - close the connections which are still opened
 	tcpReassembly.closeAllConnections();
 
@@ -373,9 +400,19 @@ void CAnalysisCap::EnterConnection(const TcpReassemblyData &tcpReassemblyData, c
 	CNetInfo nTemp;
 	PacketAttach attach;
 	
+	if (tcpReassemblyData.bytesFromSide[0] > 0)
+	{
+		//客户端的数据包
+		std::streampos pos=tcpReassemblyData.fileStreams[0]->tellp();
+		
+	}
+	if (tcpReassemblyData.bytesFromSide[1] > 0)
+	{
+		//服务端的数据包
+	}
+
 	//if (con->Packets[packetnum]->isUDPPacket)
 	//{
-
 	//	pbody = con->Packets[packetnum]->UDPData;
 	//	bodylen = con->Packets[packetnum]->UDPDataSize;
 	//	nTemp.proto = con->Packets[packetnum]->IPHeader->Protocol;
