@@ -222,7 +222,6 @@
     <ClInclude Include="LayerFilter.h" />
     <ClInclude Include="NetInfo.h" />
     <ClInclude Include="packet.h" />
-    <ClInclude Include="PacketCapture.h" />
     <ClInclude Include="PrivateFilter.h" />
     <ClInclude Include="RegexFilter.h" />
     <ClInclude Include="Sessions.h" />
@@ -253,9 +252,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="LayerFilter.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="PacketCapture.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PrivateFilter.cpp">

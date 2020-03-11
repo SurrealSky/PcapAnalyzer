@@ -6,7 +6,6 @@
 #include <algorithm>
 #include"packet.h"
 #include"Sessions.h"
-#include"PacketCapture.h"
 #include"include.h"
 
 #if defined(WIN32) || defined(WINx64)
@@ -226,6 +225,8 @@ typedef std::map<uint32_t, TcpReassemblyData>::iterator TcpReassemblyConnMgrIter
 struct TcpReassemblyMgr
 {
 	TcpReassemblyConnMgr connMgr;
+	TcpReassembly *tcpReassembly;
+	PcapLiveDevice *dev;
 	void *thisdata;
 	void *sessions;
 };
@@ -238,6 +239,7 @@ public:
 	virtual ~CAnalysisCap();
 private:
 	std::string plugin;
+	TcpReassemblyMgr mMgr;
 public:
 	static std::vector<std::string> GetAllPlugins();
 private:
@@ -246,11 +248,11 @@ private:
 	static void tcpReassemblyConnectionEndCallback(const ConnectionData& connectionData, TcpReassembly::ConnectionEndReason reason, void* userCookie);
 	static void onPacketArrives(RawPacket* packet, PcapLiveDevice* dev, void* tcpReassemblyCookie);
 	static void onApplicationInterrupted(void* cookie);
-public:
-	bool doTcpReassemblyOnPcapFile(const char *fileName,CSessions &mSessions,std::string plugin, std::string bpfFiler = "");
-	bool doTcpReassemblyOnLiveTraffic(const char *interfaceNameOrIP, CSessions &mSessions, std::string plugin,std::string bpfFiler = "");
 private:
-	void EnterConnection(const TcpReassemblyData &tcpReassemblyData, const ConnectionData& connectionData,CSessions &);
+	void PacketCenter(RawPacket&, TcpReassembly &tcpReassembly, CSessions &mSessions);
+public:
+	bool doTcpReassemblyOnPcapFile(const char *fileName, CSessions &mSessions, std::string plugin, std::string bpfFiler = "");
+	bool doTcpReassemblyOnLiveTraffic(const char *interfaceNameOrIP, CSessions &mSessions, std::string plugin,std::string bpfFiler = "");
 public:
 	//使用pcap原始库函数进行分析
 	bool pcapOpen(const char *File, CSessions&, std::string plugin);
@@ -268,15 +270,13 @@ public:
 	std::map<std::string, std::string> PacketAnalysis(const char *data, const unsigned int size,const unsigned int srcPort, const unsigned int dstPort);
 	std::map<std::string, std::string> PacketAnalysis(std::list<CSyncPacket> &packets);
 private:
-	CPacketCapture mSniffer;
+	static std::vector<NetCardInfo> devs;
+	STbool	isSniffing;
 public:
-	static void LoadNetDevs(std::vector<NetCardInfo>&);
-	bool StartOpenSniffer(const char * name, CSessions &, std::string plugin);
+	static std::vector<NetCardInfo>& LoadNetDevs();
+	bool StartOpenSniffer(const char *name, CSessions &, std::string plugin);
 	void StopOpenSniffer();
 	bool IsSniffing();
-private:
-	static unsigned int __stdcall snifferThreadFunc(void* pParam);
-	static void packet_handler(void* uParam, const unsigned char *pkt_data, unsigned int len,unsigned long long time);
 };
 
 

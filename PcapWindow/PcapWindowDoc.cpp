@@ -261,24 +261,27 @@ BOOL CPcapWindowDoc::OnNewDocument()
 	CMainFrame *pMain = (CMainFrame *)AfxGetMainWnd();
 	if (pMain)
 	{
-		CString strdev;
-		pMain->m_wndDevs.GetWindowTextA(strdev);
-		if (strdev.GetLength())
+		int sel = pMain->m_wndDevs.GetCurSel();
+		if (sel!=-1)
 		{
-			std::string plugin = "";
-			CDlgPlugins mdlg;
-			INT_PTR RESULT = mdlg.DoModal();
-			if (RESULT == IDOK)
+			NetCardInfo *net= static_cast<NetCardInfo*>(pMain->m_wndDevs.GetItemDataPtr(sel));
+			if (net)
 			{
-				if (!CACap.StartOpenSniffer(mSessions, strdev.GetString(), mdlg.plugin))
+				std::string plugin = "";
+				CDlgPlugins mdlg;
+				INT_PTR RESULT = mdlg.DoModal();
+				if (RESULT == IDOK)
 				{
-					AfxMessageBox("PCAP文件错误!");
+					if (!CACap.StartOpenSniffer(mSessions, net->name.c_str(), mdlg.plugin))
+					{
+						AfxMessageBox("捕获失败!");
+						return FALSE;
+					}
+				}
+				else
+				{
 					return FALSE;
 				}
-			}
-			else
-			{
-				return FALSE;
 			}
 		}
 	}
@@ -303,24 +306,27 @@ void CPcapWindowDoc::OnCaptureRestart()
 		CMainFrame *pMain = (CMainFrame *)AfxGetMainWnd();
 		if (pMain)
 		{
-			CString strdev;
-			pMain->m_wndDevs.GetWindowTextA(strdev);
-			if (strdev.GetLength())
+			int sel = pMain->m_wndDevs.GetCurSel();
+			if (sel != -1)
 			{
-				std::string plugin = "";
-				CDlgPlugins mdlg;
-				INT_PTR RESULT = mdlg.DoModal();
-				if (RESULT == IDOK)
+				NetCardInfo *net = static_cast<NetCardInfo*>(pMain->m_wndDevs.GetItemDataPtr(sel));
+				if (net)
 				{
-					if (!CACap.StartOpenSniffer(mSessions, strdev.GetString(), mdlg.plugin))
+					std::string plugin = "";
+					CDlgPlugins mdlg;
+					INT_PTR RESULT = mdlg.DoModal();
+					if (RESULT == IDOK)
 					{
-						AfxMessageBox("PCAP文件错误!");
+						if (!CACap.StartOpenSniffer(mSessions, net->name.c_str(), mdlg.plugin))
+						{
+							AfxMessageBox("PCAP文件错误!");
+							return;
+						}
+					}
+					else
+					{
 						return;
 					}
-				}
-				else
-				{
-					return;
 				}
 			}
 		}

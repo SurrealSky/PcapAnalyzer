@@ -272,12 +272,12 @@ void CMainFrame::LoadUI()
 	}
 	m_wndDevs.ShowWindow(SW_HIDE);
 	//¼ÓÔØÍø¿¨Êý¾Ý
-	std::vector<NetCardInfo> devs;
-	PcapAnalyzer::LoadNetDevs(devs);
+	const std::vector<NetCardInfo> &devs=PcapAnalyzer::GetNetDevs();
 	std::vector<NetCardInfo>::const_iterator iter = devs.begin();
 	for (; iter != devs.end(); iter++)
 	{
 		m_wndDevs.InsertString(m_wndDevs.GetCount(), iter->description.c_str());
+		m_wndDevs.SetItemDataPtr(m_wndDevs.GetCount()-1, (void*)&(*iter));
 	}
 	m_wndDevs.SetCurSel(0);
 

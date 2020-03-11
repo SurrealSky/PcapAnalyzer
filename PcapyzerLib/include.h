@@ -10,16 +10,11 @@
 #pragma comment(lib, "release\\Packet.lib")
 #endif
 
-//#include<Packetyzer/Packetyzer.h>
-//#ifdef _DEBUG 
-//#pragma comment(lib, "debug\\Packetyzer.lib")
-//#else
-//#pragma comment(lib, "release\\Packetyzer.lib")
-//#endif
-//
-//using namespace Packetyzer::Traffic::Connections;
+#include<iphlpapi.h>
+#pragma comment(lib,"Iphlpapi.lib")
 
 #include<pcapplusplus19.12\IPv4Layer.h>
+#include<pcapplusplus19.12\IPv6Layer.h>
 #include<pcapplusplus19.12\Packet.h>
 #include<pcapplusplus19.12\PcapFileDevice.h>
 #include<pcapplusplus19.12\TcpReassembly.h>
@@ -29,9 +24,9 @@
 #include<pcapplusplus19.12\IpUtils.h>
 #include<pcapplusplus19.12\SystemUtils.h>
 #include<pcapplusplus19.12\PlatformSpecificUtils.h>
+#include<pcapplusplus19.12\UdpLayer.h>
 
 using namespace pcpp;
-
 
 #ifdef _DEBUG 
 #pragma comment(lib,"debug\\pthreadVC2.lib")

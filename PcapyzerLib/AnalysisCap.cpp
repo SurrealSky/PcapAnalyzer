@@ -14,6 +14,8 @@
 #include"../CoreProto/coreapi.h"
 
 
+std::vector<NetCardInfo> CAnalysisCap::devs;
+
 // CAnalysisCap
 
 CAnalysisCap::CAnalysisCap()
@@ -22,6 +24,14 @@ CAnalysisCap::CAnalysisCap()
 	plugin = "";
 	//加载协议解析器
 	PluginManager::GetInstance().LoadAll();
+	mMgr.dev = NULL;
+	mMgr.tcpReassembly = NULL;
+	mMgr.thisdata = this;
+	mMgr.sessions = NULL;
+	// set global config singleton with input configuration
+	GlobalConfig::getInstance().writeMetadata = false;
+	GlobalConfig::getInstance().writeToConsole = true;
+	GlobalConfig::getInstance().separateSides = true;
 }
 
 CAnalysisCap::~CAnalysisCap()
@@ -243,20 +253,58 @@ void CAnalysisCap::tcpReassemblyConnectionEndCallback(const ConnectionData& conn
 	connMgr->erase(iter);
 }
 
+void CAnalysisCap::PacketCenter(RawPacket &rawPacket, TcpReassembly &tcpReassembly,CSessions &mSessions)
+{
+	Packet packet(&rawPacket);
+
+	if ((IPv6Layer*)packet.getLayerOfType(IPv6) != NULL)
+	{
+		//不支持ipv6
+		return;
+	}
+
+	if (packet.getLayerOfType(TCP) != NULL)
+	{
+		//tcp协议
+		tcpReassembly.reassemblePacket(&rawPacket);
+	}
+	else if (packet.getLayerOfType(UDP) != NULL)
+	{
+		//udp协议
+		UdpLayer *udp = (UdpLayer*)packet.getLayerOfType(UDP);
+		IPv4Layer *ip= (IPv4Layer*)packet.getLayerOfType(IPv4);
+		if (ip != NULL&&udp != NULL)
+		{
+			//处理数据包
+			unsigned char *pbody = NULL;
+			unsigned int bodylen = 0;
+			CNetInfo nTemp;
+			PacketAttach attach;
+			pbody = (unsigned char*)udp->getLayerPayload();
+			bodylen = udp->getLayerPayloadSize();
+			nTemp.proto = UDP;
+			nTemp.srcip = ip->getIPv4Header()->ipSrc;
+			nTemp.srcport = STswab16(udp->getUdpHeader()->portSrc);
+			nTemp.dstip = ip->getIPv4Header()->ipDst;
+			nTemp.dstport = STswab16(udp->getUdpHeader()->portDst);
+			attach.time = (time_t)rawPacket.getPacketTimeStamp().tv_sec * 1000000 + rawPacket.getPacketTimeStamp().tv_usec;
+			EnterPacket(mSessions, pbody, bodylen, nTemp, attach);
+		}
+	}
+	else
+	{
+		//不处理
+	}
+}
+
 bool CAnalysisCap::doTcpReassemblyOnPcapFile(const char *fileName, CSessions &mSessions, std::string _plugin,std::string bpfFiler)
 {
-	plugin = _plugin;
-
-	// set global config singleton with input configuration
-	GlobalConfig::getInstance().writeMetadata = false;
-	GlobalConfig::getInstance().writeToConsole = true;
-	GlobalConfig::getInstance().separateSides = true;
-	
-	TcpReassemblyMgr mMgr;
-	mMgr.thisdata = this;
+	plugin = _plugin;	
+	mMgr.connMgr.clear();
 	mMgr.sessions = &mSessions;
+
 	// create the TCP reassembly instance
-	TcpReassembly tcpReassembly(tcpReassemblyMsgReadyCallback, &mMgr, tcpReassemblyConnectionStartCallback, tcpReassemblyConnectionEndCallback);
+	mMgr.tcpReassembly=new TcpReassembly(tcpReassemblyMsgReadyCallback, &mMgr, tcpReassemblyConnectionStartCallback, tcpReassemblyConnectionEndCallback);
 
 	// open input file (pcap or pcapng file)
 	IFileReaderDevice* reader = IFileReaderDevice::getReader(fileName);
@@ -283,10 +331,10 @@ bool CAnalysisCap::doTcpReassemblyOnPcapFile(const char *fileName, CSessions &mS
 	RawPacket rawPacket;
 	while (reader->getNextPacket(rawPacket))
 	{
-		tcpReassembly.reassemblePacket(&rawPacket);
+		PacketCenter(rawPacket, *(mMgr.tcpReassembly), *(CSessions*)(mMgr.sessions));
 	}
 	// extract number of connections before closing all of them
-	size_t numOfConnectionsProcessed = tcpReassembly.getConnectionInformation().size();
+	size_t numOfConnectionsProcessed = mMgr.tcpReassembly->getConnectionInformation().size();
 
 	////处理流
 	//if (mMgr.connMgr.size() > 0)
@@ -299,7 +347,10 @@ bool CAnalysisCap::doTcpReassemblyOnPcapFile(const char *fileName, CSessions &mS
 	//}
 
 	// after all packets have been read - close the connections which are still opened
-	tcpReassembly.closeAllConnections();
+	mMgr.tcpReassembly->closeAllConnections();
+
+	delete mMgr.tcpReassembly;
+	mMgr.tcpReassembly = NULL;
 
 	// close the reader and free its memory
 	reader->close();
@@ -311,11 +362,12 @@ bool CAnalysisCap::doTcpReassemblyOnPcapFile(const char *fileName, CSessions &mS
 /**
 * packet capture callback - called whenever a packet arrives on the live device (in live device capturing mode)
 */
-void CAnalysisCap::onPacketArrives(RawPacket* packet, PcapLiveDevice* dev, void* tcpReassemblyCookie)
+void CAnalysisCap::onPacketArrives(RawPacket* rawPacket, PcapLiveDevice* dev, void* userCookie)
 {
 	// get a pointer to the TCP reassembly instance and feed the packet arrived to it
-	TcpReassembly* tcpReassembly = (TcpReassembly*)tcpReassemblyCookie;
-	tcpReassembly->reassemblePacket(packet);
+	TcpReassemblyMgr* mMgr = (TcpReassemblyMgr*)userCookie;
+	CAnalysisCap *p = static_cast<CAnalysisCap*>(mMgr->thisdata);
+	p->PacketCenter(*rawPacket, *(mMgr->tcpReassembly),*(CSessions*)(mMgr->sessions));
 }
 
 /**
@@ -330,16 +382,18 @@ void CAnalysisCap::onApplicationInterrupted(void* cookie)
 bool CAnalysisCap::doTcpReassemblyOnLiveTraffic(const char *interfaceNameOrIP, CSessions &mSessions, std::string _plugin, std::string bpfFiler)
 {
 	plugin = _plugin;
-	TcpReassemblyConnMgr connMgr;
-	// create the TCP reassembly instance
-	TcpReassembly tcpReassembly(tcpReassemblyMsgReadyCallback, &connMgr, tcpReassemblyConnectionStartCallback, tcpReassemblyConnectionEndCallback);
+	mMgr.connMgr.clear();
+	mMgr.sessions = &mSessions;
 
-	PcapLiveDevice* dev = NULL;
+	// create the TCP reassembly instance
+	mMgr.tcpReassembly = new TcpReassembly(tcpReassemblyMsgReadyCallback, &mMgr, tcpReassemblyConnectionStartCallback, tcpReassemblyConnectionEndCallback);
+
+	mMgr.dev = NULL;
 	IPv4Address interfaceIP(interfaceNameOrIP);
 	if (interfaceIP.isValid())
 	{
-		dev = PcapLiveDeviceList::getInstance().getPcapLiveDeviceByIp(interfaceIP);
-		if (dev == NULL)
+		mMgr.dev = PcapLiveDeviceList::getInstance().getPcapLiveDeviceByIp(interfaceIP);
+		if (mMgr.dev == NULL)
 		{
 			return false;
 			//EXIT_WITH_ERROR("Couldn't find interface by provided IP");
@@ -348,15 +402,15 @@ bool CAnalysisCap::doTcpReassemblyOnLiveTraffic(const char *interfaceNameOrIP, C
 	}
 	else
 	{
-		dev = PcapLiveDeviceList::getInstance().getPcapLiveDeviceByName(interfaceNameOrIP);
-		if (dev == NULL)
+		mMgr.dev = PcapLiveDeviceList::getInstance().getPcapLiveDeviceByName(interfaceNameOrIP);
+		if (mMgr.dev == NULL)
 		{
 			return false;
 			//EXIT_WITH_ERROR("Couldn't find interface by provided name");
 		}
 	}
 	// try to open device
-	if (!dev->open())
+	if (!mMgr.dev->open())
 	{
 		//EXIT_WITH_ERROR("Cannot open interface");
 		return false;
@@ -365,79 +419,35 @@ bool CAnalysisCap::doTcpReassemblyOnLiveTraffic(const char *interfaceNameOrIP, C
 	// set BPF filter if set by the user
 	if (bpfFiler != "")
 	{
-		if (!dev->setFilter(bpfFiler))
+		if (!mMgr.dev->setFilter(bpfFiler))
 		{
 			//EXIT_WITH_ERROR("Cannot set BPF filter to interface");
 			return false;
 		}
 	}
 
-	// start capturing packets. Each packet arrived will be handled by onPacketArrives method
-	dev->startCapture(onPacketArrives, &tcpReassembly);
+	return StartOpenSniffer("", mSessions, plugin);
 
-	// register the on app close event to print summary stats on app termination
-	bool shouldStop = false;
-	ApplicationEventHandler::getInstance().onApplicationInterrupted(onApplicationInterrupted, &shouldStop);
+	//// start capturing packets. Each packet arrived will be handled by onPacketArrives method
+	//dev->startCapture(onPacketArrives, mMgr.tcpReassembly);
 
-	// run in an endless loop until the user presses ctrl+c
-	while (!shouldStop)
-		PCAP_SLEEP(1);
+	//// register the on app close event to print summary stats on app termination
+	//bool shouldStop = false;
+	//ApplicationEventHandler::getInstance().onApplicationInterrupted(onApplicationInterrupted, &shouldStop);
 
-	// stop capturing and close the live device
-	dev->stopCapture();
-	dev->close();
+	//// run in an endless loop until the user presses ctrl+c
+	//while (!shouldStop)
+	//	PCAP_SLEEP(1);
 
-	// close all connections which are still opened
-	tcpReassembly.closeAllConnections();
+	//// stop capturing and close the live device
+	//dev->stopCapture();
+	//dev->close();
 
+	//// close all connections which are still opened
+	//mMgr.tcpReassembly->closeAllConnections();
 
-}
-
-void CAnalysisCap::EnterConnection(const TcpReassemblyData &tcpReassemblyData, const ConnectionData& connectionData, CSessions &mSessions)
-{
-	unsigned char *pbody = NULL;
-	unsigned int bodylen = 0;
-	CNetInfo nTemp;
-	PacketAttach attach;
-	
-	if (tcpReassemblyData.bytesFromSide[0] > 0)
-	{
-		//客户端的数据包
-		std::streampos pos=tcpReassemblyData.fileStreams[0]->tellp();
-		
-	}
-	if (tcpReassemblyData.bytesFromSide[1] > 0)
-	{
-		//服务端的数据包
-	}
-
-	//if (con->Packets[packetnum]->isUDPPacket)
-	//{
-	//	pbody = con->Packets[packetnum]->UDPData;
-	//	bodylen = con->Packets[packetnum]->UDPDataSize;
-	//	nTemp.proto = con->Packets[packetnum]->IPHeader->Protocol;
-	//	nTemp.srcip = con->Packets[packetnum]->IPHeader->SourceAddress;
-	//	nTemp.srcport = STswab16(con->Packets[packetnum]->UDPHeader->SourcePort);
-	//	nTemp.dstip = con->Packets[packetnum]->IPHeader->DestinationAddress;
-	//	nTemp.dstport = STswab16(con->Packets[packetnum]->UDPHeader->DestinationPort);
-	//	attach.time = con->Packets[packetnum]->Timestamp;
-	//}
-	//else if (con->Packets[packetnum]->isTCPPacket)
-	//{
-	//	pbody = con->Packets[packetnum]->TCPData;
-	//	bodylen = con->Packets[packetnum]->TCPDataSize;
-	//	nTemp.proto = con->Packets[packetnum]->IPHeader->Protocol;
-	//	nTemp.srcip = con->Packets[packetnum]->IPHeader->SourceAddress;
-	//	nTemp.srcport = STswab16(con->Packets[packetnum]->TCPHeader->SourcePort);
-	//	nTemp.dstip = con->Packets[packetnum]->IPHeader->DestinationAddress;
-	//	nTemp.dstport = STswab16(con->Packets[packetnum]->TCPHeader->DestinationPort);
-	//	attach.time = con->Packets[packetnum]->Timestamp;
-	//}
-	//else
-	//{
-	//	continue;
-	//}
-	//EnterPacket(mSessions,pbody, bodylen, nTemp,attach);
+	//delete mMgr.tcpReassembly;
+	//mMgr.tcpReassembly = 0;
 }
 
 bool CAnalysisCap::isFileLoaded()
@@ -704,83 +714,58 @@ std::map<std::string, std::string> CAnalysisCap::PacketAnalysis(std::list<CSyncP
 	return result;
 }
 
-void CAnalysisCap::LoadNetDevs(std::vector<NetCardInfo> &devs)
+std::vector<NetCardInfo>& CAnalysisCap::LoadNetDevs()
 {
-	devs=CPacketCapture::devs;
+	const std::vector<PcapLiveDevice*> list = PcapLiveDeviceList::getInstance().getPcapLiveDevicesList();
+	for (int i = 0; i < list.size(); i++)
+	{
+		NetCardInfo info;
+		info.name = list[i]->getName();
+		info.description = list[i]->getDesc();
+		info.netmask = list[i]->getDefaultGateway().toInt();
+		devs.push_back(info);
+	}
+	return devs;
 }
 
-bool CAnalysisCap::StartOpenSniffer(const char * name, CSessions &mSessions, std::string _plugin)
+bool CAnalysisCap::StartOpenSniffer(const char *name,CSessions &mSessions, std::string _plugin)
 {
-	plugin = _plugin;
-	mSniffer.mSnifferPackets.ClearPackets();
-	int sel = 0;
-	for (UINT i = 0; i< mSniffer.devs.size(); i++)
-	{
-		if (strcmp(mSniffer.devs[i].description.c_str(), name) == 0)
-			sel = i;
-	}
-	mSniffer.pSession = &mSessions;
-	mSniffer.devIndex = sel;
-	//需要开启一个线程
-	_beginthreadex(NULL, 0, snifferThreadFunc, this, 0, 0);
-	return true;
+	isSniffing = mMgr.dev->startCapture(onPacketArrives, &mMgr);
+	return isSniffing;
+
+	//plugin = _plugin;
+	//mSniffer.mSnifferPackets.ClearPackets();
+	//int sel = 0;
+	//for (UINT i = 0; i< mSniffer.devs.size(); i++)
+	//{
+	//	if (strcmp(mSniffer.devs[i].description.c_str(), name) == 0)
+	//		sel = i;
+	//}
+	//mSniffer.pSession = &mSessions;
+	//mSniffer.devIndex = sel;
+	////需要开启一个线程
+	//_beginthreadex(NULL, 0, snifferThreadFunc, this, 0, 0);
+	//return true;
 }
 
 void CAnalysisCap::StopOpenSniffer()
 {
-	//先结束线程
-	mSniffer.StopCapture();
+	// stop capturing and close the live device
+	mMgr.dev->stopCapture();
+	mMgr.dev->close();
+
+	// close all connections which are still opened
+	mMgr.tcpReassembly->closeAllConnections();
+
+	delete mMgr.tcpReassembly;
+	mMgr.tcpReassembly = 0;
+
+	isSniffing = false;
+	////先结束线程
+	//mSniffer.StopCapture();
 }
 
 bool CAnalysisCap::IsSniffing()
 {
-	return mSniffer.isSniffing;
-}
-
-unsigned int __stdcall CAnalysisCap::snifferThreadFunc(void* pParam)
-{
-	// TODO:
-	CAnalysisCap *p = (CAnalysisCap*)pParam;
-	p->mSniffer.CapturePackets(pParam, packet_handler, p->mSniffer.devIndex, -1, 0);
-	return 0;
-}
-
-void CAnalysisCap::packet_handler(void* uParam, const unsigned char *pkt_data, unsigned int len,unsigned long long time)
-{
-	CAnalysisCap* pAnalysis = (CAnalysisCap*)uParam;
-	//开始处理packet
-	/*cPacket* TestPacket = new cPacket((UCHAR*)pkt_data, len);
-	unsigned char *pbody = NULL;
-	unsigned int bodylen = 0;
-	CNetInfo nTemp;
-	PacketAttach attach;
-	if (TestPacket->isUDPPacket)
-	{
-		pbody = TestPacket->UDPData;
-		bodylen = TestPacket->UDPDataSize;
-		nTemp.proto = TestPacket->IPHeader->Protocol;
-		nTemp.srcip = TestPacket->IPHeader->SourceAddress;
-		nTemp.srcport = STswab16(TestPacket->UDPHeader->SourcePort);
-		nTemp.dstip = TestPacket->IPHeader->DestinationAddress;
-		nTemp.dstport = STswab16(TestPacket->UDPHeader->DestinationPort);
-		attach.time = time;
-	}
-	else if (TestPacket->isTCPPacket)
-	{
-		pbody = TestPacket->TCPData;
-		bodylen = TestPacket->TCPDataSize;
-		nTemp.proto = TestPacket->IPHeader->Protocol;
-		nTemp.srcip = TestPacket->IPHeader->SourceAddress;
-		nTemp.srcport = STswab16(TestPacket->TCPHeader->SourcePort);
-		nTemp.dstip = TestPacket->IPHeader->DestinationAddress;
-		nTemp.dstport = STswab16(TestPacket->TCPHeader->DestinationPort);
-		attach.time = time;
-	}
-	else
-	{
-		delete(TestPacket);
-		return;
-	}
-	pAnalysis->EnterPacket(*(pAnalysis->mSniffer.pSession), pbody, bodylen, nTemp, attach);*/
-	//delete(TestPacket);
+	return isSniffing;
 }

@@ -53,7 +53,7 @@ public:
 	std::string Protocol2String(STu16 protocol);
 public:
 	//sniffer
-	static void LoadNetDevs(std::vector<NetCardInfo>&);
+	static const std::vector<NetCardInfo> &GetNetDevs();
 	bool StartOpenSniffer(CSessions &mSessions, const char * dev, std::string plugin = "");
 	void StopOpenSniffer();
 	bool IsSniffing();

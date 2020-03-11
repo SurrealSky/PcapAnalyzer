@@ -1,7 +1,6 @@
 #include "PcapAnalyzer.h"
 #include"AnalysisCap.h"
 #include"XmlFilter.h"
-#include"PacketCapture.h"
 
 PcapAnalyzer::PcapAnalyzer()
 {
@@ -138,14 +137,15 @@ std::map<std::string, std::string> PcapAnalyzer::PacketAnalysis(std::list<CSyncP
 	return pImplAnalysis->PacketAnalysis(packets);
 }
 
-void PcapAnalyzer::LoadNetDevs(std::vector<NetCardInfo> &devs)
+const std::vector<NetCardInfo> &PcapAnalyzer::GetNetDevs()
 {
-	CPacketCapture::LoadNetDevs(devs);
+	return CAnalysisCap::LoadNetDevs();
 }
 
 bool PcapAnalyzer::StartOpenSniffer(CSessions &mSessions,const char * name, std::string _plugin)
 {
-	return pImplAnalysis->StartOpenSniffer(name,mSessions, _plugin);
+	return pImplAnalysis->doTcpReassemblyOnLiveTraffic(name, mSessions, _plugin);
+	//return pImplAnalysis->StartOpenSniffer(name,mSessions, _plugin);
 }
 
 void PcapAnalyzer::StopOpenSniffer()
