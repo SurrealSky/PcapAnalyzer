@@ -32,6 +32,7 @@ CAnalysisCap::CAnalysisCap()
 	GlobalConfig::getInstance().writeMetadata = false;
 	GlobalConfig::getInstance().writeToConsole = true;
 	GlobalConfig::getInstance().separateSides = true;
+	isSniffing = false;
 }
 
 CAnalysisCap::~CAnalysisCap()
