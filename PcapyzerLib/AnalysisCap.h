@@ -7,6 +7,7 @@
 #include"packet.h"
 #include"Sessions.h"
 #include"include.h"
+#include<pack\ByteBuffer.h>
 
 #if defined(WIN32) || defined(WINx64)
 #define SEPARATOR '\\'
@@ -158,10 +159,12 @@ public:
 struct TcpReassemblyData
 {
 	// pointer to 2 file stream - one for each side of the connection. If the user chooses to write both sides to the same file (which is the default), only one file stream is used (index 0)
-	std::ostream* fileStreams[2];
+	//std::ostream* fileStreams[2];
+
+	ByteBuffer fileBuffer[2];
 
 	// flags indicating whether the file in each side was already opened before. If the answer is yes, next time it'll be opened in append mode (and not in overwrite mode)
-	bool reopenFileStreams[2];
+	//bool reopenFileStreams[2];
 
 	// a flag indicating on which side was the latest message on this connection
 	int curSide;
@@ -174,7 +177,7 @@ struct TcpReassemblyData
 	/**
 	* the default c'tor
 	*/
-	TcpReassemblyData() { fileStreams[0] = NULL; fileStreams[1] = NULL; clear(); }
+	TcpReassemblyData() { /*fileStreams[0] = NULL; fileStreams[1] = NULL;*/ clear(); }
 
 	/**
 	* The default d'tor
@@ -182,11 +185,11 @@ struct TcpReassemblyData
 	~TcpReassemblyData()
 	{
 		// close files on both sides if open
-		if (fileStreams[0] != NULL)
+		/*if (fileStreams[0] != NULL)
 			GlobalConfig::getInstance().closeFileSteam(fileStreams[0]);
 
 		if (fileStreams[1] != NULL)
-			GlobalConfig::getInstance().closeFileSteam(fileStreams[1]);
+			GlobalConfig::getInstance().closeFileSteam(fileStreams[1]);*/
 	}
 
 	/**
@@ -195,7 +198,7 @@ struct TcpReassemblyData
 	void clear()
 	{
 		// for the file stream - close them if they're not null
-		if (fileStreams[0] != NULL)
+	/*	if (fileStreams[0] != NULL)
 		{
 			GlobalConfig::getInstance().closeFileSteam(fileStreams[0]);
 			fileStreams[0] = NULL;
@@ -208,7 +211,7 @@ struct TcpReassemblyData
 		}
 
 		reopenFileStreams[0] = false;
-		reopenFileStreams[1] = false;
+		reopenFileStreams[1] = false;*/
 		numOfDataPackets[0] = 0;
 		numOfDataPackets[1] = 0;
 		numOfMessagesFromSide[0] = 0;
@@ -250,6 +253,7 @@ private:
 	static void onApplicationInterrupted(void* cookie);
 private:
 	void PacketCenter(RawPacket&, TcpReassembly &tcpReassembly, CSessions &mSessions);
+	void EnterConnection(const TcpReassemblyData &data, const ConnectionData &conn,CSessions &mSessions);
 public:
 	bool doTcpReassemblyOnPcapFile(const char *fileName, CSessions &mSessions, std::string plugin, std::string bpfFiler = "");
 	bool doTcpReassemblyOnLiveTraffic(const char *interfaceNameOrIP, CSessions &mSessions, std::string plugin,std::string bpfFiler = "");

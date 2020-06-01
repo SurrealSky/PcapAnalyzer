@@ -84,44 +84,44 @@ void CAnalysisCap::tcpReassemblyMsgReadyCallback(int sideIndex, const TcpStreamD
 	else
 		side = 0;
 
-	// if the file stream on the relevant side isn't open yet (meaning it's the first data on this connection)
-	if (iter->second.fileStreams[side] == NULL)
-	{
-		// add the flow key of this connection to the list of open connections. If the return value isn't NULL it means that there are too many open files
-		// and we need to close the connection with least recently used file(s) in order to open a new one.
-		// The connection with the least recently used file is the return value
-		uint32_t flowKeyToCloseFiles;
-		int result = GlobalConfig::getInstance().getRecentConnsWithActivity()->put(tcpData.getConnectionData().flowKey, &flowKeyToCloseFiles);
+	//// if the file stream on the relevant side isn't open yet (meaning it's the first data on this connection)
+	//if (iter->second.fileStreams[side] == NULL)
+	//{
+	//	// add the flow key of this connection to the list of open connections. If the return value isn't NULL it means that there are too many open files
+	//	// and we need to close the connection with least recently used file(s) in order to open a new one.
+	//	// The connection with the least recently used file is the return value
+	//	uint32_t flowKeyToCloseFiles;
+	//	int result = GlobalConfig::getInstance().getRecentConnsWithActivity()->put(tcpData.getConnectionData().flowKey, &flowKeyToCloseFiles);
 
-		// if result equals to 1 it means we need to close the open files in this connection (the one with the least recently used files)
-		if (result == 1)
-		{
-			// find the connection from the flow key
-			TcpReassemblyConnMgrIter iter2 = mMgr->connMgr.find(flowKeyToCloseFiles);
-			if (iter2 != mMgr->connMgr.end())
-			{
-				// close files on both sides (if they're open)
-				for (int index = 0; index < 2; index++)
-				{
-					if (iter2->second.fileStreams[index] != NULL)
-					{
-						// close the file
-						GlobalConfig::getInstance().closeFileSteam(iter2->second.fileStreams[index]);
-						iter2->second.fileStreams[index] = NULL;
+	//	// if result equals to 1 it means we need to close the open files in this connection (the one with the least recently used files)
+	//	if (result == 1)
+	//	{
+	//		// find the connection from the flow key
+	//		TcpReassemblyConnMgrIter iter2 = mMgr->connMgr.find(flowKeyToCloseFiles);
+	//		if (iter2 != mMgr->connMgr.end())
+	//		{
+	//			// close files on both sides (if they're open)
+	//			for (int index = 0; index < 2; index++)
+	//			{
+	//				if (iter2->second.fileStreams[index] != NULL)
+	//				{
+	//					// close the file
+	//					GlobalConfig::getInstance().closeFileSteam(iter2->second.fileStreams[index]);
+	//					iter2->second.fileStreams[index] = NULL;
 
-						// set the reopen flag to true to indicate that next time this file will be opened it will be opened in append mode (and not overwrite mode)
-						iter2->second.reopenFileStreams[index] = true;
-					}
-				}
-			}
-		}
+	//					// set the reopen flag to true to indicate that next time this file will be opened it will be opened in append mode (and not overwrite mode)
+	//					iter2->second.reopenFileStreams[index] = true;
+	//				}
+	//			}
+	//		}
+	//	}
 
-		// get the file name according to the 5-tuple etc.
-		std::string fileName = GlobalConfig::getInstance().getFileName(tcpData.getConnectionData(), sideIndex, GlobalConfig::getInstance().separateSides) + ".txt";
+	//	// get the file name according to the 5-tuple etc.
+	//	std::string fileName = GlobalConfig::getInstance().getFileName(tcpData.getConnectionData(), sideIndex, GlobalConfig::getInstance().separateSides) + ".txt";
 
-		// open the file in overwrite mode (if this is the first time the file is opened) or in append mode (if it was already opened before)
-		iter->second.fileStreams[side] = GlobalConfig::getInstance().openFileStream(fileName, iter->second.reopenFileStreams[side]);
-	}
+	//	// open the file in overwrite mode (if this is the first time the file is opened) or in append mode (if it was already opened before)
+	//	iter->second.fileStreams[side] = GlobalConfig::getInstance().openFileStream(fileName, iter->second.reopenFileStreams[side]);
+	//}
 
 	// if this messages comes on a different side than previous message seen on this connection
 	if (sideIndex != iter->second.curSide)
@@ -138,64 +138,65 @@ void CAnalysisCap::tcpReassemblyMsgReadyCallback(int sideIndex, const TcpStreamD
 	iter->second.bytesFromSide[sideIndex] += (int)tcpData.getDataLength();
 
 	// write the new data to the file
-	iter->second.fileStreams[side]->write((char*)tcpData.getData(), tcpData.getDataLength());
+	//iter->second.fileStreams[side]->write((char*)tcpData.getData(), tcpData.getDataLength());
+	iter->second.fileBuffer[side].append((STu8*)tcpData.getData(), tcpData.getDataLength());
 
-	//处理数据包
-	unsigned char *pbody = NULL;
-	unsigned int bodylen = 0;
-	CNetInfo nTemp;
-	PacketAttach attach;
-	pbody = (unsigned char*)tcpData.getData();
-	bodylen = tcpData.getDataLength();
-	nTemp.proto = TCP;
-	if (side == 0)
-	{
-		//c->s
-		if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv4AddressType)
-		{
-			nTemp.srcip = ((IPv4Address*)(tcpData.getConnectionData().srcIP))->toInt();
-		}
-		else if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv6AddressType)
-		{
-			//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().srcIP))->toIn6Addr();
-		}
-		nTemp.srcport = tcpData.getConnectionData().srcPort;
-		if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv4AddressType)
-		{
-			nTemp.dstip = ((IPv4Address*)(tcpData.getConnectionData().dstIP))->toInt();
-		}
-		else if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv6AddressType)
-		{
-			//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().dstIP))->toIn6Addr();
-		}
-		nTemp.dstport = tcpData.getConnectionData().dstPort;
-	}
-	else
-	{
-		//s->c
-		if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv4AddressType)
-		{
-			nTemp.srcip = ((IPv4Address*)(tcpData.getConnectionData().dstIP))->toInt();
-		}
-		else if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv6AddressType)
-		{
-			//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().dstIP))->toIn6Addr();
-		}
-		nTemp.srcport = tcpData.getConnectionData().dstPort;
-		if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv4AddressType)
-		{
-			nTemp.dstip = ((IPv4Address*)(tcpData.getConnectionData().srcIP))->toInt();
-		}
-		else if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv6AddressType)
-		{
-			//nTemp.dstip = ((IPv6Address*)(tcpData.getConnectionData().srcIP))->toIn6Addr();
-		}
-		nTemp.dstport = tcpData.getConnectionData().srcPort;
-	}
-	attach.time = ((time_t)tcpData.getConnectionData().startTime.tv_sec) * 1000000 + tcpData.getConnectionData().startTime.tv_usec;
-	CAnalysisCap *p = static_cast<CAnalysisCap*>(mMgr->thisdata);
-	//attach.isStepFilter = false;
-	p->EnterPacket(*(CSessions*)(mMgr->sessions), pbody, bodylen, nTemp, attach);
+	////在流之前处理数据包
+	//unsigned char *pbody = NULL;
+	//unsigned int bodylen = 0;
+	//CNetInfo nTemp;
+	//PacketAttach attach;
+	//pbody = (unsigned char*)tcpData.getData();
+	//bodylen = tcpData.getDataLength();
+	//nTemp.proto = TCP;
+	//if (side == 0)
+	//{
+	//	//c->s
+	//	if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv4AddressType)
+	//	{
+	//		nTemp.srcip = ((IPv4Address*)(tcpData.getConnectionData().srcIP))->toInt();
+	//	}
+	//	else if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv6AddressType)
+	//	{
+	//		//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().srcIP))->toIn6Addr();
+	//	}
+	//	nTemp.srcport = tcpData.getConnectionData().srcPort;
+	//	if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv4AddressType)
+	//	{
+	//		nTemp.dstip = ((IPv4Address*)(tcpData.getConnectionData().dstIP))->toInt();
+	//	}
+	//	else if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv6AddressType)
+	//	{
+	//		//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().dstIP))->toIn6Addr();
+	//	}
+	//	nTemp.dstport = tcpData.getConnectionData().dstPort;
+	//}
+	//else
+	//{
+	//	//s->c
+	//	if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv4AddressType)
+	//	{
+	//		nTemp.srcip = ((IPv4Address*)(tcpData.getConnectionData().dstIP))->toInt();
+	//	}
+	//	else if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv6AddressType)
+	//	{
+	//		//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().dstIP))->toIn6Addr();
+	//	}
+	//	nTemp.srcport = tcpData.getConnectionData().dstPort;
+	//	if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv4AddressType)
+	//	{
+	//		nTemp.dstip = ((IPv4Address*)(tcpData.getConnectionData().srcIP))->toInt();
+	//	}
+	//	else if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv6AddressType)
+	//	{
+	//		//nTemp.dstip = ((IPv6Address*)(tcpData.getConnectionData().srcIP))->toIn6Addr();
+	//	}
+	//	nTemp.dstport = tcpData.getConnectionData().srcPort;
+	//}
+	//attach.time = ((time_t)tcpData.getConnectionData().startTime.tv_sec) * 1000000 + tcpData.getConnectionData().startTime.tv_usec;
+	//CAnalysisCap *p = static_cast<CAnalysisCap*>(mMgr->thisdata);
+	////attach.isStepFilter = false;
+	//p->EnterPacket(*(CSessions*)(mMgr->sessions), pbody, bodylen, nTemp, attach);
 }
 
 /**
@@ -224,13 +225,13 @@ void CAnalysisCap::tcpReassemblyConnectionStartCallback(const ConnectionData& co
 void CAnalysisCap::tcpReassemblyConnectionEndCallback(const ConnectionData& connectionData, TcpReassembly::ConnectionEndReason reason, void* userCookie)
 {
 	// get a pointer to the connection manager
-	TcpReassemblyConnMgr* connMgr = (TcpReassemblyConnMgr*)userCookie;
+	TcpReassemblyMgr* mMgr = (TcpReassemblyMgr*)userCookie;
 
 	// find the connection in the connection manager by the flow key
-	TcpReassemblyConnMgrIter iter = connMgr->find(connectionData.flowKey);
+	TcpReassemblyConnMgrIter iter = mMgr->connMgr.find(connectionData.flowKey);
 
 	// connection wasn't found - shouldn't get here
-	if (iter == connMgr->end())
+	if (iter == mMgr->connMgr.end())
 		return;
 
 	// write a metadata file if required by the user
@@ -251,8 +252,21 @@ void CAnalysisCap::tcpReassemblyConnectionEndCallback(const ConnectionData& conn
 		metadataFile.close();
 	}
 
+	//处理TCP流
+	CAnalysisCap *p = static_cast<CAnalysisCap*>(mMgr->thisdata);
+	p->EnterConnection(mMgr->connMgr.at(connectionData.flowKey), connectionData,*(CSessions*) mMgr->sessions);
+	//if (mMgr.connMgr.size() > 0)
+	//{
+	//	TcpReassemblyConnMgrIter iter = mMgr.connMgr.begin();
+	//	for (; iter != mMgr.connMgr.end(); iter++)
+	//	{
+	//		//EnterConnection(iter->second, tcpReassembly.getConnectionInformation().at(iter->first), mSessions);
+	//		EnterConnection(iter->second, mMgr.tcpReassembly->getConnectionInformation().at(iter->first), mSessions);
+	//	}
+	//}
+
 	// remove the connection from the connection manager
-	connMgr->erase(iter);
+	mMgr->connMgr.erase(iter);
 }
 
 void CAnalysisCap::PacketCenter(RawPacket &rawPacket, TcpReassembly &tcpReassembly,CSessions &mSessions)
@@ -267,12 +281,12 @@ void CAnalysisCap::PacketCenter(RawPacket &rawPacket, TcpReassembly &tcpReassemb
 
 	if (packet.getLayerOfType(TCP) != NULL)
 	{
-		//tcp协议
+		//tcp流协议
 		tcpReassembly.reassemblePacket(&rawPacket);
 	}
 	else if (packet.getLayerOfType(UDP) != NULL)
 	{
-		//udp协议
+		//udp协议（一个packet就是一个业务包）
 		UdpLayer *udp = (UdpLayer*)packet.getLayerOfType(UDP);
 		IPv4Layer *ip= (IPv4Layer*)packet.getLayerOfType(IPv4);
 		if (ip != NULL&&udp != NULL)
@@ -298,6 +312,46 @@ void CAnalysisCap::PacketCenter(RawPacket &rawPacket, TcpReassembly &tcpReassemb
 	{
 		//不处理
 	}
+}
+
+void CAnalysisCap::EnterConnection(const TcpReassemblyData &data,const ConnectionData &conn, CSessions &mSessions)
+{
+	if (data.bytesFromSide[0]>0)
+	{
+		CNetInfo nTemp;
+		nTemp.proto = TCP;
+		inet_pton(AF_INET,conn.srcIP->toString().c_str(),&nTemp.srcip);
+		nTemp.srcip = STswab32(nTemp.srcip);
+		nTemp.srcport = conn.srcPort;
+		inet_pton(AF_INET, conn.dstIP->toString().c_str(), &nTemp.dstip);
+		nTemp.dstip = STswab32(nTemp.dstip);
+		nTemp.dstport = conn.dstPort;
+
+		PacketAttach attach;
+		attach.time = ((time_t)conn.startTime.tv_sec) * 1000000 + conn.startTime.tv_usec;
+
+		unsigned char *pbody = (unsigned char*)(data.fileBuffer[0].contents());
+		unsigned int bodylen = data.bytesFromSide[0];
+		EnterPacket(mSessions, pbody, bodylen, nTemp, attach);
+	}
+	if (data.bytesFromSide[1] > 0)
+	{
+		CNetInfo nTemp;
+		nTemp.proto = TCP;
+		inet_pton(AF_INET, conn.srcIP->toString().c_str(), &nTemp.srcip);
+		nTemp.srcip = STswab32(nTemp.srcip);
+		nTemp.srcport = conn.srcPort;
+		inet_pton(AF_INET, conn.dstIP->toString().c_str(), &nTemp.dstip);
+		nTemp.dstip = STswab32(nTemp.dstip);
+		nTemp.dstport = conn.dstPort;
+
+		PacketAttach attach;
+		attach.time = ((time_t)conn.startTime.tv_sec) * 1000000 + conn.startTime.tv_usec;
+		unsigned char *pbody = (unsigned char*)(data.fileBuffer[1].contents());
+		unsigned int bodylen = data.bytesFromSide[1];
+		EnterPacket(mSessions, pbody, bodylen, nTemp, attach);
+	}
+	return;
 }
 
 bool CAnalysisCap::doTcpReassemblyOnPcapFile(const char *fileName, CSessions &mSessions, std::string _plugin,std::string bpfFiler)
@@ -338,16 +392,6 @@ bool CAnalysisCap::doTcpReassemblyOnPcapFile(const char *fileName, CSessions &mS
 	}
 	// extract number of connections before closing all of them
 	size_t numOfConnectionsProcessed = mMgr.tcpReassembly->getConnectionInformation().size();
-
-	////处理流
-	//if (mMgr.connMgr.size() > 0)
-	//{
-	//	TcpReassemblyConnMgrIter iter = mMgr.connMgr.begin();
-	//	for (; iter != mMgr.connMgr.end(); iter++)
-	//	{
-	//		EnterConnection(iter->second, tcpReassembly.getConnectionInformation().at(iter->first), mSessions);
-	//	}
-	//}
 
 	// after all packets have been read - close the connections which are still opened
 	mMgr.tcpReassembly->closeAllConnections();
@@ -662,16 +706,19 @@ bool CAnalysisCap::CombinPacket(CSessions &mSessions,unsigned char *pbody, unsig
 	}
 	if (p != NULL)
 	{
+		//肯定是业务数据包头
 		CSyncPacket mSyncPacket;
 		mSyncPacket.mNetInfo = n;
 		mSyncPacket.isStreamEnd = true;
 		mSyncPacket.time = attach.time;
 		mSyncPacket._payload.append(pbody, len);
+		p->AddPacket(mSyncPacket);
 		//attach.isStepFilter = true;
-		EnterPacket(mSessions,pbody + len, bodylen - len, n,attach);
+		EnterPacket(mSessions,pbody + len, bodylen-len, n,attach);
 	}
 	else
 	{
+		//没有找到流
 		CSyncPacket mSyncPacket;
 		mSyncPacket.mNetInfo = n;
 		mSyncPacket.isStreamEnd = true;
