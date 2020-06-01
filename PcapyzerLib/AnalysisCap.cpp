@@ -194,7 +194,7 @@ void CAnalysisCap::tcpReassemblyMsgReadyCallback(int sideIndex, const TcpStreamD
 	}
 	attach.time = ((time_t)tcpData.getConnectionData().startTime.tv_sec) * 1000000 + tcpData.getConnectionData().startTime.tv_usec;
 	CAnalysisCap *p = static_cast<CAnalysisCap*>(mMgr->thisdata);
-	attach.isStepFilter = false;
+	//attach.isStepFilter = false;
 	p->EnterPacket(*(CSessions*)(mMgr->sessions), pbody, bodylen, nTemp, attach);
 }
 
@@ -290,7 +290,7 @@ void CAnalysisCap::PacketCenter(RawPacket &rawPacket, TcpReassembly &tcpReassemb
 			nTemp.dstip = ip->getIPv4Header()->ipDst;
 			nTemp.dstport = STswab16(udp->getUdpHeader()->portDst);
 			attach.time = (time_t)rawPacket.getPacketTimeStamp().tv_sec * 1000000 + rawPacket.getPacketTimeStamp().tv_usec;
-			attach.isStepFilter = false;
+			//attach.isStepFilter = false;
 			EnterPacket(mSessions, pbody, bodylen, nTemp, attach);
 		}
 	}
@@ -567,7 +567,7 @@ bool CAnalysisCap::EnterPacket(CSessions &mSessions,unsigned char *pbody, unsign
 						p->FindLastPacket(n)->_payload.append(pbody, p->FindLastPacket(n)->streamResiduelen);
 						p->FindLastPacket(n)->isStreamEnd = true;
 						//新的数据包
-						attach.isStepFilter = true;
+						//attach.isStepFilter = true;
 						EnterPacket(mSessions, pbody + p->FindLastPacket(n)->streamResiduelen, bodylen - p->FindLastPacket(n)->streamResiduelen, n, attach);
 					}
 				}
@@ -667,7 +667,7 @@ bool CAnalysisCap::CombinPacket(CSessions &mSessions,unsigned char *pbody, unsig
 		mSyncPacket.isStreamEnd = true;
 		mSyncPacket.time = attach.time;
 		mSyncPacket._payload.append(pbody, len);
-		attach.isStepFilter = true;
+		//attach.isStepFilter = true;
 		EnterPacket(mSessions,pbody + len, bodylen - len, n,attach);
 	}
 	else
@@ -679,7 +679,7 @@ bool CAnalysisCap::CombinPacket(CSessions &mSessions,unsigned char *pbody, unsig
 		mSyncPacket.streamResiduelen = 0;
 		mSyncPacket._payload.append(pbody, len);
 		mSessions.AddNewPacket(mSyncPacket);
-		attach.isStepFilter = true;
+		//attach.isStepFilter = true;
 		EnterPacket(mSessions,pbody + len, bodylen - len, n, attach);
 	}
 	return true;

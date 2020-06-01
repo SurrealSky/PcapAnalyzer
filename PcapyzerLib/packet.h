@@ -146,6 +146,6 @@ typedef struct _MacInfo
 typedef struct _PacketAttach
 {
 	STu64	time;
-	STbool	isStepFilter;
+	//STbool	isStepFilter;
 }PacketAttach,*PPacketAttach;
 
