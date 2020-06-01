@@ -194,6 +194,7 @@ void CAnalysisCap::tcpReassemblyMsgReadyCallback(int sideIndex, const TcpStreamD
 	}
 	attach.time = ((time_t)tcpData.getConnectionData().startTime.tv_sec) * 1000000 + tcpData.getConnectionData().startTime.tv_usec;
 	CAnalysisCap *p = static_cast<CAnalysisCap*>(mMgr->thisdata);
+	attach.isStepFilter = false;
 	p->EnterPacket(*(CSessions*)(mMgr->sessions), pbody, bodylen, nTemp, attach);
 }
 
@@ -289,6 +290,7 @@ void CAnalysisCap::PacketCenter(RawPacket &rawPacket, TcpReassembly &tcpReassemb
 			nTemp.dstip = ip->getIPv4Header()->ipDst;
 			nTemp.dstport = STswab16(udp->getUdpHeader()->portDst);
 			attach.time = (time_t)rawPacket.getPacketTimeStamp().tv_sec * 1000000 + rawPacket.getPacketTimeStamp().tv_usec;
+			attach.isStepFilter = false;
 			EnterPacket(mSessions, pbody, bodylen, nTemp, attach);
 		}
 	}
@@ -543,6 +545,7 @@ bool CAnalysisCap::EnterPacket(CSessions &mSessions,unsigned char *pbody, unsign
 				if (p->FindLastPacket(n)->isStreamEnd ==true)
 				{
 					//最后一个数据包已经结束,重传的或者错误数据包
+					//bug：还有一种情况是bug，就是包含特征码的数据包被截断在下一个包中，导致特征码判断失败
 					return true;
 				}
 				else
@@ -564,6 +567,7 @@ bool CAnalysisCap::EnterPacket(CSessions &mSessions,unsigned char *pbody, unsign
 						p->FindLastPacket(n)->_payload.append(pbody, p->FindLastPacket(n)->streamResiduelen);
 						p->FindLastPacket(n)->isStreamEnd = true;
 						//新的数据包
+						attach.isStepFilter = true;
 						EnterPacket(mSessions, pbody + p->FindLastPacket(n)->streamResiduelen, bodylen - p->FindLastPacket(n)->streamResiduelen, n, attach);
 					}
 				}
@@ -612,7 +616,6 @@ bool CAnalysisCap::ForInterfaceData(CSessions &mSessions,unsigned char *pbody, u
 	}
 	else if (len < bodylen)
 	{
-		//五元组是否已在session中
 		CombinPacket(mSessions,pbody, bodylen, n,attach);
 	}
 	else
@@ -664,6 +667,7 @@ bool CAnalysisCap::CombinPacket(CSessions &mSessions,unsigned char *pbody, unsig
 		mSyncPacket.isStreamEnd = true;
 		mSyncPacket.time = attach.time;
 		mSyncPacket._payload.append(pbody, len);
+		attach.isStepFilter = true;
 		EnterPacket(mSessions,pbody + len, bodylen - len, n,attach);
 	}
 	else
@@ -675,6 +679,7 @@ bool CAnalysisCap::CombinPacket(CSessions &mSessions,unsigned char *pbody, unsig
 		mSyncPacket.streamResiduelen = 0;
 		mSyncPacket._payload.append(pbody, len);
 		mSessions.AddNewPacket(mSyncPacket);
+		attach.isStepFilter = true;
 		EnterPacket(mSessions,pbody + len, bodylen - len, n, attach);
 	}
 	return true;
