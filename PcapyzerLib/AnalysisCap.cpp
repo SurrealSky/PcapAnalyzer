@@ -338,12 +338,12 @@ void CAnalysisCap::EnterConnection(const TcpReassemblyData &data,const Connectio
 	{
 		CNetInfo nTemp;
 		nTemp.proto = TCP;
-		inet_pton(AF_INET, conn.srcIP->toString().c_str(), &nTemp.srcip);
+		inet_pton(AF_INET, conn.dstIP->toString().c_str(), &nTemp.srcip);
 		nTemp.srcip = STswab32(nTemp.srcip);
-		nTemp.srcport = conn.srcPort;
-		inet_pton(AF_INET, conn.dstIP->toString().c_str(), &nTemp.dstip);
+		nTemp.srcport = conn.dstPort;
+		inet_pton(AF_INET, conn.srcIP->toString().c_str(), &nTemp.dstip);
 		nTemp.dstip = STswab32(nTemp.dstip);
-		nTemp.dstport = conn.dstPort;
+		nTemp.dstport = conn.srcPort;
 
 		PacketAttach attach;
 		attach.time = ((time_t)conn.startTime.tv_sec) * 1000000 + conn.startTime.tv_usec;
