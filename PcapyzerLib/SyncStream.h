@@ -8,8 +8,8 @@
 
 class CSyncStream
 {
+	friend class CSessions;
 public:
-
 	CSyncStream()
 	{
 		GUID _guid;
@@ -33,6 +33,19 @@ public:
 	std::string		guid;
 	STu64			time;
 	CNetInfo		net;
+private:
+	void AddPacket(CSyncPacket packet)
+	{
+		mPackets.push_back(packet);
+	}
+	void ClearPackets()
+	{
+		mPackets.clear();
+	}
+	CNetInfo GetStreamNetInfo() const
+	{
+		return mPackets.begin()->mNetInfo;
+	}
 public:
 	STu32 GetCount()
 	{
@@ -49,19 +62,6 @@ public:
 	std::list<CSyncPacket>::iterator GetEnd()
 	{
 		return mPackets.end();
-	}
-public:
-	void AddPacket(CSyncPacket packet)
-	{
-		mPackets.push_back(packet);
-	}
-	void ClearPackets()
-	{
-		mPackets.clear();
-	}
-	CNetInfo GetStreamNetInfo() const
-	{
-		return mPackets.begin()->mNetInfo;
 	}
 	CSyncPacket* FindLastPacket(const CNetInfo &n)
 	{

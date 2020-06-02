@@ -674,7 +674,6 @@ bool CAnalysisCap::ForInterfaceData(CSessions &mSessions,unsigned char *pbody, u
 			mSyncPacket.time = attach.time;
 			mSyncPacket.streamResiduelen = len - bodylen;
 			mSyncPacket._payload.append(pbody, bodylen);
-			//p->AddPacket(mSyncPacket);
 			mSessions.AddPacket(p->guid, mSyncPacket);
 		}
 		else
@@ -712,7 +711,7 @@ bool CAnalysisCap::CombinPacket(CSessions &mSessions,unsigned char *pbody, unsig
 		mSyncPacket.isStreamEnd = true;
 		mSyncPacket.time = attach.time;
 		mSyncPacket._payload.append(pbody, len);
-		p->AddPacket(mSyncPacket);
+		mSessions.AddPacket(p->guid, mSyncPacket);
 		//attach.isStepFilter = true;
 		EnterPacket(mSessions,pbody + len, bodylen-len, n,attach);
 	}
