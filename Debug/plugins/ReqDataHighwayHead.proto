@@ -3,7 +3,7 @@ package ReqDataHighwayHead;
 message DataHighwayHead{
 //optional uint32 version	=1;
 optional bytes  uin    	=2;
-//optional bytes  command	=3;
+optional bytes  command	=3;
 //optional uint32	seq	=4;
 //optional uint32 retry_times	=5;
 //optional uint32 appid	=6;

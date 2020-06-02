@@ -321,10 +321,10 @@ void CAnalysisCap::EnterConnection(const TcpReassemblyData &data,const Connectio
 		CNetInfo nTemp;
 		nTemp.proto = TCP;
 		inet_pton(AF_INET,conn.srcIP->toString().c_str(),&nTemp.srcip);
-		nTemp.srcip = STswab32(nTemp.srcip);
+		//nTemp.srcip = STswab32(nTemp.srcip);
 		nTemp.srcport = conn.srcPort;
 		inet_pton(AF_INET, conn.dstIP->toString().c_str(), &nTemp.dstip);
-		nTemp.dstip = STswab32(nTemp.dstip);
+		//nTemp.dstip = STswab32(nTemp.dstip);
 		nTemp.dstport = conn.dstPort;
 
 		PacketAttach attach;
@@ -339,10 +339,10 @@ void CAnalysisCap::EnterConnection(const TcpReassemblyData &data,const Connectio
 		CNetInfo nTemp;
 		nTemp.proto = TCP;
 		inet_pton(AF_INET, conn.dstIP->toString().c_str(), &nTemp.srcip);
-		nTemp.srcip = STswab32(nTemp.srcip);
+		//nTemp.srcip = STswab32(nTemp.srcip);
 		nTemp.srcport = conn.dstPort;
 		inet_pton(AF_INET, conn.srcIP->toString().c_str(), &nTemp.dstip);
-		nTemp.dstip = STswab32(nTemp.dstip);
+		//nTemp.dstip = STswab32(nTemp.dstip);
 		nTemp.dstport = conn.srcPort;
 
 		PacketAttach attach;
