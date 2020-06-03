@@ -30,7 +30,7 @@ std::vector<std::string> PcapAnalyzer::GetAllPlugins()
 STbool PcapAnalyzer::OpenPcapFile(CSessions &mSessions,std::string file, std::string plugin)
 {
 	mSessions.ClearStream();
-	return pImplAnalysis->doTcpReassemblyOnPcapFile(file.c_str(),mSessions,plugin);
+	return pImplAnalysis->doPacketOnPcapFile(file.c_str(),mSessions,plugin);
 }
 
 STbool PcapAnalyzer::isFileLoaded()
@@ -144,7 +144,7 @@ const std::vector<NetCardInfo> &PcapAnalyzer::GetNetDevs()
 
 bool PcapAnalyzer::StartOpenSniffer(CSessions &mSessions,const char * name, std::string _plugin)
 {
-	return pImplAnalysis->doTcpReassemblyOnLiveTraffic(name, mSessions, _plugin);
+	return pImplAnalysis->doPacketOnLiveTraffic(name, mSessions, _plugin);
 	//return pImplAnalysis->StartOpenSniffer(name,mSessions, _plugin);
 }
 

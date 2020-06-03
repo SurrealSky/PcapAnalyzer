@@ -246,17 +246,22 @@ private:
 public:
 	static std::vector<std::string> GetAllPlugins();
 private:
+	//处理TCP数据包
 	static void tcpReassemblyMsgReadyCallback(int sideIndex, const TcpStreamData& tcpData, void* userCookie);
 	static void tcpReassemblyConnectionStartCallback(const ConnectionData& connectionData, void* userCookie);
 	static void tcpReassemblyConnectionEndCallback(const ConnectionData& connectionData, TcpReassembly::ConnectionEndReason reason, void* userCookie);
+	//实时嗅探网卡数据回调
 	static void onPacketArrives(RawPacket* packet, PcapLiveDevice* dev, void* tcpReassemblyCookie);
 	static void onApplicationInterrupted(void* cookie);
 private:
+	//包处理入口（UDP和TCP分开处理）
 	void PacketCenter(RawPacket&, TcpReassembly &tcpReassembly, CSessions &mSessions);
 	void EnterConnection(const TcpReassemblyData &data, const ConnectionData &conn,CSessions &mSessions);
 public:
-	bool doTcpReassemblyOnPcapFile(const char *fileName, CSessions &mSessions, std::string plugin, std::string bpfFiler = "");
-	bool doTcpReassemblyOnLiveTraffic(const char *interfaceNameOrIP, CSessions &mSessions, std::string plugin,std::string bpfFiler = "");
+	//处理pcap文件
+	bool doPacketOnPcapFile(const char *fileName, CSessions &mSessions, std::string plugin, std::string bpfFiler = "");
+	//在网卡进行嗅探
+	bool doPacketOnLiveTraffic(const char *interfaceNameOrIP, CSessions &mSessions, std::string plugin,std::string bpfFiler = "");
 public:
 	//使用pcap原始库函数进行分析
 	bool pcapOpen(const char *File, CSessions&, std::string plugin);

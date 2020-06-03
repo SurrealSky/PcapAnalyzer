@@ -255,15 +255,6 @@ void CAnalysisCap::tcpReassemblyConnectionEndCallback(const ConnectionData& conn
 	//´¦ÀíTCPÁ÷
 	CAnalysisCap *p = static_cast<CAnalysisCap*>(mMgr->thisdata);
 	p->EnterConnection(mMgr->connMgr.at(connectionData.flowKey), connectionData,*(CSessions*) mMgr->sessions);
-	//if (mMgr.connMgr.size() > 0)
-	//{
-	//	TcpReassemblyConnMgrIter iter = mMgr.connMgr.begin();
-	//	for (; iter != mMgr.connMgr.end(); iter++)
-	//	{
-	//		//EnterConnection(iter->second, tcpReassembly.getConnectionInformation().at(iter->first), mSessions);
-	//		EnterConnection(iter->second, mMgr.tcpReassembly->getConnectionInformation().at(iter->first), mSessions);
-	//	}
-	//}
 
 	// remove the connection from the connection manager
 	mMgr->connMgr.erase(iter);
@@ -354,7 +345,7 @@ void CAnalysisCap::EnterConnection(const TcpReassemblyData &data,const Connectio
 	return;
 }
 
-bool CAnalysisCap::doTcpReassemblyOnPcapFile(const char *fileName, CSessions &mSessions, std::string _plugin,std::string bpfFiler)
+bool CAnalysisCap::doPacketOnPcapFile(const char *fileName, CSessions &mSessions, std::string _plugin,std::string bpfFiler)
 {
 	plugin = _plugin;	
 	mMgr.connMgr.clear();
@@ -426,7 +417,7 @@ void CAnalysisCap::onApplicationInterrupted(void* cookie)
 	*shouldStop = true;
 }
 
-bool CAnalysisCap::doTcpReassemblyOnLiveTraffic(const char *interfaceNameOrIP, CSessions &mSessions, std::string _plugin, std::string bpfFiler)
+bool CAnalysisCap::doPacketOnLiveTraffic(const char *interfaceNameOrIP, CSessions &mSessions, std::string _plugin, std::string bpfFiler)
 {
 	plugin = _plugin;
 	mMgr.connMgr.clear();
