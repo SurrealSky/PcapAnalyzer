@@ -66,8 +66,6 @@ public:
     {
         if (!cnt) return;
 
-        assert(size() < 10000000);
-
         if (mStorage.size() < mWritePos + cnt)
         {
             mStorage.resize(mWritePos + cnt);
@@ -107,8 +105,6 @@ public:
 	void insert(int pos,const uint8 *src, size_t cnt)
 	{
 		if (!cnt) return;
-
-        assert(size() < 10000000);
 
 		std::vector<uint8>::iterator it=mStorage.begin();
 		unsigned int i = cnt;

@@ -1,0 +1,10 @@
+package qqmedia;
+
+message cpuFeatures{
+optional string processor 	=7;
+optional string manufacturer	=8;
+optional string product		=9;
+optional string model		=10;
+optional string finger		=11;
+optional string sdk		=12;
+}

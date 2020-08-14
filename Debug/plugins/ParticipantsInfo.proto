@@ -1,0 +1,17 @@
+package qqmedia;
+
+message participant{
+optional uint32	qq	=1;
+optional uint32	sid	=2;
+optional uint32 timestamp =10;
+}
+
+message room{
+optional uint32		sid	=2;
+repeated participant	_participant=3;
+}
+
+message participantsInfo{
+optional uint32	code	=1;
+optional room	_room		=2;
+}
