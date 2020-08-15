@@ -15,6 +15,9 @@
 #define SEPARATOR '/'
 #endif
 
+#define ONLY_FIRST_PACKET_FEATURE
+
+
 // unless the user chooses otherwise - default number of concurrent used file descriptors is 500
 #define DEFAULT_MAX_NUMBER_OF_CONCURRENT_OPEN_FILES 500
 

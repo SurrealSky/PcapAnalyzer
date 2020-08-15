@@ -555,6 +555,67 @@ bool CAnalysisCap::EnterPacket(CSessions &mSessions,unsigned char *pbody, unsign
 	bool result = false;
 	if (bodylen == 0) return true;
 
+#ifdef  ONLY_FIRST_PACKET_FEATURE
+	CSyncStream *p = mSessions.FindSameStreamByQuintet(n);
+	if (p != NULL)
+	{
+		//已经存在这条流
+		if (p->FindLastPacket(n) != NULL)
+		{
+			//单侧已存在数据包
+			if (p->FindLastPacket(n)->isStreamEnd == true)
+			{
+				ForInterfaceData(mSessions, pbody, bodylen, n, attach);
+				//return true;
+			}
+			else
+			{
+				//最后一个数据包未结束
+				if (bodylen < p->FindLastPacket(n)->streamResiduelen)
+				{
+					p->FindLastPacket(n)->_payload.append(pbody, bodylen);
+					p->FindLastPacket(n)->isStreamEnd = false;
+					p->FindLastPacket(n)->streamResiduelen -= bodylen;
+				}
+				else if (bodylen == p->FindLastPacket(n)->streamResiduelen)
+				{
+					p->FindLastPacket(n)->_payload.append(pbody, bodylen);
+					p->FindLastPacket(n)->isStreamEnd = true;
+				}
+				else if (bodylen > p->FindLastPacket(n)->streamResiduelen)
+				{
+					p->FindLastPacket(n)->_payload.append(pbody, p->FindLastPacket(n)->streamResiduelen);
+					p->FindLastPacket(n)->isStreamEnd = true;
+					//新的数据包
+					//attach.isStepFilter = true;
+					EnterPacket(mSessions, pbody + p->FindLastPacket(n)->streamResiduelen, bodylen - p->FindLastPacket(n)->streamResiduelen, n, attach);
+				}
+			}
+		}
+		else
+		{
+			//单侧第一包
+			ForInterfaceData(mSessions, pbody, bodylen, n, attach);
+		}
+	}
+	else
+	{
+		//新的数据包
+		bool isFilter = true;
+		IAnalyzer *qq = AnalyzerFactory::CreateAnalyzerer(plugin.c_str());
+		if (qq)
+		{
+			isFilter = qq->ForFilter(n.srcport, n.dstport, (char*)pbody, bodylen);
+			delete qq;
+		}
+		if (isFilter)
+		{
+			//头部已经匹配到特征码的数据包
+			ForInterfaceData(mSessions, pbody, bodylen, n, attach);
+		}
+	}
+#else
+	//第二种方式
 	bool isFilter = true;
 	IAnalyzer *qq = AnalyzerFactory::CreateAnalyzerer(plugin.c_str());
 	if (qq)
@@ -614,6 +675,8 @@ bool CAnalysisCap::EnterPacket(CSessions &mSessions,unsigned char *pbody, unsign
 			}
 		}
 	}
+#endif //  ONLY_FIRST_PACKET_FEATURE
+
 	return result;
 }
 

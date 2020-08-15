@@ -211,6 +211,11 @@ public:
 				//未知情况
 				//XX 00 00 00
 				offset += 4;
+			}
+			else if (value == 0x00010001)
+			{
+				//未知情况
+				offset += 4;
 			}else
 			{
 				MessageBox(0, "error", "unknow", MB_OK);
