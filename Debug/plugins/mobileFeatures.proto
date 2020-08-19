@@ -1,7 +1,0 @@
-package qqmedia;
-
-message mobileFeatures{
-optional string osinfo 		=1;
-optional string cpuinfo		=2;
-optional uint32 unknow		=3;
-}
