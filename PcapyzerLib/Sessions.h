@@ -90,6 +90,12 @@ public:
 	{
 		mCacheStreams.clear();
 	}
+	
+	/*
+	*作用：在特定流中添加数据包
+	*参数一：流的guid
+	*参数二：添加的数据包
+	*/
 	void AddPacket(std::string guid, CSyncPacket packet)
 	{
 		CSyncStream *stream = FindStreamByGuid(guid);
@@ -108,6 +114,10 @@ public:
 			g_TS.WaitforTask(&task);
 		}
 	}
+	/*
+	*作用：添加一条新的流，并在流中添加一个数据包
+	*参数一：添加的数据包
+	*/
 	void AddNewPacket(CSyncPacket packet)
 	{
 		CSyncStream m;
