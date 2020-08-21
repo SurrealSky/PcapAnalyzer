@@ -68,6 +68,8 @@ public:
 	BYTE* m_pFileData;
 	// 获取特定行的内容
 	void GetLineText(UINT uLine, CString & strText);
+	//判断是否为可打印字符
+	bool isPrint(CHAR c);
 public:
 	void SetDataView(BYTE *buffer, ULONGLONG size);
 	void ClearView();

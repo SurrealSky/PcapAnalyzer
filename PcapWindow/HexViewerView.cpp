@@ -427,6 +427,12 @@ void CHexViewerView::OnSize(UINT nType, int cx, int cy)
 	ResetScroll();
 }
 
+bool CHexViewerView::isPrint(CHAR c)
+{
+	if (c >= 0x20 && c <= 0x7e)
+		return true;
+	return false;
+}
 
 // 获取特定行的内容
 void CHexViewerView::GetLineText(UINT uLine, CString & strText)
@@ -451,7 +457,7 @@ void CHexViewerView::GetLineText(UINT uLine, CString & strText)
 		p[11], p[12], p[13], p[14], p[15]);
 
 	for (UINT i = 0; i < uCount; ++i) {
-		if (!IsCharAlphaNumericA(p[i]))
+		if (!/*IsCharAlphaNumericA*/isPrint(p[i]))
 			p[i] = '.';
 	}
 
