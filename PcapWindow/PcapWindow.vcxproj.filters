@@ -19,11 +19,11 @@
     <Filter Include="pngbutton">
       <UniqueIdentifier>{c8711309-7039-45ba-8f04-04ea20bc5c5f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CommonLib\MFCUI">
-      <UniqueIdentifier>{5e9cd1ff-c749-4752-b282-6d183ee9c62b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="HexView">
       <UniqueIdentifier>{71444eeb-65a9-453e-a7bb-28573a65fa45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MFCUI">
+      <UniqueIdentifier>{2ac6f6fb-060c-44e7-a85e-616701fd5661}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,32 +90,32 @@
     <ClInclude Include="PngButton.h">
       <Filter>pngbutton</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\MFCUI\GdiPlusMakeUi.h">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonLib\include\MFCUI\ImageButton.h">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawCheckButton.h">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawCombox.h">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawMenu.h">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawRadioButton.h">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawStatic.h">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonLib\include\MFCUI\OwnerDrawTabList.h">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClInclude>
     <ClInclude Include="HexViewerView.h">
       <Filter>HexView</Filter>
+    </ClInclude>
+    <ClInclude Include="MFCUI\GdiPlusMakeUi.h">
+      <Filter>MFCUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MFCUI\ImageButton.h">
+      <Filter>MFCUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MFCUI\OwnerDrawCheckButton.h">
+      <Filter>MFCUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MFCUI\OwnerDrawCombox.h">
+      <Filter>MFCUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MFCUI\OwnerDrawMenu.h">
+      <Filter>MFCUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MFCUI\OwnerDrawRadioButton.h">
+      <Filter>MFCUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MFCUI\OwnerDrawStatic.h">
+      <Filter>MFCUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MFCUI\OwnerDrawTabList.h">
+      <Filter>MFCUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -170,32 +170,32 @@
     <ClCompile Include="PngButton.cpp">
       <Filter>pngbutton</Filter>
     </ClCompile>
-    <ClCompile Include="..\CommonLib\include\MFCUI\GdiPlusMakeUi.cpp">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonLib\include\MFCUI\ImageButton.cpp">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawCheckButton.cpp">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawCombox.cpp">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawMenu.cpp">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawRadioButton.cpp">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawStatic.cpp">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonLib\include\MFCUI\OwnerDrawTabList.cpp">
-      <Filter>CommonLib\MFCUI</Filter>
-    </ClCompile>
     <ClCompile Include="HexViewerView.cpp">
       <Filter>HexView</Filter>
+    </ClCompile>
+    <ClCompile Include="MFCUI\GdiPlusMakeUi.cpp">
+      <Filter>MFCUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MFCUI\ImageButton.cpp">
+      <Filter>MFCUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MFCUI\OwnerDrawCheckButton.cpp">
+      <Filter>MFCUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MFCUI\OwnerDrawCombox.cpp">
+      <Filter>MFCUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MFCUI\OwnerDrawMenu.cpp">
+      <Filter>MFCUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MFCUI\OwnerDrawRadioButton.cpp">
+      <Filter>MFCUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MFCUI\OwnerDrawStatic.cpp">
+      <Filter>MFCUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MFCUI\OwnerDrawTabList.cpp">
+      <Filter>MFCUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

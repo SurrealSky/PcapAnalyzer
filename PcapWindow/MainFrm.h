@@ -9,7 +9,7 @@
 #include "PropertiesWnd.h"
 #include"include.h"
 #include"PngButton.h"
-#include<MFCUI\OwnerDrawCombox.h>
+#include"MFCUI/OwnerDrawCombox.h"
 
 
 class CMainFrame : public CMDIFrameWndEx
