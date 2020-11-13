@@ -63,7 +63,7 @@ std::vector<std::string> CAnalysisCap::GetAllPlugins()
 /**
 * The callback being called by the TCP reassembly module whenever new data arrives on a certain connection
 */
-void CAnalysisCap::tcpReassemblyMsgReadyCallback(int sideIndex, const TcpStreamData& tcpData, void* userCookie)
+void CAnalysisCap::tcpReassemblyMsgReadyCallback(int8_t sideIndex, const TcpStreamData& tcpData, void* userCookie)
 {
 	// extract the connection manager from the user cookie
 	TcpReassemblyMgr* mMgr = (TcpReassemblyMgr*)userCookie;
@@ -152,20 +152,20 @@ void CAnalysisCap::tcpReassemblyMsgReadyCallback(int sideIndex, const TcpStreamD
 	if (side == 0)
 	{
 		//c->s
-		if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv4AddressType)
+		if (tcpData.getConnectionData().srcIP.getType() == IPAddress::IPv4AddressType)
 		{
-			nTemp.srcip = ((IPv4Address*)(tcpData.getConnectionData().srcIP))->toInt();
+			nTemp.srcip = tcpData.getConnectionData().srcIP.getIPv4().toInt();
 		}
-		else if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv6AddressType)
+		else if (tcpData.getConnectionData().srcIP.getType() == IPAddress::IPv6AddressType)
 		{
 			//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().srcIP))->toIn6Addr();
 		}
 		nTemp.srcport = tcpData.getConnectionData().srcPort;
-		if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv4AddressType)
+		if (tcpData.getConnectionData().dstIP.getType() == IPAddress::IPv4AddressType)
 		{
-			nTemp.dstip = ((IPv4Address*)(tcpData.getConnectionData().dstIP))->toInt();
+			nTemp.dstip = tcpData.getConnectionData().dstIP.getIPv4().toInt();
 		}
-		else if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv6AddressType)
+		else if (tcpData.getConnectionData().dstIP.getType() == IPAddress::IPv6AddressType)
 		{
 			//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().dstIP))->toIn6Addr();
 		}
@@ -174,20 +174,20 @@ void CAnalysisCap::tcpReassemblyMsgReadyCallback(int sideIndex, const TcpStreamD
 	else
 	{
 		//s->c
-		if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv4AddressType)
+		if (tcpData.getConnectionData().dstIP.getType() == IPAddress::IPv4AddressType)
 		{
-			nTemp.srcip = ((IPv4Address*)(tcpData.getConnectionData().dstIP))->toInt();
+			nTemp.srcip = tcpData.getConnectionData().dstIP.getIPv4().toInt();
 		}
-		else if (tcpData.getConnectionData().dstIP->getType() == IPAddress::IPv6AddressType)
+		else if (tcpData.getConnectionData().dstIP.getType() == IPAddress::IPv6AddressType)
 		{
 			//nTemp.srcip = ((IPv6Address*)(tcpData.getConnectionData().dstIP))->toIn6Addr();
 		}
 		nTemp.srcport = tcpData.getConnectionData().dstPort;
-		if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv4AddressType)
+		if (tcpData.getConnectionData().srcIP.getType() == IPAddress::IPv4AddressType)
 		{
-			nTemp.dstip = ((IPv4Address*)(tcpData.getConnectionData().srcIP))->toInt();
+			nTemp.dstip = tcpData.getConnectionData().srcIP.getIPv4().toInt();
 		}
-		else if (tcpData.getConnectionData().srcIP->getType() == IPAddress::IPv6AddressType)
+		else if (tcpData.getConnectionData().srcIP.getType() == IPAddress::IPv6AddressType)
 		{
 			//nTemp.dstip = ((IPv6Address*)(tcpData.getConnectionData().srcIP))->toIn6Addr();
 		}
@@ -293,7 +293,7 @@ void CAnalysisCap::PacketCenter(RawPacket &rawPacket, TcpReassembly &tcpReassemb
 			nTemp.srcport = STswab16(udp->getUdpHeader()->portSrc);
 			nTemp.dstip = ip->getIPv4Header()->ipDst;
 			nTemp.dstport = STswab16(udp->getUdpHeader()->portDst);
-			attach.time = (time_t)rawPacket.getPacketTimeStamp().tv_sec * 1000000 + rawPacket.getPacketTimeStamp().tv_usec;
+			attach.time = (time_t)rawPacket.getPacketTimeStamp().tv_sec * 1000000 + rawPacket.getPacketTimeStamp().tv_nsec;
 			//attach.isStepFilter = false;
 			EnterPacket(mSessions, pbody, bodylen, nTemp, attach);
 		}
@@ -310,10 +310,10 @@ void CAnalysisCap::EnterConnection(const TcpReassemblyData &data,const Connectio
 	{
 		CNetInfo nTemp;
 		nTemp.proto = TCP;
-		inet_pton(AF_INET,conn.srcIP->toString().c_str(),&nTemp.srcip);
+		inet_pton(AF_INET,conn.srcIP.toString().c_str(),&nTemp.srcip);
 		//nTemp.srcip = STswab32(nTemp.srcip);
 		nTemp.srcport = conn.srcPort;
-		inet_pton(AF_INET, conn.dstIP->toString().c_str(), &nTemp.dstip);
+		inet_pton(AF_INET, conn.dstIP.toString().c_str(), &nTemp.dstip);
 		//nTemp.dstip = STswab32(nTemp.dstip);
 		nTemp.dstport = conn.dstPort;
 
@@ -328,10 +328,10 @@ void CAnalysisCap::EnterConnection(const TcpReassemblyData &data,const Connectio
 	{
 		CNetInfo nTemp;
 		nTemp.proto = TCP;
-		inet_pton(AF_INET, conn.dstIP->toString().c_str(), &nTemp.srcip);
+		inet_pton(AF_INET, conn.dstIP.toString().c_str(), &nTemp.srcip);
 		//nTemp.srcip = STswab32(nTemp.srcip);
 		nTemp.srcport = conn.dstPort;
-		inet_pton(AF_INET, conn.srcIP->toString().c_str(), &nTemp.dstip);
+		inet_pton(AF_INET, conn.srcIP.toString().c_str(), &nTemp.dstip);
 		//nTemp.dstip = STswab32(nTemp.dstip);
 		nTemp.dstport = conn.srcPort;
 

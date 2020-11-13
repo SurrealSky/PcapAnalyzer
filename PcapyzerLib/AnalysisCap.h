@@ -8,6 +8,8 @@
 #include"Sessions.h"
 #include"include.h"
 #include<pack\ByteBuffer.h>
+#include<bittypes.h>
+
 
 #if defined(WIN32) || defined(WINx64)
 #define SEPARATOR '\\'
@@ -67,8 +69,8 @@ public:
 		if (outputDir != "")
 			stream << outputDir << SEPARATOR;
 
-		std::string sourceIP = connData.srcIP->toString();
-		std::string destIP = connData.dstIP->toString();
+		std::string sourceIP = connData.srcIP.toString();
+		std::string destIP = connData.dstIP.toString();
 
 		// for IPv6 addresses, replace ':' with '_'
 		std::replace(sourceIP.begin(), sourceIP.end(), ':', '_');
@@ -250,7 +252,7 @@ public:
 	static std::vector<std::string> GetAllPlugins();
 private:
 	//处理TCP数据包
-	static void tcpReassemblyMsgReadyCallback(int sideIndex, const TcpStreamData& tcpData, void* userCookie);
+	static void tcpReassemblyMsgReadyCallback(int8_t sideIndex, const TcpStreamData& tcpData, void* userCookie);
 	static void tcpReassemblyConnectionStartCallback(const ConnectionData& connectionData, void* userCookie);
 	static void tcpReassemblyConnectionEndCallback(const ConnectionData& connectionData, TcpReassembly::ConnectionEndReason reason, void* userCookie);
 	//实时嗅探网卡数据回调

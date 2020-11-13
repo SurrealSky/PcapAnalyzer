@@ -158,214 +158,223 @@
     <ClInclude Include="..\CommonLib\include\enkiTS\TaskScheduler.h">
       <Filter>CommonLib\enkiTS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\ArpLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\ArpLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\Device.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\BgpLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\DhcpLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\Device.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\DnsLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\DhcpLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\DnsLayerEnums.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\DnsLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\DnsResource.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\DnsLayerEnums.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\DnsResourceData.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\DnsResource.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\DpdkDevice.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\DnsResourceData.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\DpdkDeviceList.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\DpdkDevice.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\EthLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\DpdkDeviceList.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\GeneralUtils.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\EthDot3Layer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\GreLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\EthLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\GtpLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\GeneralUtils.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\HttpLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\GreLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\IcmpLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\GtpLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\IgmpLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\HttpLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\IpAddress.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\IcmpLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\IPReassembly.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\IgmpLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\IpUtils.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\IpAddress.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\IPv4Layer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\IPReassembly.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\IPv6Extensions.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\IpUtils.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\IPv6Layer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\IPv4Layer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\KniDevice.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\IPv6Extensions.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\KniDeviceList.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\IPv6Layer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\Layer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\KniDevice.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\LinuxNicInformationSocket.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\KniDeviceList.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\Logger.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\Layer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\LRUList.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\LinuxNicInformationSocket.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\MacAddress.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\Logger.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\MBufRawPacket.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\LRUList.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\MplsLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\MacAddress.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\NetworkUtils.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\MBufRawPacket.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\NullLoopbackLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\MplsLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\Packet.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\NetworkUtils.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PacketTrailerLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\NullLoopbackLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PacketUtils.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\Packet.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PayloadLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PacketTrailerLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PcapDevice.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PacketUtils.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PcapFileDevice.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PayloadLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PcapFilter.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PcapDevice.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PcapLiveDevice.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PcapFileDevice.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PcapLiveDeviceList.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PcapFilter.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PcapPlusPlusVersion.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PcapLiveDevice.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PcapRemoteDevice.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PcapLiveDeviceList.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PcapRemoteDeviceList.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PcapPlusPlusVersion.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PfRingDevice.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PcapRemoteDevice.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PfRingDeviceList.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PcapRemoteDeviceList.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PlatformSpecificUtils.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PfRingDevice.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PointerVector.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PfRingDeviceList.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\PPPoELayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PlatformSpecificUtils.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\ProtocolType.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PointerVector.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\RadiusLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\PPPoELayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\RawPacket.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\ProtocolType.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\RawSocketDevice.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\RadiusLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\SdpLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\RawPacket.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\SipLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\RawSocketDevice.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\SllLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\SdpLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\SSLCommon.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\SipLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\SSLHandshake.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\SllLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\SSLLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\SSLCommon.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\SystemUtils.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\SSLHandshake.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\TablePrinter.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\SSLLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\TcpLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\SystemUtils.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\TcpReassembly.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\TablePrinter.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\TextBasedProtocol.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\TcpLayer.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\TLVData.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\TcpReassembly.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\UdpLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\TextBasedProtocol.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\VlanLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\TimespecTimeval.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\VxlanLayer.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\TLVData.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonLib\include\pcapplusplus19.12\WinPcapLiveDevice.h">
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\UdpLayer.h">
+      <Filter>CommonLib\pcapplusplus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\VlanLayer.h">
+      <Filter>CommonLib\pcapplusplus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\VxlanLayer.h">
+      <Filter>CommonLib\pcapplusplus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonLib\include\pcapplusplus20.08\WinPcapLiveDevice.h">
       <Filter>CommonLib\pcapplusplus</Filter>
     </ClInclude>
   </ItemGroup>
