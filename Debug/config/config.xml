@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<weixin_android_chat_pic_receive>
+		<filter name="1">
+			<DatalinkLayer LayerType="Ethernet" isFilter="0">
+				<CodeFilter codetype="SourceMAC" valuetype="HEXSTR" isFilter="1">ABCDEFABCDEF</CodeFilter>
+				<CodeFilter codetype="DestinationMAC" valuetype="HEXSTR" isFilter="1">ABCDEFABCDEF</CodeFilter>
+				<CodeFilter codetype="Protocol" valuetype="STRING" isFilter="1">IPv4</CodeFilter>
+			</DatalinkLayer>
+			<NetworkLayer LayerType="IPv4" isFilter="0">
+				<CodeFilter codetype="SourceIP" valuetype="STRING" isFilter="1">172.16.10.3</CodeFilter>
+				<CodeFilter codetype="DestinationIP" valuetype="STRING" isFilter="1">116.248.162.136</CodeFilter>
+				<CodeFilter codetype="Protocol" valuetype="STRING" isFilter="1">TCP</CodeFilter>
+			</NetworkLayer>
+			<TransportLayer LayerType="UDP" isFilter="0">
+				<CodeFilter codetype="SourcePort" valuetype="DWORD" isFilter="0">80</CodeFilter>
+				<CodeFilter codetype="DestinationPort" valuetype="DWORD" isFilter="1">8000</CodeFilter>
+			</TransportLayer>
+			<ApplicationLayer LayerType="Private" isFilter="1" style="packet">
+				<CodeFilter codetype="SIGCODE" valuetype="BYTE" offsettype="FRONT" offset="0" isFilter="1">2</CodeFilter>
+				<CodeFilter codetype="BACKFILL" valuetype="CHILD" offsettype="ORDER" isFilter="0">
+					<BackFill valuetype="WORD" FillType="LEN" isFilter="1" endian="1"/>
+				</CodeFilter>
+				<CodeFilter codetype="SIGCODE" valuetype="HEXSTR" offsettype="FRONT" offset="3" isFilter="1">0839</CodeFilter>
+				<CodeFilter codetype="GRAYDATA" valuetype="DWORD" offsettype="ORDER" isFilter="0" step="23"/>
+				<CodeFilter codetype="SIGCODE" valuetype="HEXSTR" offsettype="FIXED" offset="32" isFilter="0">07030100</CodeFilter>
+				<CodeFilter codetype="TLVDATA" valuetype="CHILD" offsettype="ORDER" isFilter="0">
+					<Type valuetype="HEXSTR" isFilter="0" endian="1">0102</Type>
+					<Value valuetype="STRING" isFilter="1" isPreLen="1" preLenType="w" preLenEndian="1" isSelfinLen="1" endian="1">uin</Value>
+				</CodeFilter>
+				<CodeFilter codetype="SIGCODE" valuetype="BYTE" offsettype="BACK" offset="0" isFilter="1">3</CodeFilter>
+			</ApplicationLayer>
+		</filter>
+	</weixin_android_chat_pic_receive>
+		
+</config>

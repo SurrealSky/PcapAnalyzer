@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<weixin_android_chat_pic_receive>
+		<filter name="1">
+			<LayerFilter LayerType="Private" Style="packet" isFilter="1">
+				<!-- <BaseFilter codetype="BackFill" valuetype="DWORD" offsettype="FRONT" offset="0" isFilter="1" FillType="LEN"></BaseFilter> -->
+				<!-- <BaseFilter codetype="SigCode" valuetype="BYTE" offsettype="FRONT" offset="8" isFilter="1">1</BaseFilter> -->
+				<!-- <BaseFilter codetype="RegexExp" isFilter="0">payload[0:4]==packet.len</BaseFilter> -->
+				<!-- <BaseFilter codetype="RegexExp" isFilter="1" operate="and"><![CDATA[payload[4:4]>=8]]></BaseFilter> -->
+				<!-- <BaseFilter codetype="RegexExp" isFilter="1" operate="and"><![CDATA[payload[4:4]<=F]]></BaseFilter> -->
+				<!-- <BaseFilter codetype="RegexExp" isFilter="1">payload[7:2]==0b:01</BaseFilter> -->
+			</LayerFilter>
+		</filter>
+	</weixin_android_chat_pic_receive>
+</config>
